@@ -42,11 +42,11 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                         <div class="row">
                             <div class="col-12">
                                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                    <h4 class="mb-sm-0 font-size-18">Lista de Vehículos</h4>
+                                    <h4 class="mb-sm-0 font-size-18">Lista de Activos</h4>
                                     <div class="page-title-right">
                                         <ol class="breadcrumb m-0">
-                                            <li class="breadcrumb-item"><a href="javascript: void(0);">Pages</a></li>
-                                            <li class="breadcrumb-item active">Lista de Vehículos</li>
+                                            <li class="breadcrumb-item"><a href="javascript: void(0);">Pagina</a></li>
+                                            <li class="breadcrumb-item active">Lista de Activos</li>
                                         </ol>
                                     </div>
                                 </div>
@@ -58,7 +58,7 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                             <div class="col-lg-12">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h4 class="card-title">Vehículos</h4>
+                                        <h4 class="card-title">Activos</h4>
                                         <p class="card-title-desc">(*) Vista para registrar, modificar, listar y eliminar vehículos.</p>
                                     </div>
 
@@ -74,7 +74,7 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>
-                                                    <th>Patrimonial</th>
+                                                    <th>SBN</th>
                                                     <th>Serie</th>
                                                     <th>Hostname</th>
                                                     <th>Procesador</th>
