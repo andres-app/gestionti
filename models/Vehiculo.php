@@ -25,7 +25,7 @@ class Vehiculo extends Conectar
         
         // Consulta para obtener los vehículos junto con sus mantenimientos
         $sql = "SELECT v.id, v.placa, v.marca, v.modelo, v.anio, 
-                       m.fecha_mantenimiento, m.fecha_proximo_mantenimiento
+                       m.fecha_mantenimiento, m.fecha_proximo_mantenimiento, v.color, v.motor, v.combustible
                 FROM vehiculos v
                 LEFT JOIN mantenimiento m ON v.id = m.vehiculo_id
                 WHERE v.estado = 1

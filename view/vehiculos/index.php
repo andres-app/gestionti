@@ -78,6 +78,9 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                                                     <th>Serie</th>
                                                     <th>Hostname</th>
                                                     <th>Procesador</th>
+                                                    <th>Color</th>
+                                                    <th>motor</th>
+                                                    <th>combustible</th>
                                                     <th>Acciones</th>
                                                 </tr>
                                             </thead>

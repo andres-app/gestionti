@@ -21,7 +21,7 @@
                     <!-- Fila 1: Placa y Marca del vehículo -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="vehiculo_placa" class="form-label">Placa (*)</label>
+                            <label for="vehiculo_placa" class="form-label">SBN (*)</label>
                             <input class="form-control" type="text" name="vehiculo_placa" id="vehiculo_placa" required>
                         </div>
                         <div class="col-md-6 mb-3">
