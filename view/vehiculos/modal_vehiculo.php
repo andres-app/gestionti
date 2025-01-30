@@ -38,7 +38,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="vehiculo_marca" class="form-label">Año (*)</label>
-                            <input class="form-control" type="number" name="vehiculo_marca" id="vehiculo_marca" required>
+                            <input class="form-control" type="text" name="vehiculo_marca" id="vehiculo_marca" required>
                         </div>
                     </div>
 
@@ -58,26 +58,18 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="vehiculo_responsable_id" class="form-label">responsable_id</label>
-                            <select class="form-control" name="vehiculo_responsable_id" id="vehiculo_responsable_id">
-                                <option value="Gasolina">Gasolina</option>
-                                <option value="Diesel">Diesel</option>
-                                <option value="Gas">Gas</option>
-                            </select>
+                            <input class="form-control" type="text" name="vehiculo_responsable_id" id="vehiculo_responsable_id">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="vehiculo_tipo" class="form-label">Tipo de Vehículo</label>
-                            <select class="form-control" name="vehiculo_tipo" id="vehiculo_tipo">
-                            <option value="Camioneta">Camioneta</option>
-                                <option value="Sedán">Sedán</option>
-                                <option value="Hatchback">Hatchback</option>
-                            </select>
+                            <label for="vehiculo_fecha_registro" class="form-label">Fecha de registro</label>
+                            <input class="form-control" type="text" name="vehiculo_fecha_registro" id="vehiculo_fecha_registro">
                         </div>
                     </div>
 
                     <!-- Fila 5: Póliza del vehículo y estado (activo/inactivo) -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="vehiculo_condicion" class="form-label">Póliza</label>
+                            <label for="vehiculo_condicion" class="form-label">Condicion</label>
                             <input class="form-control" type="text" name="vehiculo_condicion" id="vehiculo_condicion">
                         </div>
                         <div class="col-md-6 mb-3">

@@ -79,7 +79,7 @@ switch ($_GET["op"]) {
         $modelo = isset($_POST["vehiculo_modelo"]) ? $_POST["vehiculo_modelo"] : null;
         $ubicacion = isset($_POST["vehiculo_ubicacion"]) ? $_POST["vehiculo_ubicacion"] : null;
         $responsable_id = isset($_POST["vehiculo_responsable_id"]) ? $_POST["vehiculo_responsable_id"] : null;
-        $tipo = isset($_POST["vehiculo_tipo"]) ? $_POST["vehiculo_tipo"] : null;
+        $fecha_registro = isset($_POST["vehiculo_fecha_registro"]) ? $_POST["vehiculo_fecha_registro"] : null;
         $condicion = isset($_POST["vehiculo_condicion"]) ? $_POST["vehiculo_condicion"] : null;
         $estado = isset($_POST["vehiculo_estado"]) ? $_POST["vehiculo_estado"] : null;
 
@@ -102,7 +102,7 @@ switch ($_GET["op"]) {
         $modelo = $_POST["vehiculo_modelo"];
         $ubicacion = $_POST["vehiculo_ubicacion"];
         $responsable_id = $_POST["vehiculo_responsable_id"];
-        $fecha_registro = $_POST["vehiculo_tipo"];
+        $fecha_registro = $_POST["vehiculo_fecha_registro"];
         $condicion = $_POST["vehiculo_condicion"];
         $estado = $_POST["vehiculo_estado"];
 

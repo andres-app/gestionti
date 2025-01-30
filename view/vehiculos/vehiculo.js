@@ -72,14 +72,14 @@ function editar(id) {
             $("#vehiculo_modelo").val(data.modelo);
             $("#vehiculo_ubicacion").val(data.ubicacion);
             $("#vehiculo_responsable_id").val(data.responsable_id);
-            $("#vehiculo_tipo").val(data.fecha_registro);
+            $("#vehiculo_fecha_registro").val(data.fecha_registro);
             $("#vehiculo_ultimo_mantenimiento").val(data.ultimo_mantenimiento);
             $("#vehiculo_proximo_mantenimiento").val(data.fecha_proximo_mantenimiento);  // Cambiado a `fecha_proximo_mantenimiento`
             $("#vehiculo_condicion").val(data.condicion);
             $("#vehiculo_estado").val(data.estado);
 
             // Cambiar el título del modal a "Editar"
-            $("#myModalLabel").html("Editar Vehículo");
+            $("#myModalLabel").html("Editar Activo");
 
             // Mostrar el modal con los datos cargados
             $("#mnt_modal").modal("show");
@@ -97,7 +97,7 @@ function eliminar(id) {
     // Confirmación de eliminación con SweetAlert
     Swal.fire({
         title: '¿Estás seguro?',
-        text: "Este vehículo se eliminará permanentemente",
+        text: "Este elemento se eliminará permanentemente",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonmodelo: '#3085d6',
@@ -146,14 +146,14 @@ function previsualizar(id) {
             $("#vehiculo_modelo").val(data.modelo).prop("disabled", true);
             $("#vehiculo_ubicacion").val(data.ubicacion).prop("disabled", true);
             $("#vehiculo_responsable_id").val(data.responsable_id).prop("disabled", true);
-            $("#vehiculo_tipo").val(data.fecha_registro).prop("disabled", true);
+            $("#vehiculo_fecha_registro").val(data.fecha_registro).prop("disabled", true);
             $("#vehiculo_ultimo_mantenimiento").val(data.ultimo_mantenimiento).prop("disabled", true);
             $("#vehiculo_proximo_mantenimiento").val(data.fecha_proximo_mantenimiento).prop("disabled", true);  // Cambiado a `fecha_proximo_mantenimiento`
             $("#vehiculo_condicion").val(data.condicion).prop("disabled", true);
             $("#vehiculo_estado").val(data.estado).prop("disabled", true);
 
             // Cambiar el título del modal a "Previsualización"
-            $("#myModalLabel").html("Previsualización del Vehículo");
+            $("#myModalLabel").html("Previsualización del Activo");
 
             // Deshabilitar el botón de guardar
             $(".modal-footer .btn-primary").hide();  // Ocultar el botón de guardar

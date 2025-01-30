@@ -41,7 +41,7 @@ function guardaryeditar(e){
                 $("#listado_table").DataTable().ajax.reload();
                 $("#mnt_modal").modal('hide');
                 Swal.fire({
-                    title: "TEMPLATE",
+                    title: "El area",
                     html: "Se actualizo con exito.",
                     icon: "success",
                     confirmButtonColor: "#5156be",
