@@ -18,47 +18,47 @@
                     <!-- Campo oculto para el ID del vehículo (se usa en caso de edición) -->
                     <input type="hidden" id="vehiculo_id" name="vehiculo_id">
 
-                    <!-- Fila 1: Placa y Marca del vehículo -->
+                    <!-- Fila 1: sbn y serie del vehículo -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="vehiculo_placa" class="form-label">SBN (*)</label>
-                            <input class="form-control" type="text" name="vehiculo_placa" id="vehiculo_placa" required>
+                            <label for="vehiculo_sbn" class="form-label">SBN (*)</label>
+                            <input class="form-control" type="text" name="vehiculo_sbn" id="vehiculo_sbn" required>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="vehiculo_marca" class="form-label">Marca (*)</label>
-                            <input class="form-control" type="text" name="vehiculo_marca" id="vehiculo_marca" required>
+                            <label for="vehiculo_serie" class="form-label">serie (*)</label>
+                            <input class="form-control" type="text" name="vehiculo_serie" id="vehiculo_serie" required>
                         </div>
                     </div>
 
-                    <!-- Fila 2: Modelo y Año del vehículo -->
+                    <!-- Fila 2: tipo y Año del vehículo -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="vehiculo_modelo" class="form-label">Modelo (*)</label>
-                            <input class="form-control" type="text" name="vehiculo_modelo" id="vehiculo_modelo" required>
+                            <label for="vehiculo_tipo" class="form-label">tipo (*)</label>
+                            <input class="form-control" type="text" name="vehiculo_tipo" id="vehiculo_tipo" required>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="vehiculo_anio" class="form-label">Año (*)</label>
-                            <input class="form-control" type="number" name="vehiculo_anio" id="vehiculo_anio" required>
+                            <label for="vehiculo_marca" class="form-label">Año (*)</label>
+                            <input class="form-control" type="number" name="vehiculo_marca" id="vehiculo_marca" required>
                         </div>
                     </div>
 
-                    <!-- Fila 3: Color y Motor del vehículo -->
+                    <!-- Fila 3: modelo y ubicacion del vehículo -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="vehiculo_color" class="form-label">Color</label>
-                            <input class="form-control" type="text" name="vehiculo_color" id="vehiculo_color">
+                            <label for="vehiculo_modelo" class="form-label">modelo</label>
+                            <input class="form-control" type="text" name="vehiculo_modelo" id="vehiculo_modelo">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="vehiculo_motor" class="form-label">Motor</label>
-                            <input class="form-control" type="text" name="vehiculo_motor" id="vehiculo_motor">
+                            <label for="vehiculo_ubicacion" class="form-label">Ubicacion</label>
+                            <input class="form-control" type="text" name="vehiculo_ubicacion" id="vehiculo_ubicacion">
                         </div>
                     </div>
 
-                    <!-- Fila 4: Tipo de combustible y Tipo de vehículo -->
+                    <!-- Fila 4: Tipo de responsable_id y Tipo de vehículo -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="vehiculo_combustible" class="form-label">Combustible</label>
-                            <select class="form-control" name="vehiculo_combustible" id="vehiculo_combustible">
+                            <label for="vehiculo_responsable_id" class="form-label">responsable_id</label>
+                            <select class="form-control" name="vehiculo_responsable_id" id="vehiculo_responsable_id">
                                 <option value="Gasolina">Gasolina</option>
                                 <option value="Diesel">Diesel</option>
                                 <option value="Gas">Gas</option>
@@ -77,8 +77,8 @@
                     <!-- Fila 5: Póliza del vehículo y estado (activo/inactivo) -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="vehiculo_poliza" class="form-label">Póliza</label>
-                            <input class="form-control" type="text" name="vehiculo_poliza" id="vehiculo_poliza">
+                            <label for="vehiculo_condicion" class="form-label">Póliza</label>
+                            <input class="form-control" type="text" name="vehiculo_condicion" id="vehiculo_condicion">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="vehiculo_estado" class="form-label">Estado</label>

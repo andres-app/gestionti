@@ -7,15 +7,15 @@ class Vehiculo extends Conectar
      * 
      * @return array Listado de vehículos con los siguientes datos:
      *               - id: Identificador del vehículo.
-     *               - placa: Número de placa del vehículo.
-     *               - marca: Marca del vehículo.
-     *               - modelo: Modelo del vehículo.
-     *               - anio: Año de fabricación del vehículo.
-     *               - color: Color del vehículo.
-     *               - motor: Tipo de motor del vehículo.
-     *               - combustible: Tipo de combustible (Gasolina, Diesel, etc.).
-     *               - tipo_vehiculo: Tipo de vehículo (Camioneta, Sedán, etc.).
-     *               - poliza: Número de póliza de seguro del vehículo.
+     *               - sbn: Número de sbn del vehículo.
+     *               - serie: serie del vehículo.
+     *               - tipo: tipo del vehículo.
+     *               - marca: Año de fabricación del vehículo.
+     *               - modelo: modelo del vehículo.
+     *               - ubicacion: Tipo de ubicacion del vehículo.
+     *               - responsable_id: Tipo de responsable_id (Gasolina, Diesel, etc.).
+     *               - fecha_registro: Tipo de vehículo (Camioneta, Sedán, etc.).
+     *               - condicion: Número de póliza de seguro del vehículo.
      *               - estado: Estado del vehículo (Activo o Inactivo).
      */
     public function get_vehiculos()
@@ -24,8 +24,8 @@ class Vehiculo extends Conectar
         parent::set_names();
         
         // Consulta para obtener los vehículos junto con sus mantenimientos
-        $sql = "SELECT v.id, v.placa, v.marca, v.modelo, v.anio, 
-                       m.fecha_mantenimiento, m.fecha_proximo_mantenimiento, v.color, v.motor, v.combustible
+        $sql = "SELECT v.id, v.sbn, v.serie, v.tipo, v.marca, 
+                       m.fecha_mantenimiento, m.fecha_proximo_mantenimiento, v.modelo, v.ubicacion, v.responsable_id
                 FROM vehiculos v
                 LEFT JOIN mantenimiento m ON v.id = m.vehiculo_id
                 WHERE v.estado = 1
@@ -49,31 +49,31 @@ class Vehiculo extends Conectar
     /**
      * Método para insertar un nuevo vehículo en la base de datos.
      * 
-     * @param string $placa Placa del vehículo.
-     * @param string $marca Marca del vehículo.
-     * @param string $modelo Modelo del vehículo.
-     * @param int $anio Año de fabricación del vehículo.
-     * @param string $color Color del vehículo.
-     * @param string $motor Tipo de motor del vehículo.
-     * @param string $combustible Tipo de combustible (Gasolina, Diesel, etc.).
-     * @param string $tipo_vehiculo Tipo de vehículo.
-     * @param string $poliza Número de póliza del vehículo.
+     * @param string $sbn sbn del vehículo.
+     * @param string $serie serie del vehículo.
+     * @param string $tipo tipo del vehículo.
+     * @param int $marca Año de fabricación del vehículo.
+     * @param string $modelo modelo del vehículo.
+     * @param string $ubicacion Tipo de ubicacion del vehículo.
+     * @param string $responsable_id Tipo de responsable_id (Gasolina, Diesel, etc.).
+     * @param string $fecha_registro Tipo de vehículo.
+     * @param string $condicion Número de póliza del vehículo.
      * @param int $estado Estado del vehículo (Activo o Inactivo).
      * 
      * @return bool True si la inserción fue exitosa, false en caso de error.
      */
-    public function insertar_vehiculo($placa, $marca, $modelo, $anio, $color, $motor, $combustible, $tipo_vehiculo, $poliza, $estado)
+    public function insertar_vehiculo($sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado)
     {
         $conectar = parent::conexion();
         parent::set_names();
 
         // Consulta SQL para insertar un nuevo vehículo en la base de datos
-        $sql = "INSERT INTO vehiculos (placa, marca, modelo, anio, color, motor, combustible, tipo_vehiculo, poliza, estado) 
+        $sql = "INSERT INTO vehiculos (sbn, serie, tipo, marca, modelo, ubicacion, responsable_id, fecha_registro, condicion, estado) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = $conectar->prepare($sql);
 
-        if ($stmt->execute([$placa, $marca, $modelo, $anio, $color, $motor, $combustible, $tipo_vehiculo, $poliza, $estado])) {
+        if ($stmt->execute([$sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado])) {
             return true;
         } else {
             $error = $stmt->errorInfo();
@@ -85,19 +85,19 @@ class Vehiculo extends Conectar
     /**
      * Método para actualizar los datos de un vehículo.
      */
-    public function editar_vehiculo($id, $placa, $marca, $modelo, $anio, $color, $motor, $combustible, $tipo_vehiculo, $poliza, $estado)
+    public function editar_vehiculo($id, $sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado)
     {
         $conectar = parent::conexion();
         parent::set_names();
 
         $sql = "UPDATE vehiculos 
-                SET placa = ?, marca = ?, modelo = ?, anio = ?, color = ?, motor = ?, combustible = ?, tipo_vehiculo = ?, poliza = ?, estado = ?
+                SET sbn = ?, serie = ?, tipo = ?, marca = ?, modelo = ?, ubicacion = ?, responsable_id = ?, fecha_registro = ?, condicion = ?, estado = ?
                 WHERE id = ?";
 
         $stmt = $conectar->prepare($sql);
 
         try {
-            $stmt->execute([$placa, $marca, $modelo, $anio, $color, $motor, $combustible, $tipo_vehiculo, $poliza, $estado, $id]);
+            $stmt->execute([$sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $id]);
             return true;
         } catch (PDOException $e) {
             error_log("Error en la consulta de actualización: " . $e->getMessage());
@@ -148,7 +148,7 @@ class Vehiculo extends Conectar
         $conectar = parent::conexion();
         parent::set_names();
     
-        $sql = "SELECT v.id, v.placa, v.marca, v.modelo, v.anio, m.fecha_proximo_mantenimiento,
+        $sql = "SELECT v.id, v.sbn, v.serie, v.tipo, v.marca, m.fecha_proximo_mantenimiento,
                        CASE 
                            WHEN m.fecha_proximo_mantenimiento < CURDATE() THEN 'Vencido'
                            ELSE 'Próximo'
@@ -188,9 +188,9 @@ class Vehiculo extends Conectar
     }
 
     /**
-     * Método para marcar un mantenimiento como vencido si no se ha realizado.
+     * Método para serier un mantenimiento como vencido si no se ha realizado.
      */
-    public function marcar_mantenimiento_vencido($vehiculo_id)
+    public function serier_mantenimiento_vencido($vehiculo_id)
     {
         $conectar = parent::conexion();
         parent::set_names();
@@ -206,7 +206,7 @@ class Vehiculo extends Conectar
             $stmt->execute([$vehiculo_id]);
             return true;
         } catch (PDOException $e) {
-            error_log("Error al marcar el mantenimiento como vencido: " . $e->getMessage());
+            error_log("Error al serier el mantenimiento como vencido: " . $e->getMessage());
             return false;
         }
     }

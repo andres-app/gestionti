@@ -2,7 +2,7 @@
 require_once("../config/conexion.php");
 require_once("../models/Vehiculo.php");
 
-// Crear instancia del modelo Vehículo
+// Crear instancia del tipo Vehículo
 $vehiculo = new Vehiculo();
 $total_vehiculos = $vehiculo->get_total_vehiculos(); // Obtenemos el total de vehículos
 
@@ -16,7 +16,7 @@ switch ($_GET["op"]) {
 
     // Caso para listar todos los vehículos
     case "listar":
-        // Obtener los datos de los vehículos desde el modelo
+        // Obtener los datos de los vehículos desde el tipo
         $datos = $vehiculo->get_vehiculos();
 
         // Verificar si hubo algún error al obtener los datos
@@ -32,13 +32,13 @@ switch ($_GET["op"]) {
         foreach ($datos as $row) {
             $sub_array = array();
             $sub_array[] = $row["id"]; // ID del vehículo
-            $sub_array[] = $row["placa"]; // Placa del vehículo
-            $sub_array[] = $row["marca"]; // Marca del vehículo
-            $sub_array[] = $row["modelo"]; // Modelo del vehículo
-            $sub_array[] = $row["anio"]; // Año del vehículo
-            $sub_array[] = $row["color"]; // Año del vehículo
-            $sub_array[] = $row["motor"]; // Año del vehículo
-            $sub_array[] = $row["combustible"]; // Año del vehículo
+            $sub_array[] = $row["sbn"]; // sbn del vehículo
+            $sub_array[] = $row["serie"]; // serie del vehículo
+            $sub_array[] = $row["tipo"]; // tipo del vehículo
+            $sub_array[] = $row["marca"]; // Año del vehículo
+            $sub_array[] = $row["modelo"]; // Año del vehículo
+            $sub_array[] = $row["ubicacion"]; // Año del vehículo
+            $sub_array[] = $row["responsable_id"]; // Año del vehículo
 
             // Botones de acción (editar y eliminar) para cada fila
             $sub_array[] = '
@@ -72,19 +72,19 @@ switch ($_GET["op"]) {
     // Caso para insertar un nuevo vehículo
     case "insertar":
         // Capturar los datos enviados desde el formulario
-        $placa = isset($_POST["vehiculo_placa"]) ? $_POST["vehiculo_placa"] : null;
+        $sbn = isset($_POST["vehiculo_sbn"]) ? $_POST["vehiculo_sbn"] : null;
+        $serie = isset($_POST["vehiculo_serie"]) ? $_POST["vehiculo_serie"] : null;
+        $tipo = isset($_POST["vehiculo_tipo"]) ? $_POST["vehiculo_tipo"] : null;
         $marca = isset($_POST["vehiculo_marca"]) ? $_POST["vehiculo_marca"] : null;
         $modelo = isset($_POST["vehiculo_modelo"]) ? $_POST["vehiculo_modelo"] : null;
-        $anio = isset($_POST["vehiculo_anio"]) ? $_POST["vehiculo_anio"] : null;
-        $color = isset($_POST["vehiculo_color"]) ? $_POST["vehiculo_color"] : null;
-        $motor = isset($_POST["vehiculo_motor"]) ? $_POST["vehiculo_motor"] : null;
-        $combustible = isset($_POST["vehiculo_combustible"]) ? $_POST["vehiculo_combustible"] : null;
+        $ubicacion = isset($_POST["vehiculo_ubicacion"]) ? $_POST["vehiculo_ubicacion"] : null;
+        $responsable_id = isset($_POST["vehiculo_responsable_id"]) ? $_POST["vehiculo_responsable_id"] : null;
         $tipo = isset($_POST["vehiculo_tipo"]) ? $_POST["vehiculo_tipo"] : null;
-        $poliza = isset($_POST["vehiculo_poliza"]) ? $_POST["vehiculo_poliza"] : null;
+        $condicion = isset($_POST["vehiculo_condicion"]) ? $_POST["vehiculo_condicion"] : null;
         $estado = isset($_POST["vehiculo_estado"]) ? $_POST["vehiculo_estado"] : null;
 
-        // Insertar el nuevo vehículo en la base de datos usando el modelo
-        if ($vehiculo->insertar_vehiculo($placa, $marca, $modelo, $anio, $color, $motor, $combustible, $tipo, $poliza, $estado)) {
+        // Insertar el nuevo vehículo en la base de datos usando el tipo
+        if ($vehiculo->insertar_vehiculo($sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $tipo, $condicion, $estado)) {
             echo json_encode(["success" => "Vehículo registrado correctamente."]);
         } else {
             echo json_encode(["error" => "Error al registrar el vehículo."]);
@@ -95,19 +95,19 @@ switch ($_GET["op"]) {
     case "editar":
         // Capturar los datos enviados por el formulario
         $id = $_POST["vehiculo_id"];
-        $placa = $_POST["vehiculo_placa"];
+        $sbn = $_POST["vehiculo_sbn"];
+        $serie = $_POST["vehiculo_serie"];
+        $tipo = $_POST["vehiculo_tipo"];
         $marca = $_POST["vehiculo_marca"];
         $modelo = $_POST["vehiculo_modelo"];
-        $anio = $_POST["vehiculo_anio"];
-        $color = $_POST["vehiculo_color"];
-        $motor = $_POST["vehiculo_motor"];
-        $combustible = $_POST["vehiculo_combustible"];
-        $tipo_vehiculo = $_POST["vehiculo_tipo"];
-        $poliza = $_POST["vehiculo_poliza"];
+        $ubicacion = $_POST["vehiculo_ubicacion"];
+        $responsable_id = $_POST["vehiculo_responsable_id"];
+        $fecha_registro = $_POST["vehiculo_tipo"];
+        $condicion = $_POST["vehiculo_condicion"];
         $estado = $_POST["vehiculo_estado"];
 
-        // Llamar al método editar_vehiculo del modelo
-        if ($vehiculo->editar_vehiculo($id, $placa, $marca, $modelo, $anio, $color, $motor, $combustible, $tipo_vehiculo, $poliza, $estado)) {
+        // Llamar al método editar_vehiculo del tipo
+        if ($vehiculo->editar_vehiculo($id, $sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado)) {
             echo json_encode(["success" => "Vehículo actualizado correctamente."]);
         } else {
             echo json_encode(["error" => "Error al actualizar el vehículo."]);

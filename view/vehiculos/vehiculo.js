@@ -65,17 +65,17 @@ function editar(id) {
         } else {
             // Llenar los campos del formulario con los datos recibidos
             $("#vehiculo_id").val(data.id);
-            $("#vehiculo_placa").val(data.placa);
+            $("#vehiculo_sbn").val(data.sbn);
+            $("#vehiculo_serie").val(data.serie);
+            $("#vehiculo_tipo").val(data.tipo);
             $("#vehiculo_marca").val(data.marca);
             $("#vehiculo_modelo").val(data.modelo);
-            $("#vehiculo_anio").val(data.anio);
-            $("#vehiculo_color").val(data.color);
-            $("#vehiculo_motor").val(data.motor);
-            $("#vehiculo_combustible").val(data.combustible);
-            $("#vehiculo_tipo").val(data.tipo_vehiculo);
+            $("#vehiculo_ubicacion").val(data.ubicacion);
+            $("#vehiculo_responsable_id").val(data.responsable_id);
+            $("#vehiculo_tipo").val(data.fecha_registro);
             $("#vehiculo_ultimo_mantenimiento").val(data.ultimo_mantenimiento);
             $("#vehiculo_proximo_mantenimiento").val(data.fecha_proximo_mantenimiento);  // Cambiado a `fecha_proximo_mantenimiento`
-            $("#vehiculo_poliza").val(data.poliza);
+            $("#vehiculo_condicion").val(data.condicion);
             $("#vehiculo_estado").val(data.estado);
 
             // Cambiar el título del modal a "Editar"
@@ -100,8 +100,8 @@ function eliminar(id) {
         text: "Este vehículo se eliminará permanentemente",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
+        confirmButtonmodelo: '#3085d6',
+        cancelButtonmodelo: '#d33',
         confirmButtonText: 'Sí, eliminar',
         cancelButtonText: 'Cancelar'
     }).then((result) => {
@@ -139,17 +139,17 @@ function previsualizar(id) {
         } else {
             // Llenar los campos del formulario con los datos recibidos
             $("#vehiculo_id").val(data.id);
-            $("#vehiculo_placa").val(data.placa).prop("disabled", true);
+            $("#vehiculo_sbn").val(data.sbn).prop("disabled", true);
+            $("#vehiculo_serie").val(data.serie).prop("disabled", true);
+            $("#vehiculo_tipo").val(data.tipo).prop("disabled", true);
             $("#vehiculo_marca").val(data.marca).prop("disabled", true);
             $("#vehiculo_modelo").val(data.modelo).prop("disabled", true);
-            $("#vehiculo_anio").val(data.anio).prop("disabled", true);
-            $("#vehiculo_color").val(data.color).prop("disabled", true);
-            $("#vehiculo_motor").val(data.motor).prop("disabled", true);
-            $("#vehiculo_combustible").val(data.combustible).prop("disabled", true);
-            $("#vehiculo_tipo").val(data.tipo_vehiculo).prop("disabled", true);
+            $("#vehiculo_ubicacion").val(data.ubicacion).prop("disabled", true);
+            $("#vehiculo_responsable_id").val(data.responsable_id).prop("disabled", true);
+            $("#vehiculo_tipo").val(data.fecha_registro).prop("disabled", true);
             $("#vehiculo_ultimo_mantenimiento").val(data.ultimo_mantenimiento).prop("disabled", true);
             $("#vehiculo_proximo_mantenimiento").val(data.fecha_proximo_mantenimiento).prop("disabled", true);  // Cambiado a `fecha_proximo_mantenimiento`
-            $("#vehiculo_poliza").val(data.poliza).prop("disabled", true);
+            $("#vehiculo_condicion").val(data.condicion).prop("disabled", true);
             $("#vehiculo_estado").val(data.estado).prop("disabled", true);
 
             // Cambiar el título del modal a "Previsualización"

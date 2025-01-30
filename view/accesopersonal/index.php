@@ -38,7 +38,7 @@
                                 <div class="d-flex flex-column h-100">
                                     <div class="mb-4 mb-md-5 text-center">
                                         <a href="index-1.html" class="d-block auth-logo">
-                                            <img src="../../assets/picture/logo-sm-1.svg" alt="" height="28"> <span class="logo-txt">TEMPLATE</span>
+                                            <img src="../../assets/picture/logo-sm-1.svg" alt="" height="28"> <span class="logo-txt">GESTION TI</span>
                                         </a>
                                     </div>
                                     <div class="auth-content my-auto">
@@ -170,7 +170,7 @@
                     <!-- end col -->
                     <div class="col-xxl-9 col-lg-8 col-md-7">
                         <div class="auth-bg pt-md-5 p-4 d-flex">
-                            <div class="bg-overlay bg-primary"></div>
+                            <div class="bg-overlay "></div>
                             <ul class="bg-bubbles">
                                 <li></li>
                                 <li></li>

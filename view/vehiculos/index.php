@@ -1,9 +1,9 @@
 <?php
-// Requerimos los archivos necesarios para la conexión a la base de datos y el modelo Rol
+// Requerimos los archivos necesarios para la conexión a la base de datos y el tipo Rol
 require_once("../../config/conexion.php");
 require_once("../../models/Rol.php");
 
-// Crear una instancia del modelo Rol para validar permisos de acceso
+// Crear una instancia del tipo Rol para validar permisos de acceso
 $rol = new Rol();
 
 // Validar si el rol del usuario tiene acceso al módulo "vehículos"
@@ -76,11 +76,11 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                                                     <th>ID</th>
                                                     <th>SBN</th>
                                                     <th>Serie</th>
-                                                    <th>Hostname</th>
-                                                    <th>Procesador</th>
-                                                    <th>Color</th>
-                                                    <th>motor</th>
-                                                    <th>combustible</th>
+                                                    <th>Tipo</th>
+                                                    <th>Marca</th>
+                                                    <th>Modelo</th>
+                                                    <th>Ubicacion</th>
+                                                    <th>Responsable</th>
                                                     <th>Acciones</th>
                                                 </tr>
                                             </thead>
