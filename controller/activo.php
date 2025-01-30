@@ -14,7 +14,7 @@ $proximos_mantenimientos = $activo->get_proximos_mantenimientos();
 // Evaluar el valor del parámetro "op" para determinar qué operación realizar
 switch ($_GET["op"]) {
 
-    // Caso para listar todos los vehículos
+        // Caso para listar todos los vehículos
     case "listar":
         // Obtener los datos de los vehículos desde el tipo
         $datos = $activo->get_activos();
@@ -69,7 +69,7 @@ switch ($_GET["op"]) {
         echo json_encode($results);
         break;
 
-    // Caso para insertar un nuevo vehículo
+        // Caso para insertar un nuevo vehículo
     case "insertar":
         // Capturar los datos enviados desde el formulario
         $sbn = isset($_POST["vehiculo_sbn"]) ? $_POST["vehiculo_sbn"] : null;
@@ -91,7 +91,7 @@ switch ($_GET["op"]) {
         }
         break;
 
-    // Caso para editar un vehículo existente
+        // Caso para editar un vehículo existente
     case "editar":
         // Capturar los datos enviados por el formulario
         $id = $_POST["vehiculo_id"];
@@ -143,5 +143,19 @@ switch ($_GET["op"]) {
     default:
         echo json_encode(["error" => "Operación no válida."]);
         break;
+
+    case "obtener_fotos":
+        if (isset($_GET["vehiculo_id"])) {
+            $vehiculo_id = $_GET["vehiculo_id"];
+            $fotos = $activo->get_fotos_por_activo($vehiculo_id);
+
+            if ($fotos) {
+                echo json_encode($fotos);
+            } else {
+                echo json_encode(["error" => "No se encontraron fotos para este activo."]);
+            }
+        } else {
+            echo json_encode(["error" => "ID del vehículo no proporcionado."]);
+        }
+        break;
 }
-?>

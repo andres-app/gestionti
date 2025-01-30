@@ -210,4 +210,15 @@ class Activo extends Conectar
             return false;
         }
     }
+
+    public function get_fotos_por_activo($activo_id) {
+        $conectar = parent::conexion();
+        parent::set_names();
+    
+        $sql = "SELECT foto_url FROM fotos_activos WHERE activo_id = ?";
+        $stmt = $conectar->prepare($sql);
+        $stmt->execute([$activo_id]);
+    
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

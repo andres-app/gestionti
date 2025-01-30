@@ -247,6 +247,76 @@ $(document).ready(function() {
     });
 });
 
+/**
+ * Función para cargar la galería de fotos de un activo
+ * @param {int} vehiculo_id - ID del activo
+ */
+function cargarFotos(vehiculo_id) {
+    $.ajax({
+        url: "../../controller/activo.php?op=obtener_fotos",
+        type: "GET",
+        data: { vehiculo_id: vehiculo_id },
+        dataType: "json",
+        success: function(response) {
+            $('#galeria_fotos').empty(); // Limpiar el contenedor de imágenes
+
+            if (response.error) {
+                $('#galeria_fotos').html('<p class="text-muted">No hay fotos disponibles.</p>');
+            } else {
+                response.forEach(function(foto) {
+                    $('#galeria_fotos').append(`
+                        <div class="col-md-3 mb-3">
+                            <img src="${foto.foto_url}" class="img-fluid rounded shadow" alt="Foto del activo">
+                        </div>
+                    `);
+                });
+            }
+        },
+        error: function() {
+            $('#galeria_fotos').html('<p class="text-danger">Error al cargar las fotos.</p>');
+        }
+    });
+}
+
+/**
+ * Modificación en la función editar para que también cargue las fotos
+ */
+function editar(id) {
+    $.post("../../controller/activo.php?op=mostrar", { vehiculo_id: id }, function(data) {
+        data = JSON.parse(data);
+
+        if (data.error) {
+            Swal.fire('Error', data.error, 'error');
+        } else {
+            $("#vehiculo_id").val(data.id);
+            $("#vehiculo_sbn").val(data.sbn);
+            $("#vehiculo_serie").val(data.serie);
+            $("#vehiculo_tipo").val(data.tipo);
+            $("#vehiculo_marca").val(data.marca);
+            $("#vehiculo_modelo").val(data.modelo);
+            $("#vehiculo_ubicacion").val(data.ubicacion);
+            $("#vehiculo_responsable_id").val(data.responsable_id);
+            $("#vehiculo_fecha_registro").val(data.fecha_registro);
+            $("#vehiculo_condicion").val(data.condicion);
+            $("#vehiculo_estado").val(data.estado);
+
+            // Llamar a la función para cargar fotos
+            cargarFotos(data.id);
+
+            $("#myModalLabel").html("Editar Activo");
+            $("#mnt_modal").modal("show");
+        }
+    });
+}
+
+// Cargar fotos cuando se abre el modal
+$('#mnt_modal').on('shown.bs.modal', function () {
+    var vehiculo_id = $('#vehiculo_id').val();
+    if (vehiculo_id) {
+        cargarFotos(vehiculo_id);
+    }
+});
+
 
 /**
  * Evento para mostrar el modal cuando se hace clic en el botón "Nuevo Registro".
