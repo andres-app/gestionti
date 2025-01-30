@@ -1,14 +1,14 @@
 <?php
 require_once("../config/conexion.php");
-require_once("../models/Vehiculo.php");
+require_once("../models/Activo.php");
 
 // Crear instancia del tipo Vehículo
-$vehiculo = new Vehiculo();
-$total_vehiculos = $vehiculo->get_total_vehiculos(); // Obtenemos el total de vehículos
+$activo = new Activo();
+$total_activos = $activo->get_total_activos(); // Obtenemos el total de vehículos
 
 
 // Obtener vehículos con próximos mantenimientos
-$proximos_mantenimientos = $vehiculo->get_proximos_mantenimientos();
+$proximos_mantenimientos = $activo->get_proximos_mantenimientos();
 
 
 // Evaluar el valor del parámetro "op" para determinar qué operación realizar
@@ -17,7 +17,7 @@ switch ($_GET["op"]) {
     // Caso para listar todos los vehículos
     case "listar":
         // Obtener los datos de los vehículos desde el tipo
-        $datos = $vehiculo->get_vehiculos();
+        $datos = $activo->get_activos();
 
         // Verificar si hubo algún error al obtener los datos
         if ($datos === false) {
@@ -84,7 +84,7 @@ switch ($_GET["op"]) {
         $estado = isset($_POST["vehiculo_estado"]) ? $_POST["vehiculo_estado"] : null;
 
         // Insertar el nuevo vehículo en la base de datos usando el tipo
-        if ($vehiculo->insertar_vehiculo($sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $tipo, $condicion, $estado)) {
+        if ($activo->insertar_vehiculo($sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $tipo, $condicion, $estado)) {
             echo json_encode(["success" => "Vehículo registrado correctamente."]);
         } else {
             echo json_encode(["error" => "Error al registrar el vehículo."]);
@@ -107,7 +107,7 @@ switch ($_GET["op"]) {
         $estado = $_POST["vehiculo_estado"];
 
         // Llamar al método editar_vehiculo del tipo
-        if ($vehiculo->editar_vehiculo($id, $sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado)) {
+        if ($activo->editar_vehiculo($id, $sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado)) {
             echo json_encode(["success" => "Vehículo actualizado correctamente."]);
         } else {
             echo json_encode(["error" => "Error al actualizar el vehículo."]);
@@ -116,7 +116,7 @@ switch ($_GET["op"]) {
 
     case "mostrar":
         if (isset($_POST["vehiculo_id"])) {
-            $datos = $vehiculo->get_vehiculo_por_id($_POST["vehiculo_id"]);
+            $datos = $activo->get_vehiculo_por_id($_POST["vehiculo_id"]);
             if ($datos) {
                 echo json_encode($datos);
             } else {
@@ -130,7 +130,7 @@ switch ($_GET["op"]) {
     case "eliminar":
         if (isset($_POST["vehiculo_id"])) {
             $id = $_POST["vehiculo_id"];
-            if ($vehiculo->cambiar_estado($id, 0)) {
+            if ($activo->cambiar_estado($id, 0)) {
                 echo json_encode(["success" => "Vehículo eliminado correctamente."]);
             } else {
                 echo json_encode(["error" => "Error al eliminar el vehículo."]);

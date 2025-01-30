@@ -75,7 +75,7 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                                                 <tr>
                                                     <th>ID Vehículo</th>
                                                     <th>Fecha de Mantenimiento</th>
-                                                    <th>Vehiculo</th>
+                                                    <th>Activo</th>
                                                     <th>Precio</th>
                                                     <th>Estado</th>
                                                     <th>Fecha Próximo Mantenimiento</th>

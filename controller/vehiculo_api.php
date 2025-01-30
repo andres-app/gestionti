@@ -1,7 +1,7 @@
 <?php
 require_once("../config/conexion.php");
 
-class Vehiculo extends Conectar {
+class Activo extends Conectar {
     
     public function get_total_vehiculos() {
         $conexion = parent::conexion();
@@ -29,8 +29,8 @@ class Vehiculo extends Conectar {
     }
 }
 
-// Instancia de Vehiculo
-$vehiculo = new Vehiculo();
+// Instancia de Activo
+$activo = new Activo();
 
 // Verificar si se está ejecutando en localhost y realizar pruebas directas
 if ($_SERVER['SERVER_NAME'] === 'localhost') {
@@ -38,18 +38,18 @@ if ($_SERVER['SERVER_NAME'] === 'localhost') {
     
     // Obtener el total de vehículos
     echo "<h4>Total de Vehículos:</h4>";
-    echo $vehiculo->get_total_vehiculos();
+    echo $activo->get_total_vehiculos();
     
     // Obtener la lista completa de vehículos
     echo "<h4>Lista de Vehículos:</h4>";
     echo "<pre>";
-    print_r($vehiculo->get_vehiculos());
+    print_r($activo->get_vehiculos());
     echo "</pre>";
     
     // Obtener próximos mantenimientos
     echo "<h4>Próximos Mantenimientos:</h4>";
     echo "<pre>";
-    print_r($vehiculo->get_proximos_mantenimientos());
+    print_r($activo->get_proximos_mantenimientos());
     echo "</pre>";
 } else {
     // Switch para operaciones basadas en el valor 'op'
@@ -57,17 +57,17 @@ if ($_SERVER['SERVER_NAME'] === 'localhost') {
 
     switch ($op) {
         case 'total':
-            $total = $vehiculo->get_total_vehiculos();
+            $total = $activo->get_total_vehiculos();
             echo json_encode(['total' => $total]);
             break;
 
         case 'listar':
-            $vehiculos = $vehiculo->get_vehiculos();
+            $vehiculos = $activo->get_vehiculos();
             echo json_encode($vehiculos);
             break;
 
         case 'proximos_mantenimientos':
-            $proximos = $vehiculo->get_proximos_mantenimientos();
+            $proximos = $activo->get_proximos_mantenimientos();
             echo json_encode($proximos);
             break;
 

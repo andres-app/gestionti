@@ -1,6 +1,6 @@
 <?php
 require_once("../../config/conexion.php");
-require_once("../../models/Vehiculo.php");
+require_once("../../models/Activo.php");
 require_once("../../models/Rol.php");
 
 $rol = new Rol();
@@ -8,11 +8,11 @@ $datos = $rol->validar_menu_x_rol($_SESSION["rol_id"], "iniciocolaborador");
 
 if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
     // Crear instancia del modelo Vehículo
-    $vehiculo = new Vehiculo();
+    $activo = new Activo();
     
     // Obtener vehículos con próximos mantenimientos
-    $total_vehiculos = $vehiculo->get_total_vehiculos();
-    $proximos_mantenimientos = $vehiculo->get_proximos_mantenimientos();
+    $total_vehiculos = $activo->get_total_activos();
+    $proximos_mantenimientos = $activo->get_proximos_mantenimientos();
     ?>
     <!doctype html>
     <html lang="es">

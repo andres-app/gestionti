@@ -7,7 +7,7 @@ require_once("../../models/Rol.php");
 $rol = new Rol();
 
 // Validar si el rol del usuario tiene acceso al módulo "vehículos"
-$datos = $rol->validar_menu_x_rol($_SESSION["rol_id"], "vehiculos");
+$datos = $rol->validar_menu_x_rol($_SESSION["rol_id"], "activos");
 
 // Verificar si el usuario está autenticado y tiene los permisos necesarios
 if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
@@ -105,7 +105,7 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
         </div> <!-- Fin del layout-wrapper -->
 
         <!-- Incluir el modal para el registro o edición de vehículos -->
-        <?php require_once("modal_vehiculo.php") ?>
+        <?php require_once("modal_activo.php") ?>
 
         <!-- Incluir la barra lateral -->
         <?php require_once("../html/sidebar.php") ?>
@@ -115,8 +115,8 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
         <!-- Incluir los archivos JavaScript necesarios para la página -->
         <?php require_once("../html/js.php") ?>
 
-        <!-- Incluir el script para gestionar los vehículos (vehiculo.js) -->
-        <script type="text/javascript" src="vehiculo.js"></script>
+        <!-- Incluir el script para gestionar los vehículos (activo.js) -->
+        <script type="text/javascript" src="activo.js"></script>
 
     </body>
 </html>

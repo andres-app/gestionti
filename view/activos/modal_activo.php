@@ -8,7 +8,7 @@
 
                 <!-- Encabezado del modal -->
                 <div class="modal-header">
-                    <h5 class="modal-title" id="myModalLabel">Registro de Vehículo</h5>
+                    <h5 class="modal-title" id="myModalLabel">Registro de Activo</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
@@ -45,7 +45,7 @@
                     <!-- Fila 3: modelo y ubicacion del vehículo -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="vehiculo_modelo" class="form-label">modelo</label>
+                            <label for="vehiculo_modelo" class="form-label">Modelo</label>
                             <input class="form-control" type="text" name="vehiculo_modelo" id="vehiculo_modelo">
                         </div>
                         <div class="col-md-6 mb-3">
@@ -57,7 +57,7 @@
                     <!-- Fila 4: Tipo de responsable_id y Tipo de vehículo -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="vehiculo_responsable_id" class="form-label">responsable_id</label>
+                            <label for="vehiculo_responsable_id" class="form-label">Responsable</label>
                             <input class="form-control" type="text" name="vehiculo_responsable_id" id="vehiculo_responsable_id">
                         </div>
                         <div class="col-md-6 mb-3">

@@ -1,6 +1,6 @@
 <?php
-// Clase Vehiculo que extiende de la clase Conectar, para manejar operaciones con la base de datos.
-class Vehiculo extends Conectar
+// Clase Activo que extiende de la clase Conectar, para manejar operaciones con la base de datos.
+class Activo extends Conectar
 {
     /**
      * Método para obtener todos los vehículos registrados en la base de datos.
@@ -18,7 +18,7 @@ class Vehiculo extends Conectar
      *               - condicion: Número de póliza de seguro del vehículo.
      *               - estado: Estado del vehículo (Activo o Inactivo).
      */
-    public function get_vehiculos()
+    public function get_activos()
     {
         $conectar = parent::conexion();
         parent::set_names();
@@ -26,7 +26,7 @@ class Vehiculo extends Conectar
         // Consulta para obtener los vehículos junto con sus mantenimientos
         $sql = "SELECT v.id, v.sbn, v.serie, v.tipo, v.marca, 
                        m.fecha_mantenimiento, m.fecha_proximo_mantenimiento, v.modelo, v.ubicacion, v.responsable_id
-                FROM vehiculos v
+                FROM activos v
                 LEFT JOIN mantenimiento m ON v.id = m.vehiculo_id
                 WHERE v.estado = 1
                 ORDER BY v.id DESC";
@@ -37,9 +37,9 @@ class Vehiculo extends Conectar
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function get_total_vehiculos() {
+    public function get_total_activos() {
         $conectar = parent::conexion();
-        $sql = "SELECT COUNT(*) as total FROM vehiculos"; // Cambia 'vehiculos' por el nombre correcto de tu tabla
+        $sql = "SELECT COUNT(*) as total FROM activos"; // Cambia 'activos' por el nombre correcto de tu tabla
         $sql = $conectar->prepare($sql);
         $sql->execute();
         $result = $sql->fetch(PDO::FETCH_ASSOC);
@@ -68,7 +68,7 @@ class Vehiculo extends Conectar
         parent::set_names();
 
         // Consulta SQL para insertar un nuevo vehículo en la base de datos
-        $sql = "INSERT INTO vehiculos (sbn, serie, tipo, marca, modelo, ubicacion, responsable_id, fecha_registro, condicion, estado) 
+        $sql = "INSERT INTO activos (sbn, serie, tipo, marca, modelo, ubicacion, responsable_id, fecha_registro, condicion, estado) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = $conectar->prepare($sql);
@@ -90,7 +90,7 @@ class Vehiculo extends Conectar
         $conectar = parent::conexion();
         parent::set_names();
 
-        $sql = "UPDATE vehiculos 
+        $sql = "UPDATE activos 
                 SET sbn = ?, serie = ?, tipo = ?, marca = ?, modelo = ?, ubicacion = ?, responsable_id = ?, fecha_registro = ?, condicion = ?, estado = ?
                 WHERE id = ?";
 
@@ -113,7 +113,7 @@ class Vehiculo extends Conectar
         $conectar = parent::conexion();
         parent::set_names();
 
-        $sql = "SELECT * FROM vehiculos WHERE id = ?";
+        $sql = "SELECT * FROM activos WHERE id = ?";
         $stmt = $conectar->prepare($sql);
         $stmt->execute([$id]);
 
@@ -128,7 +128,7 @@ class Vehiculo extends Conectar
         $conectar = parent::conexion();
         parent::set_names();
 
-        $sql = "UPDATE vehiculos SET estado = ? WHERE id = ?";
+        $sql = "UPDATE activos SET estado = ? WHERE id = ?";
         $stmt = $conectar->prepare($sql);
 
         try {
@@ -153,7 +153,7 @@ class Vehiculo extends Conectar
                            WHEN m.fecha_proximo_mantenimiento < CURDATE() THEN 'Vencido'
                            ELSE 'Próximo'
                        END AS estado_mantenimiento
-                FROM vehiculos v
+                FROM activos v
                 JOIN mantenimiento m ON v.id = m.vehiculo_id
                 WHERE v.estado = 1 
                 AND m.realizado = 0

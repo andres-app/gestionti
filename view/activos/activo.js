@@ -24,7 +24,7 @@ function guardaryeditar(e) {
     var formData = new FormData($("#mnt_form")[0]); // Crear un objeto FormData con los datos del formulario
     
     // Verificar si es una edición (si vehiculo_id tiene un valor)
-    var url = $("#vehiculo_id").val() ? "../../controller/vehiculo.php?op=editar" : "../../controller/vehiculo.php?op=insertar";
+    var url = $("#vehiculo_id").val() ? "../../controller/activo.php?op=editar" : "../../controller/activo.php?op=insertar";
 
     // Enviar los datos mediante AJAX
     $.ajax({
@@ -56,7 +56,7 @@ function guardaryeditar(e) {
  */
 function editar(id) {
     // Hacer la petición AJAX para obtener los datos del vehículo
-    $.post("../../controller/vehiculo.php?op=mostrar", { vehiculo_id: id }, function(data) {
+    $.post("../../controller/activo.php?op=mostrar", { vehiculo_id: id }, function(data) {
         data = JSON.parse(data); // Convertir los datos recibidos a formato JSON
         
         // Verificar si se recibieron los datos correctamente
@@ -107,7 +107,7 @@ function eliminar(id) {
     }).then((result) => {
         if (result.isConfirmed) {
             // Hacer la petición AJAX para eliminar el vehículo
-            $.post("../../controller/vehiculo.php?op=eliminar", { vehiculo_id: id }, function(data) {
+            $.post("../../controller/activo.php?op=eliminar", { vehiculo_id: id }, function(data) {
                 data = JSON.parse(data); // Convertir los datos a formato JSON
                 
                 // Verificar si la operación fue exitosa
@@ -130,7 +130,7 @@ function eliminar(id) {
  */
 function previsualizar(id) {
     // Hacer la petición AJAX para obtener los datos del vehículo
-    $.post("../../controller/vehiculo.php?op=mostrar", { vehiculo_id: id }, function(data) {
+    $.post("../../controller/activo.php?op=mostrar", { vehiculo_id: id }, function(data) {
         data = JSON.parse(data); // Convertir los datos recibidos a formato JSON
         
         // Verificar si se recibieron los datos correctamente
@@ -201,7 +201,7 @@ $(document).ready(function() {
             'pdfHtml5'           // Exportar a PDF
         ],
         "ajax": {
-            url: '../../controller/vehiculo.php?op=listar', // URL del controlador para listar los vehículos
+            url: '../../controller/activo.php?op=listar', // URL del controlador para listar los vehículos
             type: "GET",         // Método de la petición
             dataType: "json",    // Tipo de datos esperados
             error: function(e) {  // Manejo de errores
