@@ -17,7 +17,7 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
 <html lang="es">
     <head>
         <!-- Título de la página -->
-        <title>Mantenimiento de Vehículos - DIGESE</title>
+        <title>Gestión TI - INPE</title>
         
         <!-- Incluir el archivo de configuración del <head> -->
         <?php require_once("../html/head.php") ?>

@@ -8,7 +8,7 @@
 <!doctype html>
 <html lang="es">
     <head>
-        <title>  Inicio TEMPLATE</title>
+        <title>Gestión TI - INPE</title>
         <?php require_once("../html/head.php")?>
     </head>
 

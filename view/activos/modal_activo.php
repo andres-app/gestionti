@@ -74,7 +74,7 @@
                             </select>
                         </div>
                     </div>
-                    
+
                     <!-- Galería de imágenes en Carrusel -->
                     <div class="row mt-4">
                         <div class="col-12">
@@ -83,11 +83,11 @@
                                 <div class="carousel-inner" id="galeria_fotos"></div>
 
                                 <!-- Botones de navegación del carrusel -->
-                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselGaleria" data-bs-slide="prev">
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselGaleria" data-bs-slide="prev" style="filter: invert(0%);">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                     <span class="visually-hidden">Anterior</span>
                                 </button>
-                                <button class="carousel-control-next" type="button" data-bs-target="#carouselGaleria" data-bs-slide="next">
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselGaleria" data-bs-slide="next" style="filter: invert(0%);">
                                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                     <span class="visually-hidden">Siguiente</span>
                                 </button>

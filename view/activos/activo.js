@@ -248,7 +248,7 @@ $(document).ready(function() {
 });
 
 /**
- * Función para cargar la galería de fotos de un activo en formato carrusel.
+ * Función para cargar la galería de fotos de un activo en formato carrusel con 3 imágenes por slide.
  * @param {int} vehiculo_id - ID del activo
  */
 function cargarFotos(vehiculo_id) {
@@ -260,18 +260,33 @@ function cargarFotos(vehiculo_id) {
         success: function(response) {
             $('#galeria_fotos').empty(); // Limpiar el carrusel
 
-            if (response.error) {
+            if (response.error || response.length === 0) {
                 $('#galeria_fotos').html('<p class="text-muted text-center">No hay fotos disponibles.</p>');
             } else {
-                response.forEach(function(foto, index) {
-                    $('#galeria_fotos').append(`
-                        <div class="carousel-item ${index === 0 ? 'active' : ''}">
-                            <img src="${foto.foto_url}" class="d-block w-100 rounded shadow-sm"
-                                 style="max-height: 300px; object-fit: contain; cursor: pointer; transition: transform 0.3s ease-in-out;"
-                                 alt="Foto del activo" onclick="mostrarZoom('${foto.foto_url}')">
-                        </div>
-                    `);
-                });
+                let imagenesHTML = '';
+                let totalFotos = response.length;
+
+                for (let i = 0; i < totalFotos; i += 3) {
+                    let activeClass = i === 0 ? 'active' : ''; // Solo la primera slide será activa
+
+                    imagenesHTML += `<div class="carousel-item ${activeClass}">
+                                        <div class="row">`;
+
+                    // Agregar hasta 3 imágenes en cada slide
+                    for (let j = i; j < i + 3 && j < totalFotos; j++) {
+                        imagenesHTML += `
+                            <div class="col-md-4">
+                                <img src="${response[j].foto_url}" class="d-block w-100 rounded shadow-sm"
+                                     style="max-height: 300px; object-fit: cover; cursor: pointer;"
+                                     alt="Foto del activo" onclick="mostrarZoom('${response[j].foto_url}')">
+                            </div>
+                        `;
+                    }
+
+                    imagenesHTML += `</div></div>`;
+                }
+
+                $('#galeria_fotos').html(imagenesHTML); // Insertar imágenes en el carrusel
             }
         },
         error: function() {

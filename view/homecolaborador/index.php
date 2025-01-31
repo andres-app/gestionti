@@ -18,7 +18,7 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
     <html lang="es">
 
     <head>
-        <title> Inicio TEMPLATE</title>
+        <title>Gestión TI - INPE</title>
         <?php require_once("../html/head.php") ?>
     </head>
 
