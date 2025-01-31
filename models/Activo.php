@@ -23,11 +23,11 @@ class Activo extends Conectar
         $conectar = parent::conexion();
         parent::set_names();
         
-        // Consulta para obtener los vehículos junto con sus mantenimientos
-        $sql = "SELECT v.id, v.sbn, v.serie, v.tipo, v.marca, 
-                       m.fecha_mantenimiento, m.fecha_proximo_mantenimiento, v.modelo, v.ubicacion, v.responsable_id
+        // Consulta con JOIN para obtener el nombre del responsable
+        $sql = "SELECT v.id, v.sbn, v.serie, v.tipo, v.marca, v.modelo, v.ubicacion, 
+                       u.usu_nomape AS responsable, v.fecha_registro, v.condicion, v.estado
                 FROM activos v
-                LEFT JOIN mantenimiento m ON v.id = m.vehiculo_id
+                LEFT JOIN tm_usuario u ON v.responsable_id = u.usu_id
                 WHERE v.estado = 1
                 ORDER BY v.id DESC";
     
@@ -36,6 +36,7 @@ class Activo extends Conectar
     
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
 
     public function get_total_activos() {
         $conectar = parent::conexion();
@@ -112,13 +113,19 @@ class Activo extends Conectar
     {
         $conectar = parent::conexion();
         parent::set_names();
-
-        $sql = "SELECT * FROM activos WHERE id = ?";
+    
+        $sql = "SELECT v.id, v.sbn, v.serie, v.tipo, v.marca, v.modelo, v.ubicacion, 
+                       u.usu_nomape AS responsable, v.fecha_registro, v.condicion, v.estado
+                FROM activos v
+                LEFT JOIN tm_usuario u ON v.responsable_id = u.usu_id
+                WHERE v.id = ?";
         $stmt = $conectar->prepare($sql);
         $stmt->execute([$id]);
-
+    
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    
+    
 
     /**
      * Método para cambiar el estado de un vehículo.

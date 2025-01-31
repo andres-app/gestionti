@@ -55,15 +55,13 @@ function guardaryeditar(e) {
  * @param {int} id - ID del vehículo que se va a editar.
  */
 function editar(id) {
-    // Hacer la petición AJAX para obtener los datos del vehículo
     $.post("../../controller/activo.php?op=mostrar", { vehiculo_id: id }, function(data) {
-        data = JSON.parse(data); // Convertir los datos recibidos a formato JSON
-        
-        // Verificar si se recibieron los datos correctamente
+        data = JSON.parse(data);
+
         if (data.error) {
             Swal.fire('Error', data.error, 'error');
         } else {
-            // Llenar los campos del formulario con los datos recibidos
+            // Llenar los campos del modal con los datos recibidos
             $("#vehiculo_id").val(data.id);
             $("#vehiculo_sbn").val(data.sbn);
             $("#vehiculo_serie").val(data.serie);
@@ -71,21 +69,22 @@ function editar(id) {
             $("#vehiculo_marca").val(data.marca);
             $("#vehiculo_modelo").val(data.modelo);
             $("#vehiculo_ubicacion").val(data.ubicacion);
-            $("#vehiculo_responsable_id").val(data.responsable_id);
+            $("#vehiculo_responsable").val(data.responsable); // Asignar el nombre del responsable
             $("#vehiculo_fecha_registro").val(data.fecha_registro);
-            $("#vehiculo_ultimo_mantenimiento").val(data.ultimo_mantenimiento);
-            $("#vehiculo_proximo_mantenimiento").val(data.fecha_proximo_mantenimiento);  // Cambiado a `fecha_proximo_mantenimiento`
             $("#vehiculo_condicion").val(data.condicion);
             $("#vehiculo_estado").val(data.estado);
 
-            // Cambiar el título del modal a "Editar"
+            // Cambiar el título del modal
             $("#myModalLabel").html("Editar Activo");
 
-            // Mostrar el modal con los datos cargados
+            // Mostrar el modal
             $("#mnt_modal").modal("show");
         }
     });
 }
+
+
+
 
 /**
  * Función para eliminar un vehículo.

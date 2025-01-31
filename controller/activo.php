@@ -38,7 +38,7 @@ switch ($_GET["op"]) {
             $sub_array[] = $row["marca"]; // Año del vehículo
             $sub_array[] = $row["modelo"]; // Año del vehículo
             $sub_array[] = $row["ubicacion"]; // Año del vehículo
-            $sub_array[] = $row["responsable_id"]; // Año del vehículo
+            $sub_array[] = $row["responsable"]; // Año del vehículo
 
             // Botones de acción (editar y eliminar) para cada fila
             $sub_array[] = '
