@@ -278,6 +278,52 @@ function cargarFotos(vehiculo_id) {
     });
 }
 
+function cargarFotos(vehiculo_id) {
+    $.ajax({
+        url: "../../controller/activo.php?op=obtener_fotos",
+        type: "GET",
+        data: { vehiculo_id: vehiculo_id },
+        dataType: "json",
+        success: function(response) {
+            $('#galeria_fotos').empty(); // Limpiar el contenedor de imágenes
+
+            if (response.error) {
+                $('#galeria_fotos').html('<p class="text-muted">No hay fotos disponibles.</p>');
+            } else {
+                response.forEach(function(foto) {
+                    $('#galeria_fotos').append(`
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="image-container position-relative">
+                                <img src="${foto.foto_url}" class="img-thumbnail shadow-sm hover-zoom" alt="Foto del activo" onclick="mostrarZoom('${foto.foto_url}')">
+                            </div>
+                        </div>
+                    `);
+                });
+            }
+        },
+        error: function() {
+            $('#galeria_fotos').html('<p class="text-danger">Error al cargar las fotos.</p>');
+        }
+    });
+}
+
+/**
+ * Función para mostrar la imagen en grande dentro del modal de zoom
+ * @param {string} url - URL de la imagen seleccionada
+ */
+function mostrarZoom(url) {
+    $('#imagenZoom').attr('src', url); // Cambia la imagen en el modal
+    $('#modalZoomImagen').modal('show'); // Muestra el modal
+}
+
+// Cargar fotos cuando se abre el modal
+$('#mnt_modal').on('shown.bs.modal', function () {
+    var vehiculo_id = $('#vehiculo_id').val();
+    if (vehiculo_id) {
+        cargarFotos(vehiculo_id);
+    }
+});
+
 /**
  * Modificación en la función editar para que también cargue las fotos
  */
