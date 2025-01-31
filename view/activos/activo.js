@@ -248,7 +248,7 @@ $(document).ready(function() {
 });
 
 /**
- * Función para cargar la galería de fotos de un activo
+ * Función para cargar la galería de fotos de un activo en formato carrusel.
  * @param {int} vehiculo_id - ID del activo
  */
 function cargarFotos(vehiculo_id) {
@@ -258,57 +258,30 @@ function cargarFotos(vehiculo_id) {
         data: { vehiculo_id: vehiculo_id },
         dataType: "json",
         success: function(response) {
-            $('#galeria_fotos').empty(); // Limpiar el contenedor de imágenes
+            $('#galeria_fotos').empty(); // Limpiar el carrusel
 
             if (response.error) {
-                $('#galeria_fotos').html('<p class="text-muted">No hay fotos disponibles.</p>');
+                $('#galeria_fotos').html('<p class="text-muted text-center">No hay fotos disponibles.</p>');
             } else {
-                response.forEach(function(foto) {
+                response.forEach(function(foto, index) {
                     $('#galeria_fotos').append(`
-                        <div class="col-md-3 mb-3">
-                            <img src="${foto.foto_url}" class="img-fluid rounded shadow" alt="Foto del activo">
+                        <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                            <img src="${foto.foto_url}" class="d-block w-100 rounded shadow-sm"
+                                 style="max-height: 300px; object-fit: contain; cursor: pointer; transition: transform 0.3s ease-in-out;"
+                                 alt="Foto del activo" onclick="mostrarZoom('${foto.foto_url}')">
                         </div>
                     `);
                 });
             }
         },
         error: function() {
-            $('#galeria_fotos').html('<p class="text-danger">Error al cargar las fotos.</p>');
-        }
-    });
-}
-
-function cargarFotos(vehiculo_id) {
-    $.ajax({
-        url: "../../controller/activo.php?op=obtener_fotos",
-        type: "GET",
-        data: { vehiculo_id: vehiculo_id },
-        dataType: "json",
-        success: function(response) {
-            $('#galeria_fotos').empty(); // Limpiar el contenedor de imágenes
-
-            if (response.error) {
-                $('#galeria_fotos').html('<p class="text-muted">No hay fotos disponibles.</p>');
-            } else {
-                response.forEach(function(foto) {
-                    $('#galeria_fotos').append(`
-                        <div class="col-md-3 col-sm-6 mb-3">
-                            <div class="image-container position-relative">
-                                <img src="${foto.foto_url}" class="img-thumbnail shadow-sm hover-zoom" alt="Foto del activo" onclick="mostrarZoom('${foto.foto_url}')">
-                            </div>
-                        </div>
-                    `);
-                });
-            }
-        },
-        error: function() {
-            $('#galeria_fotos').html('<p class="text-danger">Error al cargar las fotos.</p>');
+            $('#galeria_fotos').html('<p class="text-danger text-center">Error al cargar las fotos.</p>');
         }
     });
 }
 
 /**
- * Función para mostrar la imagen en grande dentro del modal de zoom
+ * Función para mostrar la imagen en grande dentro del modal de zoom.
  * @param {string} url - URL de la imagen seleccionada
  */
 function mostrarZoom(url) {
@@ -316,13 +289,14 @@ function mostrarZoom(url) {
     $('#modalZoomImagen').modal('show'); // Muestra el modal
 }
 
-// Cargar fotos cuando se abre el modal
+// Cargar fotos cuando se abre el modal de edición
 $('#mnt_modal').on('shown.bs.modal', function () {
     var vehiculo_id = $('#vehiculo_id').val();
     if (vehiculo_id) {
         cargarFotos(vehiculo_id);
     }
 });
+
 
 /**
  * Modificación en la función editar para que también cargue las fotos

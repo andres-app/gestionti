@@ -74,12 +74,24 @@
                             </select>
                         </div>
                     </div>
-
-                    <!-- Galería de imágenes -->
+                    
+                    <!-- Galería de imágenes en Carrusel -->
                     <div class="row mt-4">
                         <div class="col-12">
                             <h5>Galería de Fotos</h5>
-                            <div id="galeria_fotos" class="row g-2"></div>
+                            <div id="carouselGaleria" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-inner" id="galeria_fotos"></div>
+
+                                <!-- Botones de navegación del carrusel -->
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselGaleria" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Anterior</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselGaleria" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Siguiente</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -97,6 +109,7 @@
                             </div>
                         </div>
                     </div>
+
 
 
                 </div> <!-- Fin del cuerpo del modal -->
