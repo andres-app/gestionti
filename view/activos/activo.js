@@ -144,7 +144,7 @@ function previsualizar(id) {
             $("#vehiculo_marca").val(data.marca).prop("disabled", true);
             $("#vehiculo_modelo").val(data.modelo).prop("disabled", true);
             $("#vehiculo_ubicacion").val(data.ubicacion).prop("disabled", true);
-            $("#vehiculo_responsable_id").val(data.responsable_id).prop("disabled", true);
+            $("#vehiculo_responsable").val(data.responsable).prop("disabled", true);
             $("#vehiculo_fecha_registro").val(data.fecha_registro).prop("disabled", true);
             $("#vehiculo_ultimo_mantenimiento").val(data.ultimo_mantenimiento).prop("disabled", true);
             $("#vehiculo_proximo_mantenimiento").val(data.fecha_proximo_mantenimiento).prop("disabled", true);  // Cambiado a `fecha_proximo_mantenimiento`
