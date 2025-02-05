@@ -31,8 +31,15 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="vehiculo_tipo" class="form-label">Tipo (*)</label>
-                            <input class="form-control" type="text" name="vehiculo_tipo" id="vehiculo_tipo" required>
+                            <select class="form-control" name="vehiculo_tipo" id="vehiculo_tipo" required>
+                                <option value="">Seleccione un tipo</option>
+                                <option value="CPU">CPU</option>
+                                <option value="TECLADO">TECLADO</option>
+                                <option value="MONITOR">MONITOR</option>
+                                <option value="IMPRESORA">IMPRESORA</option>
+                            </select>
                         </div>
+
                         <div class="col-md-6 mb-3">
                             <label for="vehiculo_marca" class="form-label">Año (*)</label>
                             <input class="form-control" type="text" name="vehiculo_marca" id="vehiculo_marca" required>

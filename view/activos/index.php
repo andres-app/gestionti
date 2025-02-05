@@ -59,7 +59,7 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                                 <div class="card">
                                     <div class="card-header">
                                         <h4 class="card-title">Activos</h4>
-                                        <p class="card-title-desc">(*) Vista para registrar, modificar, listar y eliminar vehículos.</p>
+                                        <p class="card-title-desc">(*) Vista para registrar, modificar, listar y eliminar activos.</p>
                                     </div>
 
                                     <div class="card-body">
