@@ -60,7 +60,7 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="vehiculo_responsable" class="form-label">Responsable</label>
-                            <input class="form-control" type="text" id="vehiculo_responsable" name="vehiculo_responsable" readonly>
+                            <input class="form-control" type="text" id="vehiculo_responsable" name="vehiculo_responsable">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="vehiculo_fecha_registro" class="form-label">Fecha de registro</label>
