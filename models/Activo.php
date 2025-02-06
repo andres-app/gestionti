@@ -124,6 +124,18 @@ class Activo extends Conectar
     
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function get_usuarios() {
+        $conectar = parent::conexion();
+        parent::set_names();
+    
+        $sql = "SELECT usu_id, usu_nomape FROM tm_usuario WHERE estado = 1";
+        $stmt = $conectar->prepare($sql);
+        $stmt->execute();
+    
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
     
     
 

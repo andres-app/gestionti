@@ -128,6 +128,19 @@
             return $sql1->fetchAll();
         }
 
+        public function get_usuarios() {
+            $conectar = parent::conexion();
+            parent::set_names();
+        
+            // Consulta para obtener usuarios activos
+            $sql = "SELECT usu_id, usu_nomape FROM tm_usuario WHERE est = 1";
+            $stmt = $conectar->prepare($sql);
+            $stmt->execute();
+        
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+        
+
         public function get_usuario_correo($usu_correo){
             /* TODO: Obtener la conexión a la base de datos utilizando el método de la clase padre */
             $conectar = parent::conexion();

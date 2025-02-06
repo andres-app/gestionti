@@ -59,8 +59,10 @@
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="vehiculo_responsable" class="form-label">Responsable</label>
-                            <input class="form-control" type="text" id="vehiculo_responsable" name="vehiculo_responsable">
+                            <label for="vehiculo_responsable_id" class="form-label">Responsable</label>
+                            <select class="form-control" id="vehiculo_responsable_id" name="vehiculo_responsable_id" required>
+                                <option value="">Seleccione un responsable</option>
+                            </select>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="vehiculo_fecha_registro" class="form-label">Fecha de registro</label>

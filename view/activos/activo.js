@@ -48,6 +48,29 @@ function guardaryeditar(e) {
     });
 }
 
+function cargarResponsables() {
+    $.ajax({
+        url: '../../controller/activo.php?op=obtener_responsables', // Ruta al backend
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            let options = '<option value="">Seleccione un responsable</option>';
+            response.forEach(function(usuario) {
+                options += `<option value="${usuario.usu_id}">${usuario.usu_nomape}</option>`;
+            });
+            $('#vehiculo_responsable_id').html(options);
+        },
+        error: function() {
+            Swal.fire('Error', 'No se pudieron cargar los responsables', 'error');
+        }
+    });
+}
+
+// Llama esta función cada vez que abras el modal
+$('#mnt_modal').on('shown.bs.modal', function () {
+    cargarResponsables();
+});
+
 /**
  * Función para editar un vehículo.
  * Se cargan los datos en el formulario para su edición.
@@ -55,13 +78,14 @@ function guardaryeditar(e) {
  * @param {int} id - ID del vehículo que se va a editar.
  */
 function editar(id) {
+    // Cargar los datos del vehículo
     $.post("../../controller/activo.php?op=mostrar", { vehiculo_id: id }, function(data) {
         data = JSON.parse(data);
 
         if (data.error) {
             Swal.fire('Error', data.error, 'error');
         } else {
-            // Llenar los campos del modal con los datos recibidos
+            // Llenar los campos del formulario con los datos recibidos
             $("#vehiculo_id").val(data.id);
             $("#vehiculo_sbn").val(data.sbn);
             $("#vehiculo_serie").val(data.serie);
@@ -69,15 +93,19 @@ function editar(id) {
             $("#vehiculo_marca").val(data.marca);
             $("#vehiculo_modelo").val(data.modelo);
             $("#vehiculo_ubicacion").val(data.ubicacion);
-            $("#vehiculo_responsable").val(data.responsable); // Asignar el nombre del responsable
             $("#vehiculo_fecha_registro").val(data.fecha_registro);
             $("#vehiculo_condicion").val(data.condicion);
             $("#vehiculo_estado").val(data.estado);
 
-            // Cambiar el título del modal
-            $("#myModalLabel").html("Editar Activo");
+            // Cargar los responsables antes de establecer el valor seleccionado
+            cargarResponsables();
 
-            // Mostrar el modal
+            // Esperar un momento para asegurar que los responsables están cargados
+            setTimeout(function() {
+                $("#vehiculo_responsable_id").val(data.responsable_id);
+            }, 200);
+
+            $("#myModalLabel").html("Editar Activo");
             $("#mnt_modal").modal("show");
         }
     });

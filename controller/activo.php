@@ -78,7 +78,7 @@ switch ($_GET["op"]) {
         $marca = isset($_POST["vehiculo_marca"]) ? $_POST["vehiculo_marca"] : null;
         $modelo = isset($_POST["vehiculo_modelo"]) ? $_POST["vehiculo_modelo"] : null;
         $ubicacion = isset($_POST["vehiculo_ubicacion"]) ? $_POST["vehiculo_ubicacion"] : null;
-        $responsable_id = isset($_POST["vehiculo_responsable_id"]) ? $_POST["vehiculo_responsable_id"] : null;
+        $responsable = isset($_POST["vehiculo_responsable"]) ? $_POST["vehiculo_responsable"] : null;
         $fecha_registro = isset($_POST["vehiculo_fecha_registro"]) ? $_POST["vehiculo_fecha_registro"] : null;
         $condicion = isset($_POST["vehiculo_condicion"]) ? $_POST["vehiculo_condicion"] : null;
         $estado = isset($_POST["vehiculo_estado"]) ? $_POST["vehiculo_estado"] : null;
@@ -101,18 +101,28 @@ switch ($_GET["op"]) {
         $marca = $_POST["vehiculo_marca"];
         $modelo = $_POST["vehiculo_modelo"];
         $ubicacion = $_POST["vehiculo_ubicacion"];
-        $responsable_id = $_POST["vehiculo_responsable_id"];
+        $responsable_id = $_POST["vehiculo_responsable_id"]; // Asegúrate de usar el ID del responsable aquí
         $fecha_registro = $_POST["vehiculo_fecha_registro"];
         $condicion = $_POST["vehiculo_condicion"];
         $estado = $_POST["vehiculo_estado"];
 
-        // Llamar al método editar_vehiculo del tipo
+        // Llamar al método editar_vehiculo del modelo
         if ($activo->editar_vehiculo($id, $sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado)) {
             echo json_encode(["success" => "Vehículo actualizado correctamente."]);
         } else {
             echo json_encode(["error" => "Error al actualizar el vehículo."]);
         }
         break;
+
+
+    case "obtener_responsables":
+        require_once("../models/Usuario.php");
+        $usuario = new Usuario();
+
+        $datos = $usuario->get_usuarios(); // Obtén los usuarios de tu modelo
+        echo json_encode($datos);
+        break;
+
 
     case "mostrar":
         if (isset($_POST["vehiculo_id"])) {
