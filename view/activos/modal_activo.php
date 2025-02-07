@@ -41,7 +41,7 @@
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label for="vehiculo_marca" class="form-label">Año (*)</label>
+                            <label for="vehiculo_marca" class="form-label">Marca (*)</label>
                             <input class="form-control" type="text" name="vehiculo_marca" id="vehiculo_marca" required>
                         </div>
                     </div>
