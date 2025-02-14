@@ -15,60 +15,58 @@ $proximos_mantenimientos = $activo->get_proximos_mantenimientos();
 switch ($_GET["op"]) {
 
         // Caso para listar todos los vehículos
-    case "listar":
-        // Obtener los datos de los vehículos desde el tipo
-        $datos = $activo->get_activos();
-
-        // Verificar si hubo algún error al obtener los datos
-        if ($datos === false) {
-            echo json_encode(["error" => "Error al obtener los vehículos"]);
-            exit;
-        }
-
-        // Array para almacenar los datos formateados
-        $data = array();
-
-        // Recorrer los datos obtenidos y formatearlos para el DataTable
-        foreach ($datos as $row) {
-            $sub_array = array();
-            $sub_array[] = $row["id"]; // ID del vehículo
-            $sub_array[] = $row["sbn"]; // sbn del vehículo
-            $sub_array[] = $row["serie"]; // serie del vehículo
-            $sub_array[] = $row["tipo"]; // tipo del vehículo
-            $sub_array[] = $row["marca"]; // Año del vehículo
-            $sub_array[] = $row["modelo"]; // Año del vehículo
-            $sub_array[] = $row["ubicacion"]; // Año del vehículo
-            $sub_array[] = $row["responsable"]; // Año del vehículo
-
-            // Botones de acción (editar y eliminar) para cada fila
-            $sub_array[] = '
-            <button type="button" class="btn btn-soft-info waves-effect waves-light btn-sm" onClick="previsualizar(' . $row["id"] . ')">
-                <i class="bx bx-show-alt font-size-16 align-middle"></i>
-            </button>
-            <button type="button" class="btn btn-soft-warning waves-effect waves-light btn-sm" onClick="editar(' . $row["id"] . ')">
-                <i class="bx bx-edit-alt font-size-16 align-middle"></i>
-            </button>
-            <button type="button" class="btn btn-soft-danger waves-effect waves-light btn-sm" onClick="eliminar(' . $row["id"] . ')">
-                <i class="bx bx-trash-alt font-size-16 align-middle"></i>
-            </button>';
-
-            // Agregar la fila formateada al array de datos
-            $data[] = $sub_array;
-        }
-
-        // Preparar los resultados en el formato esperado por el DataTable
-        $results = array(
-            "sEcho" => 1,
-            "iTotalRecords" => count($data),
-            "iTotalDisplayRecords" => count($data),
-            "aaData" => $data
-        );
-
-        // Enviar los resultados como JSON
-        header('Content-Type: application/json');
-        echo json_encode($results);
-        break;
-
+        case "listar":
+            $datos = $activo->get_activos();
+            if ($datos === false) {
+                echo json_encode(["error" => "Error al obtener los activos"]);
+                exit;
+            }
+        
+            $data = array();
+            foreach ($datos as $row) {
+                $sub_array = array();
+                $sub_array["id"] = $row["id"];
+                $sub_array["sbn"] = $row["sbn"];
+                $sub_array["serie"] = $row["serie"];
+                $sub_array["tipo"] = $row["tipo"];
+                $sub_array["marca"] = $row["marca"];
+                $sub_array["modelo"] = $row["modelo"];
+                $sub_array["ubicacion"] = $row["ubicacion"];
+                $sub_array["responsable"] = $row["responsable"];
+        
+                // 🔹 Datos para el modal (NO se mostrarán en DataTable)
+                $sub_array["hostname"] = $row["hostname"];
+                $sub_array["procesador"] = $row["procesador"];
+                $sub_array["sisopera"] = $row["sisopera"];
+                $sub_array["ram"] = $row["ram"];
+                $sub_array["disco"] = $row["disco"];
+        
+                // 🔹 Botones de acción
+                $sub_array["acciones"] = '
+                    <button type="button" class="btn btn-soft-info waves-effect waves-light btn-sm" onClick="previsualizar(' . $row["id"] . ')">
+                        <i class="bx bx-show-alt font-size-16 align-middle"></i>
+                    </button>
+                    <button type="button" class="btn btn-soft-warning waves-effect waves-light btn-sm" onClick="editar(' . $row["id"] . ')">
+                        <i class="bx bx-edit-alt font-size-16 align-middle"></i>
+                    </button>
+                    <button type="button" class="btn btn-soft-danger waves-effect waves-light btn-sm" onClick="eliminar(' . $row["id"] . ')">
+                        <i class="bx bx-trash-alt font-size-16 align-middle"></i>
+                    </button>';
+        
+                $data[] = $sub_array;
+            }
+        
+            $results = array(
+                "sEcho" => 1,
+                "iTotalRecords" => count($data),
+                "iTotalDisplayRecords" => count($data),
+                "aaData" => $data
+            );
+        
+            header('Content-Type: application/json');
+            echo json_encode($results);
+            break;
+        
         // Caso para insertar un nuevo vehículo
     case "insertar":
         // Capturar los datos enviados desde el formulario

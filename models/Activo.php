@@ -22,31 +22,33 @@ class Activo extends Conectar
     {
         $conectar = parent::conexion();
         parent::set_names();
-        
-        // Consulta con JOIN para obtener el nombre del responsable
+
+        // Consulta para obtener todos los activos con datos de `detactivo`
         $sql = "SELECT v.id, v.sbn, v.serie, v.tipo, v.marca, v.modelo, v.ubicacion, 
-                       u.usu_nomape AS responsable, v.fecha_registro, v.condicion, v.estado
+                       u.usu_nomape AS responsable, d.hostname, d.procesador, d.sisopera, d.ram, d.disco
                 FROM activos v
                 LEFT JOIN tm_usuario u ON v.responsable_id = u.usu_id
+                LEFT JOIN detactivo d ON v.id = d.activo_id
                 WHERE v.estado = 1
                 ORDER BY v.id DESC";
-    
+
         $stmt = $conectar->prepare($sql);
         $stmt->execute();
-    
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
 
-    public function get_total_activos() {
+
+    public function get_total_activos()
+    {
         $conectar = parent::conexion();
         $sql = "SELECT COUNT(*) as total FROM activos"; // Cambia 'activos' por el nombre correcto de tu tabla
         $sql = $conectar->prepare($sql);
         $sql->execute();
         $result = $sql->fetch(PDO::FETCH_ASSOC);
         return $result['total']; // Retorna solo el valor total
-    }    
-    
+    }
+
     /**
      * Método para insertar un nuevo vehículo en la base de datos.
      * 
@@ -113,7 +115,7 @@ class Activo extends Conectar
     {
         $conectar = parent::conexion();
         parent::set_names();
-    
+
         $sql = "SELECT v.id, v.sbn, v.serie, v.tipo, v.marca, v.modelo, v.ubicacion, 
                        u.usu_nomape AS responsable, v.fecha_registro, v.condicion, v.estado
                 FROM activos v
@@ -121,23 +123,24 @@ class Activo extends Conectar
                 WHERE v.id = ?";
         $stmt = $conectar->prepare($sql);
         $stmt->execute([$id]);
-    
+
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function get_usuarios() {
+    public function get_usuarios()
+    {
         $conectar = parent::conexion();
         parent::set_names();
-    
+
         $sql = "SELECT usu_id, usu_nomape FROM tm_usuario WHERE estado = 1";
         $stmt = $conectar->prepare($sql);
         $stmt->execute();
-    
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
-    
-    
+
+
+
 
     /**
      * Método para cambiar el estado de un vehículo.
@@ -166,7 +169,7 @@ class Activo extends Conectar
     {
         $conectar = parent::conexion();
         parent::set_names();
-    
+
         $sql = "SELECT v.id, v.sbn, v.serie, v.tipo, v.marca, m.fecha_proximo_mantenimiento,
                        CASE 
                            WHEN m.fecha_proximo_mantenimiento < CURDATE() THEN 'Vencido'
@@ -177,12 +180,12 @@ class Activo extends Conectar
                 WHERE v.estado = 1 
                 AND m.realizado = 0
                 ORDER BY m.fecha_proximo_mantenimiento ASC";
-    
+
         $stmt = $conectar->prepare($sql);
         $stmt->execute();
-    
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } 
+    }
 
     /**
      * Método para insertar un nuevo registro de mantenimiento.
@@ -230,14 +233,15 @@ class Activo extends Conectar
         }
     }
 
-    public function get_fotos_por_activo($activo_id) {
+    public function get_fotos_por_activo($activo_id)
+    {
         $conectar = parent::conexion();
         parent::set_names();
-    
+
         $sql = "SELECT foto_url FROM fotos_activos WHERE activo_id = ?";
         $stmt = $conectar->prepare($sql);
         $stmt->execute([$activo_id]);
-    
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

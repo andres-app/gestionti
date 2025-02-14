@@ -84,6 +84,32 @@
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="vehiculo_hostname" class="form-label">Hostname</label>
+                            <input class="form-control" type="text" name="vehiculo_hostname" id="vehiculo_hostname">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="vehiculo_procesador" class="form-label">Procesador</label>
+                            <input class="form-control" type="text" name="vehiculo_procesador" id="vehiculo_procesador">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="vehiculo_sisopera" class="form-label">Sistema Operativo</label>
+                            <input class="form-control" type="text" name="vehiculo_sisopera" id="vehiculo_sisopera">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="vehiculo_ram" class="form-label">RAM</label>
+                            <input class="form-control" type="text" name="vehiculo_ram" id="vehiculo_ram">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="vehiculo_disco" class="form-label">Disco</label>
+                            <input class="form-control" type="text" name="vehiculo_disco" id="vehiculo_disco">
+                        </div>
+                    </div>
+
                     <!-- Galería de imágenes en Carrusel -->
                     <div class="row mt-4">
                         <div class="col-12">
