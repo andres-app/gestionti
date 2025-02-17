@@ -126,14 +126,18 @@ switch ($_GET["op"]) {
         if (isset($_POST["vehiculo_id"])) {
             $datos = $activo->get_vehiculo_por_id($_POST["vehiculo_id"]);
 
-            // 🔹 Imprimir el JSON antes de enviarlo
-            header('Content-Type: application/json');
-            echo json_encode($datos, JSON_PRETTY_PRINT);
-            exit;  // Evitar que haya más contenido en la respuesta
+            if ($datos) {
+                // 🔹 Asegurarnos de que la respuesta sea JSON sin errores
+                header('Content-Type: application/json');
+                echo json_encode($datos, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+            } else {
+                echo json_encode(["error" => "No se encontraron datos para el ID del vehículo."]);
+            }
         } else {
             echo json_encode(["error" => "No se proporcionó un ID de vehículo válido."]);
         }
         break;
+
 
 
     case "eliminar":

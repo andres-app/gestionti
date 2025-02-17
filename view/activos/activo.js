@@ -7,7 +7,7 @@ var tabla;
  */
 function init() {
     // Configuración del evento submit para el formulario de creación o edición
-    $("#mnt_form").on("submit", function(e) {
+    $("#mnt_form").on("submit", function (e) {
         guardaryeditar(e); // Llamar a la función para guardar o editar un registro
     });
 }
@@ -22,7 +22,7 @@ function guardaryeditar(e) {
     e.preventDefault(); // Evitar el comportamiento por defecto del formulario
 
     var formData = new FormData($("#mnt_form")[0]); // Crear un objeto FormData con los datos del formulario
-    
+
     // Verificar si es una edición (si vehiculo_id tiene un valor)
     var url = $("#vehiculo_id").val() ? "../../controller/activo.php?op=editar" : "../../controller/activo.php?op=insertar";
 
@@ -33,7 +33,7 @@ function guardaryeditar(e) {
         data: formData, // Datos del formulario
         contentType: false, // No establecer ningún tipo de contenido para los datos
         processData: false, // No procesar los datos automáticamente (para permitir el uso de FormData)
-        success: function(datos) {
+        success: function (datos) {
             // Mostrar un mensaje de éxito usando SweetAlert
             Swal.fire('Registro', 'Vehículo guardado correctamente', 'success');
             // Recargar el DataTable para mostrar el nuevo registro
@@ -41,7 +41,7 @@ function guardaryeditar(e) {
             // Cerrar el modal de registro
             $("#mnt_modal").modal("hide");
         },
-        error: function(e) {
+        error: function (e) {
             // Mostrar un mensaje de error en caso de que falle la inserción
             Swal.fire('Error', 'No se pudo guardar el vehículo', 'error');
         }
@@ -53,14 +53,14 @@ function cargarResponsables() {
         url: '../../controller/activo.php?op=obtener_responsables', // Ruta al backend
         type: 'GET',
         dataType: 'json',
-        success: function(response) {
+        success: function (response) {
             let options = '<option value="">Seleccione un responsable</option>';
-            response.forEach(function(usuario) {
+            response.forEach(function (usuario) {
                 options += `<option value="${usuario.usu_id}">${usuario.usu_nomape}</option>`;
             });
             $('#vehiculo_responsable_id').html(options);
         },
-        error: function() {
+        error: function () {
             Swal.fire('Error', 'No se pudieron cargar los responsables', 'error');
         }
     });
@@ -78,40 +78,49 @@ $('#mnt_modal').on('shown.bs.modal', function () {
  * @param {int} id - ID del vehículo que se va a editar.
  */
 function editar(id) {
-    // Cargar los datos del vehículo
-    $.post("../../controller/activo.php?op=mostrar", { vehiculo_id: id }, function(data) {
-        data = JSON.parse(data);
+    console.log("📌 Editando activo con ID:", id); // 🔍 Verifica que el ID no sea null o undefined
 
-        if (data.error) {
-            Swal.fire('Error', data.error, 'error');
-        } else {
-            // Llenar los campos del formulario con los datos recibidos
-            $("#vehiculo_id").val(data.id);
-            $("#vehiculo_sbn").val(data.sbn);
-            $("#vehiculo_serie").val(data.serie);
-            $("#vehiculo_tipo").val(data.tipo);
-            $("#vehiculo_marca").val(data.marca);
-            $("#vehiculo_modelo").val(data.modelo);
-            $("#vehiculo_ubicacion").val(data.ubicacion);
-            $("#vehiculo_fecha_registro").val(data.fecha_registro);
-            $("#vehiculo_condicion").val(data.condicion);
-            $("#vehiculo_estado").val(data.estado);
+    $.ajax({
+        url: "../../controller/activo.php?op=mostrar",
+        type: "POST",
+        data: { vehiculo_id: id }, // 🔹 Asegurarse de que el ID se envía correctamente
+        dataType: "json",
+        success: function (data) {
+            console.log("🔍 Respuesta del servidor:", data); // 🔍 Verifica si el servidor devuelve los datos correctos
 
-            // Cargar los responsables antes de establecer el valor seleccionado
-            cargarResponsables();
-
-            // Esperar un momento para asegurar que los responsables están cargados
-            setTimeout(function() {
+            if (data.error) {
+                Swal.fire("Error", data.error, "error");
+            } else {
+                $("#vehiculo_id").val(data.id);
+                $("#vehiculo_sbn").val(data.sbn);
+                $("#vehiculo_serie").val(data.serie);
+                $("#vehiculo_tipo").val(data.tipo);
+                $("#vehiculo_marca").val(data.marca);
+                $("#vehiculo_modelo").val(data.modelo);
+                $("#vehiculo_ubicacion").val(data.ubicacion);
                 $("#vehiculo_responsable_id").val(data.responsable_id);
-            }, 200);
+                $("#vehiculo_fecha_registro").val(data.fecha_registro);
+                $("#vehiculo_condicion").val(data.condicion);
+                $("#vehiculo_estado").val(data.estado);
 
-            $("#myModalLabel").html("Editar Activo");
-            $("#mnt_modal").modal("show");
+                // 🔹 Llenar los nuevos campos de hardware
+                $("#vehiculo_hostname").val(data.hostname || "");
+                $("#vehiculo_procesador").val(data.procesador || "");
+                $("#vehiculo_sisopera").val(data.sisopera || "");
+                $("#vehiculo_ram").val(data.ram || "");
+                $("#vehiculo_disco").val(data.disco || "");
+
+                $("#myModalLabel").html("Editar Activo");
+                $(".modal-footer .btn-primary").show();
+                $("#mnt_modal").modal("show");
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.error("🔴 Error en la solicitud AJAX:", textStatus, errorThrown);
+            Swal.fire("Error", "No se pudo obtener la información del activo", "error");
         }
     });
 }
-
-
 
 
 /**
@@ -134,9 +143,9 @@ function eliminar(id) {
     }).then((result) => {
         if (result.isConfirmed) {
             // Hacer la petición AJAX para eliminar el vehículo
-            $.post("../../controller/activo.php?op=eliminar", { vehiculo_id: id }, function(data) {
-                data = JSON.parse(data); // Convertir los datos a formato JSON
-                
+            $.post("../../controller/activo.php?op=eliminar", { vehiculo_id: id }, function (data) {
+
+
                 // Verificar si la operación fue exitosa
                 if (data.success) {
                     Swal.fire('Eliminado', data.success, 'success');
@@ -156,7 +165,7 @@ function eliminar(id) {
  * @param {int} id - ID del vehículo a previsualizar.
  */
 function previsualizar(id) {
-    $.post("../../controller/activo.php?op=mostrar", { vehiculo_id: id }, function(data) {
+    $.post("../../controller/activo.php?op=mostrar", { vehiculo_id: id }, function (data) {
         console.log("🔹 Datos recibidos en previsualizar:", data); // Verifica en consola
 
         if (data.error) {
@@ -185,7 +194,7 @@ function previsualizar(id) {
             $(".modal-footer .btn-primary").hide();
             $("#mnt_modal").modal("show");
         }
-    }).fail(function(jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
         console.error("🔴 Error en la solicitud AJAX:", textStatus, errorThrown);
         Swal.fire('Error', 'No se pudo obtener la información del activo', 'error');
     });
@@ -214,7 +223,7 @@ $("#mnt_modal").on("hidden.bs.modal", function () {
  * Configuración del DataTable para listar los vehículos registrados.
  * Se configura la tabla con opciones de exportación y búsqueda.
  */
-$(document).ready(function() {
+$(document).ready(function () {
     tabla = $("#listado_table").DataTable({
         "aProcessing": true,
         "aServerSide": true,
@@ -227,7 +236,7 @@ $(document).ready(function() {
             url: '../../controller/activo.php?op=listar',
             type: "GET",
             dataType: "json",
-            error: function(e) {
+            error: function (e) {
                 Swal.fire('Error', 'No se pudo cargar la lista de activos', 'error');
             }
         },
@@ -277,7 +286,7 @@ function cargarFotos(vehiculo_id) {
         type: "GET",
         data: { vehiculo_id: vehiculo_id },
         dataType: "json",
-        success: function(response) {
+        success: function (response) {
             $('#galeria_fotos').empty(); // Limpiar el carrusel
 
             if (response.error || response.length === 0) {
@@ -309,7 +318,7 @@ function cargarFotos(vehiculo_id) {
                 $('#galeria_fotos').html(imagenesHTML); // Insertar imágenes en el carrusel
             }
         },
-        error: function() {
+        error: function () {
             $('#galeria_fotos').html('<p class="text-danger text-center">Error al cargar las fotos.</p>');
         }
     });
@@ -337,9 +346,7 @@ $('#mnt_modal').on('shown.bs.modal', function () {
  * Modificación en la función editar para que también cargue las fotos
  */
 function editar(id) {
-    $.post("../../controller/activo.php?op=mostrar", { vehiculo_id: id }, function(data) {
-        data = JSON.parse(data);
-
+    $.post("../../controller/activo.php?op=mostrar", { vehiculo_id: id }, function (data) {
         if (data.error) {
             Swal.fire('Error', data.error, 'error');
         } else {
@@ -355,7 +362,14 @@ function editar(id) {
             $("#vehiculo_condicion").val(data.condicion);
             $("#vehiculo_estado").val(data.estado);
 
-            // Llamar a la función para cargar fotos
+            // 🔹 Permitir que estos campos sean editables
+            $("#vehiculo_hostname").val(data.hostname || "").prop("disabled", false);
+            $("#vehiculo_procesador").val(data.procesador || "").prop("disabled", false);
+            $("#vehiculo_sisopera").val(data.sisopera || "").prop("disabled", false);
+            $("#vehiculo_ram").val(data.ram || "").prop("disabled", false);
+            $("#vehiculo_disco").val(data.disco || "").prop("disabled", false);
+
+            // Cargar fotos del activo
             cargarFotos(data.id);
 
             $("#myModalLabel").html("Editar Activo");
@@ -377,7 +391,7 @@ $('#mnt_modal').on('shown.bs.modal', function () {
  * Evento para mostrar el modal cuando se hace clic en el botón "Nuevo Registro".
  * Se limpia el formulario y se prepara el modal para la creación de un nuevo vehículo.
  */
-$("#btnnuevo").on("click", function() {
+$("#btnnuevo").on("click", function () {
     $("#vehiculo_id").val('');   // Limpiar el campo de ID del vehículo
     $("#mnt_form")[0].reset();   // Resetea el formulario
     $("#myModalLabel").html('Nuevo Registro'); // Cambia el título del modal
