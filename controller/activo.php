@@ -15,34 +15,34 @@ $proximos_mantenimientos = $activo->get_proximos_mantenimientos();
 switch ($_GET["op"]) {
 
         // Caso para listar todos los vehículos
-        case "listar":
-            $datos = $activo->get_activos();
-            if ($datos === false) {
-                echo json_encode(["error" => "Error al obtener los activos"]);
-                exit;
-            }
-        
-            $data = array();
-            foreach ($datos as $row) {
-                $sub_array = array();
-                $sub_array["id"] = $row["id"];
-                $sub_array["sbn"] = $row["sbn"];
-                $sub_array["serie"] = $row["serie"];
-                $sub_array["tipo"] = $row["tipo"];
-                $sub_array["marca"] = $row["marca"];
-                $sub_array["modelo"] = $row["modelo"];
-                $sub_array["ubicacion"] = $row["ubicacion"];
-                $sub_array["responsable"] = $row["responsable"];
-        
-                // 🔹 Datos para el modal (NO se mostrarán en DataTable)
-                $sub_array["hostname"] = $row["hostname"];
-                $sub_array["procesador"] = $row["procesador"];
-                $sub_array["sisopera"] = $row["sisopera"];
-                $sub_array["ram"] = $row["ram"];
-                $sub_array["disco"] = $row["disco"];
-        
-                // 🔹 Botones de acción
-                $sub_array["acciones"] = '
+    case "listar":
+        $datos = $activo->get_activos();
+        if ($datos === false) {
+            echo json_encode(["error" => "Error al obtener los activos"]);
+            exit;
+        }
+
+        $data = array();
+        foreach ($datos as $row) {
+            $sub_array = array();
+            $sub_array["id"] = $row["id"];
+            $sub_array["sbn"] = $row["sbn"];
+            $sub_array["serie"] = $row["serie"];
+            $sub_array["tipo"] = $row["tipo"];
+            $sub_array["marca"] = $row["marca"];
+            $sub_array["modelo"] = $row["modelo"];
+            $sub_array["ubicacion"] = $row["ubicacion"];
+            $sub_array["responsable"] = $row["responsable"];
+
+            // 🔹 Datos para el modal (NO se mostrarán en DataTable)
+            $sub_array["hostname"] = $row["hostname"];
+            $sub_array["procesador"] = $row["procesador"];
+            $sub_array["sisopera"] = $row["sisopera"];
+            $sub_array["ram"] = $row["ram"];
+            $sub_array["disco"] = $row["disco"];
+
+            // 🔹 Botones de acción
+            $sub_array["acciones"] = '
                     <button type="button" class="btn btn-soft-info waves-effect waves-light btn-sm" onClick="previsualizar(' . $row["id"] . ')">
                         <i class="bx bx-show-alt font-size-16 align-middle"></i>
                     </button>
@@ -52,21 +52,21 @@ switch ($_GET["op"]) {
                     <button type="button" class="btn btn-soft-danger waves-effect waves-light btn-sm" onClick="eliminar(' . $row["id"] . ')">
                         <i class="bx bx-trash-alt font-size-16 align-middle"></i>
                     </button>';
-        
-                $data[] = $sub_array;
-            }
-        
-            $results = array(
-                "sEcho" => 1,
-                "iTotalRecords" => count($data),
-                "iTotalDisplayRecords" => count($data),
-                "aaData" => $data
-            );
-        
-            header('Content-Type: application/json');
-            echo json_encode($results);
-            break;
-        
+
+            $data[] = $sub_array;
+        }
+
+        $results = array(
+            "sEcho" => 1,
+            "iTotalRecords" => count($data),
+            "iTotalDisplayRecords" => count($data),
+            "aaData" => $data
+        );
+
+        header('Content-Type: application/json');
+        echo json_encode($results);
+        break;
+
         // Caso para insertar un nuevo vehículo
     case "insertar":
         // Capturar los datos enviados desde el formulario
@@ -125,15 +125,16 @@ switch ($_GET["op"]) {
     case "mostrar":
         if (isset($_POST["vehiculo_id"])) {
             $datos = $activo->get_vehiculo_por_id($_POST["vehiculo_id"]);
-            if ($datos) {
-                echo json_encode($datos);
-            } else {
-                echo json_encode(["error" => "No se encontraron datos para el ID del vehículo."]);
-            }
+
+            // 🔹 Imprimir el JSON antes de enviarlo
+            header('Content-Type: application/json');
+            echo json_encode($datos, JSON_PRETTY_PRINT);
+            exit;  // Evitar que haya más contenido en la respuesta
         } else {
             echo json_encode(["error" => "No se proporcionó un ID de vehículo válido."]);
         }
         break;
+
 
     case "eliminar":
         if (isset($_POST["vehiculo_id"])) {

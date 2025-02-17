@@ -42,7 +42,7 @@ class Activo extends Conectar
     public function get_total_activos()
     {
         $conectar = parent::conexion();
-        $sql = "SELECT COUNT(*) as total FROM activos"; // Cambia 'activos' por el nombre correcto de tu tabla
+        $sql = "SELECT COUNT(*) as total FROM activos WHERE estado = '1' "; // Cambia 'activos' por el nombre correcto de tu tabla
         $sql = $conectar->prepare($sql);
         $sql->execute();
         $result = $sql->fetch(PDO::FETCH_ASSOC);
@@ -115,17 +115,21 @@ class Activo extends Conectar
     {
         $conectar = parent::conexion();
         parent::set_names();
-
+    
         $sql = "SELECT v.id, v.sbn, v.serie, v.tipo, v.marca, v.modelo, v.ubicacion, 
-                       u.usu_nomape AS responsable, v.fecha_registro, v.condicion, v.estado
+                       u.usu_nomape AS responsable, v.fecha_registro, v.condicion, v.estado,
+                       d.hostname, d.procesador, d.sisopera, d.ram, d.disco
                 FROM activos v
                 LEFT JOIN tm_usuario u ON v.responsable_id = u.usu_id
+                LEFT JOIN detactivo d ON v.id = d.activo_id  -- 🔹 Aquí unimos con detactivos
                 WHERE v.id = ?";
+        
         $stmt = $conectar->prepare($sql);
         $stmt->execute([$id]);
-
+    
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    
 
     public function get_usuarios()
     {

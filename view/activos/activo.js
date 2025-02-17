@@ -156,15 +156,12 @@ function eliminar(id) {
  * @param {int} id - ID del vehículo a previsualizar.
  */
 function previsualizar(id) {
-    // Hacer la petición AJAX para obtener los datos del vehículo
     $.post("../../controller/activo.php?op=mostrar", { vehiculo_id: id }, function(data) {
-        data = JSON.parse(data); // Convertir los datos recibidos a formato JSON
-        
-        // Verificar si se recibieron los datos correctamente
+        console.log("🔹 Datos recibidos en previsualizar:", data); // Verifica en consola
+
         if (data.error) {
             Swal.fire('Error', data.error, 'error');
         } else {
-            // Llenar los campos del formulario con los datos recibidos
             $("#vehiculo_id").val(data.id);
             $("#vehiculo_sbn").val(data.sbn).prop("disabled", true);
             $("#vehiculo_serie").val(data.serie).prop("disabled", true);
@@ -174,22 +171,27 @@ function previsualizar(id) {
             $("#vehiculo_ubicacion").val(data.ubicacion).prop("disabled", true);
             $("#vehiculo_responsable").val(data.responsable).prop("disabled", true);
             $("#vehiculo_fecha_registro").val(data.fecha_registro).prop("disabled", true);
-            $("#vehiculo_ultimo_mantenimiento").val(data.ultimo_mantenimiento).prop("disabled", true);
-            $("#vehiculo_proximo_mantenimiento").val(data.fecha_proximo_mantenimiento).prop("disabled", true);  // Cambiado a `fecha_proximo_mantenimiento`
             $("#vehiculo_condicion").val(data.condicion).prop("disabled", true);
             $("#vehiculo_estado").val(data.estado).prop("disabled", true);
 
-            // Cambiar el título del modal a "Previsualización"
+            // 🔹 Ahora se llenan los nuevos campos correctamente
+            $("#vehiculo_hostname").val(data.hostname || "N/A").prop("disabled", true);
+            $("#vehiculo_procesador").val(data.procesador || "N/A").prop("disabled", true);
+            $("#vehiculo_sisopera").val(data.sisopera || "N/A").prop("disabled", true);
+            $("#vehiculo_ram").val(data.ram || "N/A").prop("disabled", true);
+            $("#vehiculo_disco").val(data.disco || "N/A").prop("disabled", true);
+
             $("#myModalLabel").html("Previsualización del Activo");
-
-            // Deshabilitar el botón de guardar
-            $(".modal-footer .btn-primary").hide();  // Ocultar el botón de guardar
-
-            // Mostrar el modal con los datos cargados
+            $(".modal-footer .btn-primary").hide();
             $("#mnt_modal").modal("show");
         }
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        console.error("🔴 Error en la solicitud AJAX:", textStatus, errorThrown);
+        Swal.fire('Error', 'No se pudo obtener la información del activo', 'error');
     });
 }
+
+
 
 /**
  * Restaurar el formulario cuando se cierra el modal.
