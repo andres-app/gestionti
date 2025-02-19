@@ -166,7 +166,7 @@ function eliminar(id) {
  */
 function previsualizar(id) {
     $.post("../../controller/activo.php?op=mostrar", { vehiculo_id: id }, function (data) {
-        console.log("🔹 Datos recibidos en previsualizar:", data); // Verifica en consola
+        console.log("🔹 Datos recibidos en previsualizar:", data); // Depuración en consola
 
         if (data.error) {
             Swal.fire('Error', data.error, 'error');
@@ -178,25 +178,22 @@ function previsualizar(id) {
             $("#vehiculo_marca").val(data.marca).prop("disabled", true);
             $("#vehiculo_modelo").val(data.modelo).prop("disabled", true);
             $("#vehiculo_ubicacion").val(data.ubicacion).prop("disabled", true);
-            $("#vehiculo_responsable").val(data.responsable).prop("disabled", true);
+            $("#vehiculo_responsable_id").val(data.responsable).prop("disabled", true);
             $("#vehiculo_fecha_registro").val(data.fecha_registro).prop("disabled", true);
             $("#vehiculo_condicion").val(data.condicion).prop("disabled", true);
             $("#vehiculo_estado").val(data.estado).prop("disabled", true);
 
-            // 🔹 Ahora se llenan los nuevos campos correctamente
-            $("#vehiculo_hostname").val(data.hostname || "N/A").prop("disabled", true);
-            $("#vehiculo_procesador").val(data.procesador || "N/A").prop("disabled", true);
-            $("#vehiculo_sisopera").val(data.sisopera || "N/A").prop("disabled", true);
-            $("#vehiculo_ram").val(data.ram || "N/A").prop("disabled", true);
-            $("#vehiculo_disco").val(data.disco || "N/A").prop("disabled", true);
+            // 🔹 Aplicar visibilidad a los campos vacíos
+            manejarVisibilidadCampo("#vehiculo_hostname", data.hostname);
+            manejarVisibilidadCampo("#vehiculo_procesador", data.procesador);
+            manejarVisibilidadCampo("#vehiculo_sisopera", data.sisopera);
+            manejarVisibilidadCampo("#vehiculo_ram", data.ram);
+            manejarVisibilidadCampo("#vehiculo_disco", data.disco);
 
             $("#myModalLabel").html("Previsualización del Activo");
             $(".modal-footer .btn-primary").hide();
             $("#mnt_modal").modal("show");
         }
-    }).fail(function (jqXHR, textStatus, errorThrown) {
-        console.error("🔴 Error en la solicitud AJAX:", textStatus, errorThrown);
-        Swal.fire('Error', 'No se pudo obtener la información del activo', 'error');
     });
 }
 
@@ -341,14 +338,27 @@ $('#mnt_modal').on('shown.bs.modal', function () {
     }
 });
 
+function manejarVisibilidadCampo(selector, valor) {
+    let parentCol = $(selector).closest(".col-md-6");
+
+    if (!valor || valor === "N/A" || valor.trim() === "" || valor === null) {
+        parentCol.hide();  // Oculta solo la columna si el valor es inválido
+    } else {
+        $(selector).val(valor);
+        parentCol.show();  // Muestra la columna si el campo tiene un valor válido
+    }
+}
+
 
 /**
  * Modificación en la función editar para que también cargue las fotos
  */
 function editar(id) {
     $.post("../../controller/activo.php?op=mostrar", { vehiculo_id: id }, function (data) {
+        console.log("📌 Editando activo con ID:", id);
+
         if (data.error) {
-            Swal.fire('Error', data.error, 'error');
+            Swal.fire("Error", data.error, "error");
         } else {
             $("#vehiculo_id").val(data.id);
             $("#vehiculo_sbn").val(data.sbn);
@@ -362,21 +372,20 @@ function editar(id) {
             $("#vehiculo_condicion").val(data.condicion);
             $("#vehiculo_estado").val(data.estado);
 
-            // 🔹 Permitir que estos campos sean editables
-            $("#vehiculo_hostname").val(data.hostname || "").prop("disabled", false);
-            $("#vehiculo_procesador").val(data.procesador || "").prop("disabled", false);
-            $("#vehiculo_sisopera").val(data.sisopera || "").prop("disabled", false);
-            $("#vehiculo_ram").val(data.ram || "").prop("disabled", false);
-            $("#vehiculo_disco").val(data.disco || "").prop("disabled", false);
-
-            // Cargar fotos del activo
-            cargarFotos(data.id);
+            // 🔹 Manejar visibilidad de los campos adicionales
+            manejarVisibilidadCampo("#vehiculo_hostname", data.hostname);
+            manejarVisibilidadCampo("#vehiculo_procesador", data.procesador);
+            manejarVisibilidadCampo("#vehiculo_sisopera", data.sisopera);
+            manejarVisibilidadCampo("#vehiculo_ram", data.ram);
+            manejarVisibilidadCampo("#vehiculo_disco", data.disco);
 
             $("#myModalLabel").html("Editar Activo");
+            $(".modal-footer .btn-primary").show();
             $("#mnt_modal").modal("show");
         }
     });
 }
+
 
 // Cargar fotos cuando se abre el modal
 $('#mnt_modal').on('shown.bs.modal', function () {

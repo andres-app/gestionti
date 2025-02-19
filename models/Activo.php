@@ -117,18 +117,19 @@ class Activo extends Conectar
         parent::set_names();
     
         $sql = "SELECT v.id, v.sbn, v.serie, v.tipo, v.marca, v.modelo, v.ubicacion, 
-                       u.usu_nomape AS responsable, v.fecha_registro, v.condicion, v.estado,
+                       u.usu_nomape AS responsable,  -- 🔹 Esto obtiene el nombre del responsable
+                       v.fecha_registro, v.condicion, v.estado,
                        d.hostname, d.procesador, d.sisopera, d.ram, d.disco
                 FROM activos v
-                LEFT JOIN tm_usuario u ON v.responsable_id = u.usu_id
-                LEFT JOIN detactivo d ON v.id = d.activo_id  -- 🔹 Aquí unimos con detactivos
+                LEFT JOIN tm_usuario u ON v.responsable_id = u.usu_id  -- 🔹 Correcta relación con el usuario
+                LEFT JOIN detactivo d ON v.id = d.activo_id  -- 🔹 Relación con tabla de detalles
                 WHERE v.id = ?";
-        
+    
         $stmt = $conectar->prepare($sql);
         $stmt->execute([$id]);
     
         return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
+    }    
     
 
     public function get_usuarios()

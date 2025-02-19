@@ -83,7 +83,7 @@
                             </select>
                         </div>
                     </div>
-
+                    <!-- 🔹 Hostname y Procesador en una fila -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="vehiculo_hostname" class="form-label">Hostname</label>
@@ -95,6 +95,8 @@
                         </div>
                     </div>
 
+
+                    <!-- 🔹 Sistema Operativo y RAM en otra fila -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="vehiculo_sisopera" class="form-label">Sistema Operativo</label>
@@ -104,11 +106,17 @@
                             <label for="vehiculo_ram" class="form-label">RAM</label>
                             <input class="form-control" type="text" name="vehiculo_ram" id="vehiculo_ram">
                         </div>
+                    </div>
+
+                    <!-- 🔹 Disco en una fila separada -->
+                    <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="vehiculo_disco" class="form-label">Disco</label>
+                            <label for="vehiculo_disco" class="form-label">Discoss</label>
                             <input class="form-control" type="text" name="vehiculo_disco" id="vehiculo_disco">
                         </div>
                     </div>
+
+
 
                     <!-- Galería de imágenes en Carrusel -->
                     <div class="row mt-4">
