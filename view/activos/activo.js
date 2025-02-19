@@ -166,7 +166,7 @@ function eliminar(id) {
  */
 function previsualizar(id) {
     $.post("../../controller/activo.php?op=mostrar", { vehiculo_id: id }, function (data) {
-        console.log("🔹 Datos recibidos en previsualizar:", data); // Depuración en consola
+        console.log("🔹 Datos recibidos en previsualizar:", data); // Verifica en consola
 
         if (data.error) {
             Swal.fire('Error', data.error, 'error');
@@ -178,7 +178,6 @@ function previsualizar(id) {
             $("#vehiculo_marca").val(data.marca).prop("disabled", true);
             $("#vehiculo_modelo").val(data.modelo).prop("disabled", true);
             $("#vehiculo_ubicacion").val(data.ubicacion).prop("disabled", true);
-            $("#vehiculo_responsable_id").val(data.responsable).prop("disabled", true);
             $("#vehiculo_fecha_registro").val(data.fecha_registro).prop("disabled", true);
             $("#vehiculo_condicion").val(data.condicion).prop("disabled", true);
             $("#vehiculo_estado").val(data.estado).prop("disabled", true);
@@ -190,9 +189,15 @@ function previsualizar(id) {
             manejarVisibilidadCampo("#vehiculo_ram", data.ram);
             manejarVisibilidadCampo("#vehiculo_disco", data.disco);
 
+            // ✅ Agregamos el responsable sin que sea sobrescrito después
+            $("#vehiculo_responsable_id").html(`<option selected>${data.responsable}</option>`).prop("disabled", true);
+
             $("#myModalLabel").html("Previsualización del Activo");
             $(".modal-footer .btn-primary").hide();
             $("#mnt_modal").modal("show");
+
+            // ❌ Evitar que cargarResponsables() sobrescriba el select en previsualización
+            $("#mnt_modal").off("shown.bs.modal");
         }
     });
 }
