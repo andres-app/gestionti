@@ -166,7 +166,7 @@ function eliminar(id) {
  */
 function previsualizar(id) {
     $.post("../../controller/activo.php?op=mostrar", { vehiculo_id: id }, function (data) {
-        console.log("🔹 Datos recibidos en previsualizar:", data); // Verifica en consola
+        console.log("🔹 Datos recibidos en previsualizar:", data);
 
         if (data.error) {
             Swal.fire('Error', data.error, 'error');
@@ -181,7 +181,6 @@ function previsualizar(id) {
             $("#vehiculo_fecha_registro").val(data.fecha_registro).prop("disabled", true);
             $("#vehiculo_condicion").val(data.condicion).prop("disabled", true);
             $("#vehiculo_estado").val(data.estado).prop("disabled", true);
-
             // 🔹 Aplicar visibilidad a los campos vacíos
             manejarVisibilidadCampo("#vehiculo_hostname", data.hostname);
             manejarVisibilidadCampo("#vehiculo_procesador", data.procesador);
@@ -190,17 +189,22 @@ function previsualizar(id) {
             manejarVisibilidadCampo("#vehiculo_disco", data.disco);
 
             // ✅ Agregamos el responsable sin que sea sobrescrito después
+            // ✅ Aseguramos que el responsable se mantenga sin ser sobrescrito
             $("#vehiculo_responsable_id").html(`<option selected>${data.responsable}</option>`).prop("disabled", true);
 
             $("#myModalLabel").html("Previsualización del Activo");
             $(".modal-footer .btn-primary").hide();
             $("#mnt_modal").modal("show");
 
-            // ❌ Evitar que cargarResponsables() sobrescriba el select en previsualización
+            // ✅ Cargar fotos correctamente
+            cargarFotos(data.id); // 🔥 IMPORTANTE: Asegurar que se ejecuta aquí
+
+            // Evitar que el modal recargue el select
             $("#mnt_modal").off("shown.bs.modal");
         }
     });
 }
+
 
 
 
