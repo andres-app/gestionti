@@ -351,9 +351,9 @@ function manejarVisibilidadCampo(selector, valor) {
     let parentCol = $(selector).closest(".col-md-6");
 
     if (!valor || valor === "N/A" || valor.trim() === "" || valor === null) {
-        parentCol.hide();  // Oculta solo la columna si el valor es inválido
+        parentCol.hide();  // Oculta la columna si el valor es inválido
     } else {
-        $(selector).val(valor);
+        $(selector).val(valor).prop("disabled", true); // Asigna valor y deshabilita el campo
         parentCol.show();  // Muestra la columna si el campo tiene un valor válido
     }
 }
