@@ -129,7 +129,7 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
     <?php require_once("../html/sidebar.php") ?>
     <div class="rightbar-overlay"></div>
     <?php require_once("../html/js.php") ?>
-    <script type="text/javascript" src="reportes.js"></script>
+    <script type="text/javascript" src="reporte.js"></script>
 
 </body>
 </html>

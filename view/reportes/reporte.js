@@ -9,7 +9,8 @@ $(document).ready(function () {
             url: "../../controller/reporte.php?op=listar",
             type: "GET",
             dataType: "json",
-            error: function (e) {
+            error: function (xhr, status, error) {
+                console.log("❌ Error en AJAX:", xhr.responseText);
                 Swal.fire('Error', 'No se pudo cargar los reportes', 'error');
             }
         },
@@ -24,24 +25,35 @@ $(document).ready(function () {
             { "data": "acciones", "orderable": false }
         ]
     });
+    
+    // Corrección en exportación de PDF y Excel
+    $("#btn_exportar_pdf").on("click", function () {
+        window.location.href = "../../controller/reporte.php?op=exportar_pdf"; 
+    });
+    
+    $("#btn_exportar_excel").on("click", function () {
+        window.location.href = "../../controller/reporte.php?op=exportar_excel"; 
+    });
+    
+    
 
-    // Generar reporte
+    // Generar reporte con filtros
     $("#btn_generar_reporte").on("click", function () {
         var usuario = $("#reporte_usuario").val();
         var bien = $("#reporte_bien").val();
         var fecha = $("#reporte_fecha").val();
 
-        tabla.ajax.url(`../../controller/reporte.php?op=filtrar&usuario=${usuario}&bien=${bien}&fecha=${fecha}`).load();
+        tabla.ajax.url(`../../controller/reporte.php?op=listar&usuario_id=${usuario}&bien_id=${bien}&fecha=${fecha}`).load();
     });
 
     // Exportar a PDF
     $("#btn_exportar_pdf").on("click", function () {
-        window.location.href = `../../controller/reporte.php?op=exportar_pdf`;
+        window.open(`../../controller/reporte.php?op=exportar_pdf&usuario_id=${$("#reporte_usuario").val()}&bien_id=${$("#reporte_bien").val()}&fecha=${$("#reporte_fecha").val()}`, "_blank");
     });
 
     // Exportar a Excel
     $("#btn_exportar_excel").on("click", function () {
-        window.location.href = `../../controller/reporte.php?op=exportar_excel`;
+        window.open(`../../controller/reporte.php?op=exportar_excel&usuario_id=${$("#reporte_usuario").val()}&bien_id=${$("#reporte_bien").val()}&fecha=${$("#reporte_fecha").val()}`, "_blank");
     });
 
     function cargarUsuarios() {
