@@ -105,7 +105,7 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                                             <tr>
                                                 <th>ID</th>
                                                 <th>Usuario</th>
-                                                <th>Bien</th>
+                                                <th>Activo</th>
                                                 <th>Fecha</th>
                                                 <th>Acciones</th>
                                             </tr>

@@ -1,7 +1,7 @@
 $(document).ready(function () {
-    // Cargar lista de usuarios y bienes al iniciar
+    // Cargar lista de usuarios y activos al iniciar
     cargarUsuarios();
-    cargarBienes();
+    cargarActivos();
 
     // Configuración de DataTable
     var tabla = $("#listado_reportes").DataTable({
@@ -20,48 +20,37 @@ $(document).ready(function () {
         "columns": [
             { "data": "id" },
             { "data": "usuario" },
-            { "data": "bien" },
+            { "data": "activo" },
             { "data": "fecha" },
-            { "data": "acciones", "orderable": false }
+            { 
+                "data": "acciones",
+                "orderable": false,
+                "searchable": false,
+                "defaultContent": "" // Evita errores si "acciones" está vacío
+            }
         ]
     });
-    
-    // Corrección en exportación de PDF y Excel
-    $("#btn_exportar_pdf").on("click", function () {
-        window.location.href = "../../controller/reporte.php?op=exportar_pdf"; 
-    });
-    
-    $("#btn_exportar_excel").on("click", function () {
-        window.location.href = "../../controller/reporte.php?op=exportar_excel"; 
-    });
-    
     
 
     // Generar reporte con filtros
     $("#btn_generar_reporte").on("click", function () {
         var usuario = $("#reporte_usuario").val();
-        var bien = $("#reporte_bien").val();
+        var activo = $("#reporte_activo").val();
         var fecha = $("#reporte_fecha").val();
 
-        tabla.ajax.url(`../../controller/reporte.php?op=listar&usuario_id=${usuario}&bien_id=${bien}&fecha=${fecha}`).load();
-    });
-
-    // Exportar a PDF
-    $("#btn_exportar_pdf").on("click", function () {
-        window.open(`../../controller/reporte.php?op=exportar_pdf&usuario_id=${$("#reporte_usuario").val()}&bien_id=${$("#reporte_bien").val()}&fecha=${$("#reporte_fecha").val()}`, "_blank");
-    });
-
-    // Exportar a Excel
-    $("#btn_exportar_excel").on("click", function () {
-        window.open(`../../controller/reporte.php?op=exportar_excel&usuario_id=${$("#reporte_usuario").val()}&bien_id=${$("#reporte_bien").val()}&fecha=${$("#reporte_fecha").val()}`, "_blank");
+        tabla.ajax.url(`../../controller/reporte.php?op=listar&usuario=${usuario}&activo=${activo}&fecha=${fecha}`).load();
     });
 
     function cargarUsuarios() {
         $.ajax({
-            url: '../../controller/reporte.php?op=listar_usuarios',
+            url: '../../controller/reporte.php?op=obtener_usuarios',
             type: 'GET',
             dataType: 'json',
             success: function (response) {
+                if (!Array.isArray(response)) {
+                    console.error("❌ Error: Respuesta inválida en usuarios", response);
+                    return;
+                }
                 let options = '<option value="">Seleccione un usuario</option>';
                 response.forEach(function (usuario) {
                     options += `<option value="${usuario.id}">${usuario.nombre}</option>`;
@@ -71,17 +60,21 @@ $(document).ready(function () {
         });
     }
 
-    function cargarBienes() {
+    function cargarActivos() {
         $.ajax({
-            url: '../../controller/reporte.php?op=listar_bienes',
+            url: '../../controller/reporte.php?op=obtener_activos',
             type: 'GET',
             dataType: 'json',
             success: function (response) {
-                let options = '<option value="">Seleccione un bien</option>';
-                response.forEach(function (bien) {
-                    options += `<option value="${bien.id}">${bien.nombre}</option>`;
+                if (!Array.isArray(response)) {
+                    console.error("❌ Error: Respuesta inválida en activos", response);
+                    return;
+                }
+                let options = '<option value="">Seleccione un activo</option>';
+                response.forEach(function (activo) {
+                    options += `<option value="${activo.id}">${activo.sbn}</option>`;
                 });
-                $('#reporte_bien').html(options);
+                $('#reporte_activo').html(options);
             }
         });
     }
