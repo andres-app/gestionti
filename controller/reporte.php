@@ -41,12 +41,28 @@ switch ($_GET["op"]) {
         exit;
     
 
-    case "obtener_usuarios":
-        require_once("../models/Usuario.php");
-        $usuario = new Usuario();
-        $datos = $usuario->get_usuarios();
-        echo json_encode($datos);
-        break;
+        case "obtener_usuarios":
+            require_once("../models/Usuario.php");
+            $usuario = new Usuario();
+            $datos = $usuario->get_usuarios();
+        
+            // 🔹 Depuración: Ver datos antes de enviarlos
+            error_log("📌 Usuarios obtenidos: " . json_encode($datos));
+        
+            // Verificar que los datos tengan la estructura correcta
+            $usuarios = [];
+            foreach ($datos as $row) {
+                if (isset($row["usu_id"]) && isset($row["usu_nomape"])) {
+                    $usuarios[] = [
+                        "usu_id" => $row["usu_id"],
+                        "usu_nomape" => $row["usu_nomape"]
+                    ];
+                }
+            }
+        
+            echo json_encode($usuarios);
+            exit;
+        
 
     case "obtener_activos":
         require_once("../models/Activo.php");

@@ -33,4 +33,5 @@ class Reporte extends Conectar {
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
 }   
