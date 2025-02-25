@@ -4,34 +4,38 @@ class Reporte extends Conectar {
 
     public function get_reportes($usuario_id = null, $activo_id = null, $fecha = null) {
         $conectar = parent::conexion();
-        
-        // Consulta corregida SIN tabla reportes
-        $sql = "SELECT a.id, u.usu_nomape AS usuario, a.sbn AS activo, a.fecha_registro AS fecha 
-                FROM activos a
-                LEFT JOIN tm_usuario u ON a.responsable_id = u.usu_id
-                WHERE 1=1"; 
-
+        $sql = "SELECT r.id, u.usu_nomape AS usuario, a.sbn AS activo, r.fecha_registro AS fecha 
+                FROM activos r
+                LEFT JOIN tm_usuario u ON r.responsable_id = u.usu_id
+                LEFT JOIN activos a ON r.id = a.id
+                WHERE 1=1";
+    
+        $params = [];
+    
         if (!empty($usuario_id)) {
-            $sql .= " AND a.responsable_id = ?";
+            $sql .= " AND r.responsable_id = ?";
+            $params[] = $usuario_id;
         }
         if (!empty($activo_id)) {
-            $sql .= " AND a.id = ?";
+            $sql .= " AND r.id = ?";
+            $params[] = $activo_id;
         }
         if (!empty($fecha)) {
-            $sql .= " AND DATE(a.fecha_registro) = ?";
+            $sql .= " AND DATE(r.fecha_registro) = ?";
+            $params[] = $fecha;
         }
-
-        error_log("SQL Ejecutado: " . $sql); // 🛠 Para depuración
-
+    
+        error_log("📌 SQL Ejecutado: " . $sql);
+    
         $stmt = $conectar->prepare($sql);
-        $params = [];
-
-        if (!empty($usuario_id)) $params[] = $usuario_id;
-        if (!empty($activo_id)) $params[] = $activo_id;
-        if (!empty($fecha)) $params[] = $fecha;
-
         $stmt->execute($params);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        if (!$result) {
+            error_log("⚠️ No se encontraron reportes en la BD con los filtros aplicados.");
+        }
+    
+        return $result;
     }
     
 }   
