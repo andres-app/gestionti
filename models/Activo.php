@@ -249,4 +249,16 @@ class Activo extends Conectar
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function get_tipos_activos() {
+        $conectar = parent::conexion();
+        parent::set_names();
+    
+        $sql = "SELECT DISTINCT tipo FROM activos WHERE tipo IS NOT NULL AND tipo != ''";
+        $stmt = $conectar->prepare($sql);
+        $stmt->execute();
+    
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
 }

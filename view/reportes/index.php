@@ -64,9 +64,9 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                                                 </div>
 
                                                 <div class="col-md-4">
-                                                    <label class="form-label">Bien</label>
-                                                    <select class="form-control" id="reporte_activo">
-                                                        <option value="">Seleccione un activo</option>
+                                                    <label class="form-label">Tipo de Activo</label>
+                                                    <select class="form-control" id="reporte_tipo_activo">
+                                                        <option value="">Seleccione un tipo de activo</option>
                                                     </select>
 
                                                 </div>

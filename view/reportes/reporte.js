@@ -2,6 +2,7 @@ $(document).ready(function () {
     // Cargar lista de usuarios y activos al iniciar
     cargarUsuarios();
     cargarActivos();
+    cargarTiposActivos();
 
     // Inicializar DataTable
     var tabla = $("#listado_reportes").DataTable({
@@ -82,4 +83,34 @@ $(document).ready(function () {
             }
         });
     }
+
+    function cargarTiposActivos() {
+        $.ajax({
+            url: '../../controller/reporte.php?op=obtener_tipos_activos',
+            type: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                console.log("📌 Tipos de activos recibidos:", response); // Para verificar en consola
+    
+                // Verifica si la respuesta es un array
+                if (!Array.isArray(response)) {
+                    console.error("❌ Error: Respuesta inválida en tipos de activos", response);
+                    return;
+                }
+    
+                let options = '<option value="">Seleccione un tipo de activo</option>';
+                response.forEach(function (tipo) {
+                    if (tipo.tipo) {
+                        options += `<option value="${tipo.tipo}">${tipo.tipo}</option>`;
+                    }
+                });
+    
+                $('#reporte_tipo_activo').html(options);
+            },
+            error: function (xhr, status, error) {
+                console.log("❌ Error al cargar los tipos de activos:", xhr.responseText);
+            }
+        });
+    }
+    
 });

@@ -75,14 +75,16 @@ switch ($_GET["op"]) {
         exit;
 
 
-    case "obtener_activos":
-        require_once("../models/Activo.php");
-        $activo = new Activo();
-        $datos = $activo->get_activos();
-        echo json_encode($datos);
-        break;
-
-    default:
-        echo json_encode(["error" => "Operación no válida."]);
-        break;
+        case "obtener_tipos_activos":
+            require_once("../models/Activo.php");
+            $activo = new Activo();
+            $datos = $activo->get_tipos_activos();
+        
+            if (!$datos) {
+                echo json_encode(["error" => "No se encontraron tipos de activos"]);
+            } else {
+                echo json_encode($datos);
+            }
+            break;
+        
 }
