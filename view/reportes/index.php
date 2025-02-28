@@ -107,15 +107,25 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                                                 <tr>
                                                     <th>ID</th>
                                                     <th>Usuario</th>
-                                                    <th>Activo</th>
-                                                    <th>Fecha</th>
-                                                    <th>Acciones</th>
+                                                    <th>SBN</th>
+                                                    <th>Serie</th>
+                                                    <th>Tipo</th>
+                                                    <th>Marca</th>
+                                                    <th>Modelo</th>
+                                                    <th>Ubicación</th>
+                                                    <th>Hostname</th>
+                                                    <th>Procesador:</th>
+                                                    <th>Sis. Ope:</th>
+                                                    <th>RAM:</th>
+                                                    <th>Disco:</th>
+                                                    <th>Fecha:</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <!-- Se llenará dinámicamente -->
                                             </tbody>
                                         </table>
+
                                     </div>
                                 </div>
                             </div>

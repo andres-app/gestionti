@@ -1,17 +1,14 @@
 $(document).ready(function () {
-    // Cargar lista de usuarios y activos al iniciar
     cargarUsuarios();
-    cargarActivos();
     cargarTiposActivos();
 
-    // Inicializar DataTable
     var tabla = $("#listado_reportes").DataTable({
         "ajax": {
             url: "../../controller/reporte.php?op=listar",
             type: "GET",
             data: function (d) {
                 d.usuario = $("#reporte_usuario").val();
-                d.activo = $("#reporte_activo").val();
+                d.tipo_activo = $("#reporte_tipo_activo").val();
                 d.fecha = $("#reporte_fecha").val();
             },
             dataType: "json",
@@ -21,33 +18,36 @@ $(document).ready(function () {
             }
         },
         "processing": true,
-
+        "serverSide": false,
         "responsive": true,
         "autoWidth": false,
         "order": [[0, "asc"]],
         "columns": [
             { "data": "id" },
             { "data": "usuario" },
-            { "data": "activo" },
-            { "data": "fecha" },
-            { 
-                "data": "acciones",
-                "orderable": false,
-                "searchable": false,
-                "defaultContent": "" // Evita errores si "acciones" está vacío
-            }
+            { "data": "sbn" },
+            { "data": "serie" },
+            { "data": "tipo_activo" },
+            { "data": "marca" },
+            { "data": "modelo" },
+            { "data": "ubicacion" },
+            { "data": "hostname" },
+            { "data": "procesador" },
+            { "data": "sisopera" },
+            { "data": "ram" },
+            { "data": "disco" },
+            { "data": "fecha" }
         ]
     });
 
-    // Aplicar filtros automáticamente cuando el usuario cambia algún select o fecha
-    $("#reporte_usuario, #reporte_activo, #reporte_fecha").on("change", function () {
+    $("#reporte_usuario, #reporte_tipo_activo, #reporte_fecha").on("change", function () {
         let usuario = $("#reporte_usuario").val() || "";
-        let activo = $("#reporte_activo").val() || "";
+        let tipo_activo = $("#reporte_tipo_activo").val() || "";
         let fecha = $("#reporte_fecha").val() || "";
 
-        console.log(`📌 Filtrando - Usuario: ${usuario}, Activo: ${activo}, Fecha: ${fecha}`);
+        console.log(`📌 Filtrando - Usuario: ${usuario}, Tipo de Activo: ${tipo_activo}, Fecha: ${fecha}`);
 
-        tabla.ajax.reload(); // Recarga los datos aplicando los filtros
+        tabla.ajax.reload();
     });
 
     function cargarUsuarios() {
@@ -67,44 +67,19 @@ $(document).ready(function () {
         });
     }
 
-    function cargarActivos() {
-        $.ajax({
-            url: '../../controller/reporte.php?op=obtener_activos',
-            type: 'GET',
-            dataType: 'json',
-            success: function (response) {
-                let options = '<option value="">Seleccione un activo</option>';
-                response.forEach(function (activo) {
-                    if (activo.id && activo.sbn) {
-                        options += `<option value="${activo.id}">${activo.sbn}</option>`;
-                    }
-                });
-                $('#reporte_activo').html(options);
-            }
-        });
-    }
-
     function cargarTiposActivos() {
         $.ajax({
             url: '../../controller/reporte.php?op=obtener_tipos_activos',
             type: 'GET',
             dataType: 'json',
             success: function (response) {
-                console.log("📌 Tipos de activos recibidos:", response); // Para verificar en consola
-    
-                // Verifica si la respuesta es un array
-                if (!Array.isArray(response)) {
-                    console.error("❌ Error: Respuesta inválida en tipos de activos", response);
-                    return;
-                }
-    
+                console.log("📌 Tipos de activos recibidos:", response);
                 let options = '<option value="">Seleccione un tipo de activo</option>';
                 response.forEach(function (tipo) {
                     if (tipo.tipo) {
                         options += `<option value="${tipo.tipo}">${tipo.tipo}</option>`;
                     }
                 });
-    
                 $('#reporte_tipo_activo').html(options);
             },
             error: function (xhr, status, error) {
@@ -112,5 +87,4 @@ $(document).ready(function () {
             }
         });
     }
-    
 });

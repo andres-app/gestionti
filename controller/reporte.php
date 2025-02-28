@@ -8,29 +8,17 @@ switch ($_GET["op"]) {
 
     case "listar":
         $usuario_id = isset($_GET["usuario"]) && !empty($_GET["usuario"]) ? $_GET["usuario"] : null;
-        $activo_id = isset($_GET["activo"]) && !empty($_GET["activo"]) ? $_GET["activo"] : null;
+        $tipo_activo = isset($_GET["tipo_activo"]) && !empty($_GET["tipo_activo"]) ? $_GET["tipo_activo"] : null;
         $fecha = isset($_GET["fecha"]) && !empty($_GET["fecha"]) ? $_GET["fecha"] : null;
     
-        $datos = $reporte->get_reportes($usuario_id, $activo_id, $fecha);
+        $datos = $reporte->get_reportes($usuario_id, $tipo_activo, $fecha);
     
         if (!$datos || count($datos) == 0) {
-            echo json_encode(["data" => []]); // DataTables necesita esta estructura para evitar errores
+            echo json_encode(["data" => []]);
             exit;
         }
     
-        echo json_encode([
-            "draw" => intval($_GET['draw'] ?? 1),  // Para compatibilidad con DataTables
-            "recordsTotal" => count($datos),
-            "recordsFiltered" => count($datos),
-            "data" => $datos // Cambiado de `aaData` a `data`
-        ]);
-        exit;
-    
-    
-    
-
-
-        // 🔹 Agregar columna de acciones a cada fila
+        // Agregar acciones a cada fila
         $data = [];
         foreach ($datos as $row) {
             $row["acciones"] = '
@@ -42,12 +30,12 @@ switch ($_GET["op"]) {
                 </button>';
             $data[] = $row;
         }
-
+    
         echo json_encode([
-            "sEcho" => 1,
-            "iTotalRecords" => count($data),
-            "iTotalDisplayRecords" => count($data),
-            "aaData" => $data // Aseguramos que "acciones" esté en cada fila
+            "draw" => intval($_GET['draw'] ?? 1),
+            "recordsTotal" => count($data),
+            "recordsFiltered" => count($data),
+            "data" => $data
         ]);
         exit;
 
