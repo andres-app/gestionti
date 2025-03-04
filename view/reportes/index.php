@@ -77,20 +77,15 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                                                 </div>
                                             </div>
                                             <br>
+ <!-- Botones para exportar con iconos -->
+<button type="button" id="btn_exportar_pdf" class="btn btn-danger">
+    <i class="fas fa-file-pdf"></i> PDF
+</button>
 
-                                            <!-- Botón para generar reporte -->
-                                            <button type="button" id="btn_generar_reporte" class="btn btn-primary">
-                                                Generar Reporte
-                                            </button>
+<button type="button" id="btn_exportar_excel" class="btn btn-success">
+    <i class="fas fa-file-excel"></i> Excel
+</button>
 
-                                            <!-- Botones para exportar -->
-                                            <button type="button" id="btn_exportar_pdf" class="btn btn-danger">
-                                                Exportar a PDF
-                                            </button>
-
-                                            <button type="button" id="btn_exportar_excel" class="btn btn-success">
-                                                Exportar a Excel
-                                            </button>
                                         </form>
                                     </div>
                                 </div>
