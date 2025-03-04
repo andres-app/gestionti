@@ -150,4 +150,65 @@ switch ($_GET["op"]) {
         // Descargar el archivo
         $pdf->Output('Reporte_Activos.pdf', 'D');
         exit;
+
+    case "exportar_excel":
+        $usuario_id = isset($_GET["usuario"]) ? $_GET["usuario"] : null;
+        $tipo_activo = isset($_GET["tipo_activo"]) ? $_GET["tipo_activo"] : null;
+        $fecha = isset($_GET["fecha"]) ? $_GET["fecha"] : null;
+
+        $datos = $reporte->get_reportes($usuario_id, $tipo_activo, $fecha);
+
+        if (!$datos || count($datos) == 0) {
+            die("No hay datos para exportar.");
+        }
+
+        // Definir las cabeceras para Excel
+        header("Content-Type: application/vnd.ms-excel; charset=UTF-8");
+        header("Content-Disposition: attachment; filename=Reporte_Activos.xls");
+        header("Pragma: no-cache");
+        header("Expires: 0");
+
+        // Construir la tabla
+        echo "<table border='1'>";
+        echo "<thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Usuario</th>
+                        <th>SBN</th>
+                        <th>Serie</th>
+                        <th>Tipo Activo</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
+                        <th>Ubicación</th>
+                        <th>Hostname</th>
+                        <th>Procesador</th>
+                        <th>Sis. Ope.</th>
+                        <th>RAM</th>
+                        <th>Disco</th>
+                        <th>Fecha</th>
+                    </tr>
+                  </thead>";
+
+        echo "<tbody>";
+        foreach ($datos as $row) {
+            echo "<tr>
+                        <td>{$row['id']}</td>
+                        <td>{$row['usuario']}</td>
+                        <td>{$row['sbn']}</td>
+                        <td>{$row['serie']}</td>
+                        <td>{$row['tipo_activo']}</td>
+                        <td>{$row['marca']}</td>
+                        <td>{$row['modelo']}</td>
+                        <td>{$row['ubicacion']}</td>
+                        <td>{$row['hostname']}</td>
+                        <td>{$row['procesador']}</td>
+                        <td>{$row['sisopera']}</td>
+                        <td>{$row['ram']}</td>
+                        <td>{$row['disco']}</td>
+                        <td>{$row['fecha']}</td>
+                      </tr>";
+        }
+        echo "</tbody></table>";
+
+        exit;
 }
