@@ -40,6 +40,29 @@ $(document).ready(function () {
         ]
     });
 
+    $("#btn_exportar_pdf").on("click", function () {
+        let usuario = $("#reporte_usuario").val() || "";
+        let tipo_activo = $("#reporte_tipo_activo").val() || "";
+        let fecha = $("#reporte_fecha").val() || "";
+
+        let url = `../../controller/reporte.php?op=exportar_pdf&usuario=${usuario}&tipo_activo=${tipo_activo}&fecha=${fecha}`;
+
+        window.open(url, '_blank');
+    });
+
+    // Evento para exportar a Excel
+    $("#btn_exportar_excel").on("click", function () {
+        let usuario = $("#reporte_usuario").val() || "";
+        let tipo_activo = $("#reporte_tipo_activo").val() || "";
+        let fecha = $("#reporte_fecha").val() || "";
+
+        let url = `../../controller/reporte.php?op=exportar_excel&usuario=${usuario}&tipo_activo=${tipo_activo}&fecha=${fecha}`;
+
+        window.location.href = url; // Redirecciona para descargar el archivo
+    });
+
+
+
     $("#reporte_usuario, #reporte_tipo_activo, #reporte_fecha").on("change", function () {
         let usuario = $("#reporte_usuario").val() || "";
         let tipo_activo = $("#reporte_tipo_activo").val() || "";
