@@ -14,7 +14,7 @@ $proximos_mantenimientos = $activo->get_proximos_mantenimientos();
 // Evaluar el valor del parámetro "op" para determinar qué operación realizar
 switch ($_GET["op"]) {
 
-        // Caso para listar todos los vehículos
+    // Caso para listar todos los vehículos
     case "listar":
         $datos = $activo->get_activos();
         if ($datos === false) {
@@ -67,7 +67,7 @@ switch ($_GET["op"]) {
         echo json_encode($results);
         break;
 
-        // Caso para insertar un nuevo vehículo
+    // Caso para insertar un nuevo vehículo
     case "insertar":
         // Capturar los datos enviados desde el formulario
         $sbn = isset($_POST["vehiculo_sbn"]) ? $_POST["vehiculo_sbn"] : null;
@@ -89,7 +89,7 @@ switch ($_GET["op"]) {
         }
         break;
 
-        // Caso para editar un vehículo existente
+    // Caso para editar un vehículo existente
     case "editar":
         // Capturar los datos enviados por el formulario
         $id = $_POST["vehiculo_id"];
@@ -141,17 +141,21 @@ switch ($_GET["op"]) {
 
 
     case "eliminar":
-        if (isset($_POST["vehiculo_id"])) {
-            $id = $_POST["vehiculo_id"];
-            if ($activo->cambiar_estado($id, 0)) {
-                echo json_encode(["success" => "Vehículo eliminado correctamente."]);
-            } else {
-                echo json_encode(["error" => "Error al eliminar el vehículo."]);
-            }
-        } else {
-            echo json_encode(["error" => "No se proporcionó un ID de vehículo válido."]);
+        if (!isset($_POST["vehiculo_id"]) || empty($_POST["vehiculo_id"])) {
+            echo json_encode(["success" => false, "error" => "ID de activo no recibido"]);
+            exit;
         }
-        break;
+
+        $vehiculo_id = $_POST["vehiculo_id"];
+        $resultado = $activo->cambiar_estado($vehiculo_id, 0); // Cambia estado a inactivo
+
+        if ($resultado) {
+            echo json_encode(["success" => true, "message" => "Activo eliminado correctamente"]);
+        } else {
+            echo json_encode(["success" => false, "error" => "No se pudo eliminar el activo"]);
+        }
+        exit;
+
 
     default:
         echo json_encode(["error" => "Operación no válida."]);

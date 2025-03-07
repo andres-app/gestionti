@@ -130,28 +130,35 @@ function editar(id) {
  * @param {int} id - ID del vehículo que se va a eliminar.
  */
 function eliminar(id) {
-    // Confirmación de eliminación con SweetAlert
     Swal.fire({
         title: '¿Estás seguro?',
         text: "Este elemento se eliminará permanentemente",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonmodelo: '#3085d6',
-        cancelButtonmodelo: '#d33',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
         confirmButtonText: 'Sí, eliminar',
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            // Hacer la petición AJAX para eliminar el vehículo
-            $.post("../../controller/activo.php?op=eliminar", { vehiculo_id: id }, function (data) {
+            $.ajax({
+                url: "../../controller/activo.php?op=eliminar",
+                type: "POST",
+                data: { vehiculo_id: id },
+                dataType: "json",
+                success: function(response) {
+                    console.log("📌 Respuesta del servidor:", response);
 
-
-                // Verificar si la operación fue exitosa
-                if (data.success) {
-                    Swal.fire('Eliminado', data.success, 'success');
-                    tabla.ajax.reload(); // Recargar el DataTable para reflejar los cambios
-                } else {
-                    Swal.fire('Error', data.error, 'error');
+                    if (response.success) {
+                        Swal.fire('Eliminado', response.message, 'success');
+                        tabla.ajax.reload();
+                    } else {
+                        Swal.fire('Error', response.error, 'error');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log("❌ Error en AJAX:", xhr.responseText);
+                    Swal.fire('Error', 'No se pudo eliminar el activo', 'error');
                 }
             });
         }
