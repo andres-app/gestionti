@@ -48,76 +48,33 @@ function guardaryeditar(e) {
     });
 }
 
-function cargarResponsables() {
+function cargarResponsables(responsable_id = null, callback = null) {
     $.ajax({
-        url: '../../controller/activo.php?op=obtener_responsables', // Ruta al backend
+        url: '../../controller/activo.php?op=obtener_responsables',
         type: 'GET',
         dataType: 'json',
         success: function (response) {
             let options = '<option value="">Seleccione un responsable</option>';
+
             response.forEach(function (usuario) {
                 options += `<option value="${usuario.usu_id}">${usuario.usu_nomape}</option>`;
             });
+
             $('#vehiculo_responsable_id').html(options);
+
+            // ✅ Asignar responsable solo si existe y es válido
+            if (responsable_id !== null) {
+                console.log("✅ Responsable seleccionado en el select:", responsable_id);
+                $("#vehiculo_responsable_id").val(responsable_id);
+            }
+
+            // ✅ Forzar actualización visual del select
+            $("#vehiculo_responsable_id").trigger("change");
+
+            if (callback) callback();
         },
         error: function () {
             Swal.fire('Error', 'No se pudieron cargar los responsables', 'error');
-        }
-    });
-}
-
-// Llama esta función cada vez que abras el modal
-$('#mnt_modal').on('shown.bs.modal', function () {
-    cargarResponsables();
-});
-
-/**
- * Función para editar un vehículo.
- * Se cargan los datos en el formulario para su edición.
- *
- * @param {int} id - ID del vehículo que se va a editar.
- */
-function editar(id) {
-    console.log("📌 Editando activo con ID:", id); // 🔍 Verifica que el ID no sea null o undefined
-
-    $.ajax({
-        url: "../../controller/activo.php?op=mostrar",
-        type: "POST",
-        data: { vehiculo_id: id }, // 🔹 Asegurarse de que el ID se envía correctamente
-        dataType: "json",
-        success: function (data) {
-            console.log("🔍 Respuesta del servidor:", data); // 🔍 Verifica si el servidor devuelve los datos correctos
-
-            if (data.error) {
-                Swal.fire("Error", data.error, "error");
-            } else {
-                $("#vehiculo_id").val(data.id);
-                $("#vehiculo_sbn").val(data.sbn);
-                $("#vehiculo_serie").val(data.serie);
-                $("#vehiculo_tipo").val(data.tipo);
-                $("#vehiculo_marca").val(data.marca);
-                $("#vehiculo_modelo").val(data.modelo);
-                $("#vehiculo_ubicacion").val(data.ubicacion);
-                $("#vehiculo_responsable_id").val(data.responsable_id);
-                $("#vehiculo_fecha_registro").val(data.fecha_registro);
-                $("#vehiculo_condicion").val(data.condicion);
-                $("#vehiculo_estado").val(data.estado);
-
-                // 🔹 Llenar los nuevos campos de hardware
-                $("#vehiculo_hostname").val(data.hostname || "");
-                $("#vehiculo_procesador").val(data.procesador || "");
-                $("#vehiculo_sisopera").val(data.sisopera || "");
-                $("#vehiculo_ram").val(data.ram || "");
-                $("#vehiculo_disco").val(data.disco || "");
-
-                $("#myModalLabel").html("Editar Activo");
-                $(".modal-footer .btn-primary").show();
-                $("#mnt_modal").modal("show");
-            }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            console.error("🔴 Error en la solicitud AJAX:", textStatus, errorThrown);
-            Swal.fire("Error", "No se pudo obtener la información del activo", "error");
         }
     });
 }
@@ -370,12 +327,22 @@ function manejarVisibilidadCampo(selector, valor) {
  * Modificación en la función editar para que también cargue las fotos
  */
 function editar(id) {
-    $.post("../../controller/activo.php?op=mostrar", { vehiculo_id: id }, function (data) {
-        console.log("📌 Editando activo con ID:", id);
+    console.log("📌 Editando activo con ID:", id);
 
-        if (data.error) {
-            Swal.fire("Error", data.error, "error");
-        } else {
+    $.ajax({
+        url: "../../controller/activo.php?op=mostrar",
+        type: "POST",
+        data: { vehiculo_id: id },
+        dataType: "json",
+        success: function (data) {
+            console.log("✅ Respuesta del servidor:", data);
+
+            if (!data || data.error) {
+                Swal.fire("Error", data.error || "No se encontró información", "error");
+                return;
+            }
+
+            // ✅ Primero asignamos todos los valores al formulario
             $("#vehiculo_id").val(data.id);
             $("#vehiculo_sbn").val(data.sbn);
             $("#vehiculo_serie").val(data.serie);
@@ -383,24 +350,37 @@ function editar(id) {
             $("#vehiculo_marca").val(data.marca);
             $("#vehiculo_modelo").val(data.modelo);
             $("#vehiculo_ubicacion").val(data.ubicacion);
-            $("#vehiculo_responsable_id").val(data.responsable_id);
             $("#vehiculo_fecha_registro").val(data.fecha_registro);
             $("#vehiculo_condicion").val(data.condicion);
             $("#vehiculo_estado").val(data.estado);
+            $("#vehiculo_hostname").val(data.hostname);
+            $("#vehiculo_procesador").val(data.procesador);
+            $("#vehiculo_sisopera").val(data.sisopera);
+            $("#vehiculo_ram").val(data.ram);
+            $("#vehiculo_disco").val(data.disco);
 
-            // 🔹 Manejar visibilidad de los campos adicionales
-            manejarVisibilidadCampo("#vehiculo_hostname", data.hostname);
-            manejarVisibilidadCampo("#vehiculo_procesador", data.procesador);
-            manejarVisibilidadCampo("#vehiculo_sisopera", data.sisopera);
-            manejarVisibilidadCampo("#vehiculo_ram", data.ram);
-            manejarVisibilidadCampo("#vehiculo_disco", data.disco);
+            let responsableID = data.responsable_id && !isNaN(data.responsable_id) ? data.responsable_id : null;
+            console.log("📌 Responsable ID recibido:", responsableID);
 
-            $("#myModalLabel").html("Editar Activo");
-            $(".modal-footer .btn-primary").show();
-            $("#mnt_modal").modal("show");
+            // ✅ Ahora cargamos los responsables y abrimos el modal solo cuando todo esté listo
+            cargarResponsables(responsableID, function () {
+                console.log("🔹 Responsable y demás campos cargados correctamente.");
+                $("#myModalLabel").html("Editar Activo");
+                $(".modal-footer .btn-primary").show();
+                $("#mnt_modal").modal("show"); // 🔥 Solo abrimos aquí el modal
+            });
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.error("🔴 Error en la solicitud AJAX:", textStatus, errorThrown);
+            Swal.fire("Error", "No se pudo obtener la información del activo", "error");
         }
     });
 }
+
+
+
+
 
 
 // Cargar fotos cuando se abre el modal
