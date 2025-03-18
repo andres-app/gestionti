@@ -91,26 +91,44 @@ switch ($_GET["op"]) {
 
     // Caso para editar un vehículo existente
     case "editar":
+        // 🚀 REGISTRAR EN LOG LOS DATOS RECIBIDOS
+        error_log("📌 Datos recibidos para editar: " . json_encode($_POST));
+    
         // Capturar los datos enviados por el formulario
-        $id = $_POST["vehiculo_id"];
-        $sbn = $_POST["vehiculo_sbn"];
-        $serie = $_POST["vehiculo_serie"];
-        $tipo = $_POST["vehiculo_tipo"];
-        $marca = $_POST["vehiculo_marca"];
-        $modelo = $_POST["vehiculo_modelo"];
-        $ubicacion = $_POST["vehiculo_ubicacion"];
-        $responsable_id = $_POST["vehiculo_responsable_id"]; // Asegúrate de usar el ID del responsable aquí
-        $fecha_registro = $_POST["vehiculo_fecha_registro"];
-        $condicion = $_POST["vehiculo_condicion"];
-        $estado = $_POST["vehiculo_estado"];
-
-        // Llamar al método editar_vehiculo del modelo
-        if ($activo->editar_vehiculo($id, $sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado)) {
+        $id = $_POST["vehiculo_id"] ?? null;
+        $sbn = $_POST["vehiculo_sbn"] ?? null;
+        $serie = $_POST["vehiculo_serie"] ?? null;
+        $tipo = $_POST["vehiculo_tipo"] ?? null;
+        $marca = $_POST["vehiculo_marca"] ?? null;
+        $modelo = $_POST["vehiculo_modelo"] ?? null;
+        $ubicacion = $_POST["vehiculo_ubicacion"] ?? null;
+        $responsable_id = $_POST["vehiculo_responsable_id"] ?? null;
+        $fecha_registro = $_POST["vehiculo_fecha_registro"] ?? null;
+        $condicion = $_POST["vehiculo_condicion"] ?? null;
+        $estado = $_POST["vehiculo_estado"] ?? null;
+        $hostname = $_POST["vehiculo_hostname"] ?? null;
+        $procesador = $_POST["vehiculo_procesador"] ?? null;
+        $sisopera = $_POST["vehiculo_sisopera"] ?? null;
+        $ram = $_POST["vehiculo_ram"] ?? null;
+        $disco = $_POST["vehiculo_disco"] ?? null;
+    
+        // 🚨 Verificar si algún campo clave está vacío
+        if (!$id || !$sbn || !$serie) {
+            error_log("❌ Faltan datos obligatorios: ID: $id, SBN: $sbn, Serie: $serie");
+            echo json_encode(["error" => "Faltan datos obligatorios."]);
+            exit;
+        }
+    
+        // 🔥 LLAMAMOS A LA FUNCIÓN DE ACTUALIZACIÓN
+        $resultado = $activo->editar_vehiculo($id, $sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $hostname, $procesador, $sisopera, $ram, $disco);
+        
+        if ($resultado) {
             echo json_encode(["success" => "Vehículo actualizado correctamente."]);
         } else {
             echo json_encode(["error" => "Error al actualizar el vehículo."]);
         }
         break;
+    
 
 
     case "obtener_responsables":

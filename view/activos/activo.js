@@ -21,32 +21,42 @@ function init() {
 function guardaryeditar(e) {
     e.preventDefault(); // Evitar el comportamiento por defecto del formulario
 
-    var formData = new FormData($("#mnt_form")[0]); // Crear un objeto FormData con los datos del formulario
+    var formData = new FormData($("#mnt_form")[0]); // Capturar datos del formulario
 
-    // Verificar si es una edición (si vehiculo_id tiene un valor)
+    console.log("🚀 Datos enviados al backend:", Object.fromEntries(formData)); // 🔥 Verificar datos antes del AJAX
+
     var url = $("#vehiculo_id").val() ? "../../controller/activo.php?op=editar" : "../../controller/activo.php?op=insertar";
 
-    // Enviar los datos mediante AJAX
     $.ajax({
-        url: url, // Cambia la URL según si es insertar o editar
+        url: url,
         type: "POST",
-        data: formData, // Datos del formulario
-        contentType: false, // No establecer ningún tipo de contenido para los datos
-        processData: false, // No procesar los datos automáticamente (para permitir el uso de FormData)
-        success: function (datos) {
-            // Mostrar un mensaje de éxito usando SweetAlert
-            Swal.fire('Registro', 'Vehículo guardado correctamente', 'success');
-            // Recargar el DataTable para mostrar el nuevo registro
-            tabla.ajax.reload();
-            // Cerrar el modal de registro
-            $("#mnt_modal").modal("hide");
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            console.log("✅ Respuesta del servidor:", response); // 🔥 Verificar respuesta del backend
+
+            try {
+                var jsonData = JSON.parse(response);
+                if (jsonData.success) {
+                    Swal.fire('Registro', 'Vehículo guardado correctamente', 'success');
+                    tabla.ajax.reload();
+                    $("#mnt_modal").modal("hide");
+                } else {
+                    Swal.fire('Error', jsonData.error || 'No se pudo actualizar.', 'error');
+                }
+            } catch (error) {
+                console.error("❌ Error al parsear JSON:", error, response);
+                Swal.fire('Error', 'Respuesta inesperada del servidor.', 'error');
+            }
         },
-        error: function (e) {
-            // Mostrar un mensaje de error en caso de que falle la inserción
+        error: function (xhr, status, error) {
+            console.error("❌ Error en AJAX:", xhr.responseText);
             Swal.fire('Error', 'No se pudo guardar el vehículo', 'error');
         }
     });
 }
+
 
 function cargarResponsables(responsable_id = null, callback = null) {
     $.ajax({

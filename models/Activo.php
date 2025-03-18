@@ -88,25 +88,56 @@ class Activo extends Conectar
     /**
      * Método para actualizar los datos de un vehículo.
      */
-    public function editar_vehiculo($id, $sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado)
+    public function editar_vehiculo($id, $sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $hostname, $procesador, $sisopera, $ram, $disco)
     {
         $conectar = parent::conexion();
         parent::set_names();
-
-        $sql = "UPDATE activos 
-                SET sbn = ?, serie = ?, tipo = ?, marca = ?, modelo = ?, ubicacion = ?, responsable_id = ?, fecha_registro = ?, condicion = ?, estado = ?
-                WHERE id = ?";
-
-        $stmt = $conectar->prepare($sql);
-
+    
         try {
-            $stmt->execute([$sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $id]);
+            // 🔹 Iniciar una transacción para asegurar que ambas tablas se actualizan correctamente
+            $conectar->beginTransaction();
+    
+            // 🔹 Actualizar la tabla `activos`
+            $sql1 = "UPDATE activos 
+                    SET sbn = ?, serie = ?, tipo = ?, marca = ?, modelo = ?, ubicacion = ?, responsable_id = ?, fecha_registro = ?, 
+                        condicion = ?, estado = ?
+                    WHERE id = ?";
+            $stmt1 = $conectar->prepare($sql1);
+            $stmt1->execute([$sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $id]);
+    
+            // 🔹 Verificar si el `activo_id` ya está en `detactivo`
+            $sql2 = "SELECT COUNT(*) FROM detactivo WHERE activo_id = ?";
+            $stmt2 = $conectar->prepare($sql2);
+            $stmt2->execute([$id]);
+            $existe = $stmt2->fetchColumn();
+    
+            if ($existe) {
+                // 🔹 Si existe, actualizar `detactivo`
+                $sql3 = "UPDATE detactivo 
+                        SET hostname = ?, procesador = ?, sisopera = ?, ram = ?, disco = ?
+                        WHERE activo_id = ?";
+                $stmt3 = $conectar->prepare($sql3);
+                $stmt3->execute([$hostname, $procesador, $sisopera, $ram, $disco, $id]);
+            } else {
+                // 🔹 Si no existe, insertarlo
+                $sql4 = "INSERT INTO detactivo (activo_id, hostname, procesador, sisopera, ram, disco) 
+                         VALUES (?, ?, ?, ?, ?, ?)";
+                $stmt4 = $conectar->prepare($sql4);
+                $stmt4->execute([$id, $hostname, $procesador, $sisopera, $ram, $disco]);
+            }
+    
+            // 🔹 Confirmar la transacción si todo salió bien
+            $conectar->commit();
             return true;
         } catch (PDOException $e) {
-            error_log("Error en la consulta de actualización: " . $e->getMessage());
+            // 🔴 Si hay error, hacer rollback y registrar en logs
+            $conectar->rollBack();
+            error_log("❌ Error en la actualización: " . $e->getMessage());
             return false;
         }
     }
+    
+
 
     /**
      * Método para obtener los detalles de un vehículo por su ID.
