@@ -128,29 +128,34 @@ switch ($_GET["op"]) {
         echo "1";
         break;
 
-    case "listar":
-        $datos = $area->get_area();
-        $data = array();
-
-        foreach ($datos as $row) {
-            $sub_array = array();
-            $sub_array[] = $row["area_nom"];
-            $sub_array[] = $row["area_correo"];
-            $sub_array[] = date("d/m/Y", strtotime($row["fech_crea"]));  // Asegúrate que tu campo de fecha se llame así
-            $sub_array[] = '
-                        <button type="button" onClick="editar(' . $row["area_id"] . ');" class="btn btn-outline-info btn-sm">Editar</button>
-                        <button type="button" onClick="eliminar(' . $row["area_id"] . ');" class="btn btn-outline-danger btn-sm">Eliminar</button>
-                    ';
-            $data[] = $sub_array;
-        }
-
-        $results = array(
-            "sEcho" => 1,
-            "iTotalRecords" => count($data),
-            "iTotalDisplayRecords" => count($data),
-            "aaData" => $data
-        );
-
-        echo json_encode($results);
-        break;
+        case "listar":
+            $datos = $area->get_area();
+            $data = array();
+            
+            foreach($datos as $row){
+                $sub_array = array();
+                $sub_array[] = $row["area_nom"];
+                $sub_array[] = $row["area_correo"];
+                $sub_array[] = date("d/m/Y", strtotime($row["fech_crea"])); // o el campo correcto de fecha
+                $sub_array[] = '
+                    <button type="button" class="btn btn-soft-warning waves-effect waves-light btn-sm" onClick="editar(' . $row["area_id"] . ')">
+                        <i class="bx bx-edit-alt font-size-16 align-middle"></i>
+                    </button>
+                    <button type="button" class="btn btn-soft-danger waves-effect waves-light btn-sm" onClick="eliminar(' . $row["area_id"] . ')">
+                        <i class="bx bx-trash-alt font-size-16 align-middle"></i>
+                    </button>
+                ';
+                $data[] = $sub_array;
+            }
+        
+            $results = array(
+                "sEcho" => 1,
+                "iTotalRecords" => count($data),
+                "iTotalDisplayRecords" => count($data),
+                "aaData" => $data
+            );
+        
+            echo json_encode($results);
+            break;
+        
 }
