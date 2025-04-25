@@ -16,7 +16,7 @@
                     $conectar = $this->dbh = new PDO("mysql:host=localhost;dbname=gestionti", "root", "");
                 } else {
                     // Configuración para el entorno de producción
-                    $conectar = $this->dbh = new PDO("mysql:host=localhost;dbname=u274409976_template", "u274409976_template", "Dev2804751$$$");
+                    $conectar = $this->dbh = new PDO("mysql:host=localhost;dbname=gestionti", "root", "");
                 }
                 
                 
@@ -40,7 +40,7 @@
                 return "http://localhost:8080/gestionti/";
             } else {
                 /* Ruta para el entorno de producción */
-                return "http://localhost:8080/gestionti/";
+                return "http://10.4.16.83:8080/gestionti/";
             }
         }
     }
