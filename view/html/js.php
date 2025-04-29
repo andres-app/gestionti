@@ -34,5 +34,6 @@
 <script src="../../assets/js/responsive.bootstrap4.min.js"></script>
 
 <script src="../../assets/js/app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>

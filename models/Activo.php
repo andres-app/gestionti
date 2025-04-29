@@ -293,5 +293,35 @@ class Activo extends Conectar
     
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function get_activos_por_estado() {
+        $conectar = parent::conexion();
+        $sql = "SELECT 
+                    CASE estado
+                        WHEN 1 THEN 'Activo'
+                        WHEN 0 THEN 'Inactivo'
+                        ELSE 'Otro'
+                    END AS estado_nombre,
+                    COUNT(*) AS total
+                FROM activos
+                GROUP BY estado";
+    
+        $sql = $conectar->prepare($sql);
+        $sql->execute();
+        return $sql->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function get_activos_por_tipo() {
+        $conectar = parent::conexion();
+        $sql = "SELECT tipo, COUNT(*) AS total
+                FROM activos
+                WHERE tipo IS NOT NULL AND tipo != ''
+                GROUP BY tipo";
+        $stmt = $conectar->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    
     
 }

@@ -93,7 +93,7 @@ switch ($_GET["op"]) {
     case "editar":
         // 🚀 REGISTRAR EN LOG LOS DATOS RECIBIDOS
         error_log("📌 Datos recibidos para editar: " . json_encode($_POST));
-    
+
         // Capturar los datos enviados por el formulario
         $id = $_POST["vehiculo_id"] ?? null;
         $sbn = $_POST["vehiculo_sbn"] ?? null;
@@ -111,24 +111,24 @@ switch ($_GET["op"]) {
         $sisopera = $_POST["vehiculo_sisopera"] ?? null;
         $ram = $_POST["vehiculo_ram"] ?? null;
         $disco = $_POST["vehiculo_disco"] ?? null;
-    
+
         // 🚨 Verificar si algún campo clave está vacío
         if (!$id || !$sbn || !$serie) {
             error_log("❌ Faltan datos obligatorios: ID: $id, SBN: $sbn, Serie: $serie");
             echo json_encode(["error" => "Faltan datos obligatorios."]);
             exit;
         }
-    
+
         // 🔥 LLAMAMOS A LA FUNCIÓN DE ACTUALIZACIÓN
         $resultado = $activo->editar_vehiculo($id, $sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $hostname, $procesador, $sisopera, $ram, $disco);
-        
+
         if ($resultado) {
             echo json_encode(["success" => "Vehículo actualizado correctamente."]);
         } else {
             echo json_encode(["error" => "Error al actualizar el vehículo."]);
         }
         break;
-    
+
 
 
     case "obtener_responsables":
@@ -192,5 +192,15 @@ switch ($_GET["op"]) {
         } else {
             echo json_encode(["error" => "ID del vehículo no proporcionado."]);
         }
+        break;
+
+    case "activos_estado":
+        $datos = $activo->get_activos_por_estado();
+        echo json_encode($datos);
+        break;
+
+    case "activos_tipo":
+        $datos = $activo->get_activos_por_tipo();
+        echo json_encode($datos);
         break;
 }
