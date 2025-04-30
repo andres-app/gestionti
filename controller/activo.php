@@ -208,4 +208,9 @@ switch ($_GET["op"]) {
         $datos = $activo->get_activos_por_ubicacion();
         echo json_encode($datos);
         break;
+
+    case "activos_condicion":
+        $datos = $activo->get_activos_por_condicion();
+        echo json_encode($datos);
+        break;
 }

@@ -117,3 +117,39 @@ fetch("../../controller/activo.php?op=activos_tipo")
             }
         });
     });
+
+    fetch("../../controller/activo.php?op=activos_condicion")
+    .then(res => res.json())
+    .then(data => {
+        const labels = data.map(d => d.condicion);
+        const valores = data.map(d => parseInt(d.total));
+
+        const ctx = document.getElementById('graficoCondicion');
+        if (!ctx) return;
+
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Condición',
+                    data: valores,
+                    backgroundColor: [
+                        '#FF6384', '#36A2EB', '#FFCE56',
+                        '#4BC0C0', '#9966FF', '#FF9F40'
+                    ],
+                    borderColor: '#fff',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    });
+

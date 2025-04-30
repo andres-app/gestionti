@@ -53,15 +53,15 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                         </div>
                     </div>
 
-                    <!-- Gráficos en una sola fila -->
-                    <div class="row g-4 align-items-stretch">
+                    <!-- Fila de 3 gráficos -->
+                    <div class="row g-4 align-items-stretch mb-4">
                         <!-- Estado -->
-                        <div class="col-xl-4 col-md-12">
+                        <div class="col-xl-4 col-md-6">
                             <div class="card shadow h-100">
                                 <div class="card-header bg-primary text-white">
                                     <h5 class="my-0 text-white">Distribución por Estado</h5>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body d-flex justify-content-center align-items-center">
                                     <canvas id="graficoEstado" style="height: 220px; max-height: 220px;"></canvas>
                                 </div>
                             </div>
@@ -73,20 +73,34 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                                 <div class="card-header bg-primary text-white">
                                     <h5 class="my-0 text-white">Distribución por Tipo</h5>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body d-flex justify-content-center align-items-center">
                                     <canvas id="graficoTipo" style="height: 220px; max-height: 220px;"></canvas>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Ubicación -->
-                        <div class="col-xl-4 col-md-12">
+                        <div class="col-xl-4 col-md-6">
                             <div class="card shadow h-100">
                                 <div class="card-header bg-primary text-white">
                                     <h5 class="my-0 text-white">Distribución por Ubicación</h5>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body d-flex justify-content-center align-items-center">
                                     <canvas id="graficoUbicacion" style="height: 220px; max-height: 220px;"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fila 2: Gráfico por condición -->
+                    <div class="row g-4 align-items-stretch">
+                        <div class="col-xl-4 col-md-6">
+                            <div class="card shadow h-100">
+                                <div class="card-header bg-primary text-white">
+                                    <h5 class="my-0 text-white">Distribución por Condición</h5>
+                                </div>
+                                <div class="card-body d-flex justify-content-center align-items-center">
+                                    <canvas id="graficoCondicion" style="height: 220px; max-height: 220px;"></canvas>
                                 </div>
                             </div>
                         </div>
