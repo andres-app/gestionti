@@ -322,6 +322,18 @@ class Activo extends Conectar
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
+    public function get_activos_por_ubicacion() {
+        $conectar = parent::conexion();
+        parent::set_names();
     
+        $sql = "SELECT ubicacion, COUNT(*) AS total 
+                FROM activos 
+                WHERE ubicacion IS NOT NULL AND ubicacion != '' 
+                GROUP BY ubicacion";
+    
+        $stmt = $conectar->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
     
 }
