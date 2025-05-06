@@ -413,9 +413,16 @@ $('#mnt_modal').on('shown.bs.modal', function () {
 $("#btnnuevo").on("click", function () {
     $("#vehiculo_id").val('');   // Limpiar el campo de ID del vehículo
     $("#mnt_form")[0].reset();   // Resetea el formulario
+
+    // 🕒 Asignar la fecha y hora actual al campo
+    const fechaActual = new Date();
+    const formato = fechaActual.toISOString().slice(0, 19).replace("T", " ");
+    $("#vehiculo_fecha_registro").val(formato);
+
     $("#myModalLabel").html('Nuevo Registro'); // Cambia el título del modal
     $("#mnt_modal").modal('show'); // Muestra el modal de registro
 });
+
 
 // Llamada a la función de inicialización
 init();

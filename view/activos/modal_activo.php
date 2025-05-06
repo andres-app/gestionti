@@ -111,7 +111,7 @@
                     <!-- 🔹 Disco en una fila separada -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="vehiculo_disco" class="form-label">Discoss</label>
+                            <label for="vehiculo_disco" class="form-label">Discos</label>
                             <input class="form-control" type="text" name="vehiculo_disco" id="vehiculo_disco">
                         </div>
                         <div class="col-md-6 mb-3">
