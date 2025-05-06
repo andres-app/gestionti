@@ -76,7 +76,7 @@ switch ($_GET["op"]) {
         $marca = isset($_POST["vehiculo_marca"]) ? $_POST["vehiculo_marca"] : null;
         $modelo = isset($_POST["vehiculo_modelo"]) ? $_POST["vehiculo_modelo"] : null;
         $ubicacion = isset($_POST["vehiculo_ubicacion"]) ? $_POST["vehiculo_ubicacion"] : null;
-        $responsable = isset($_POST["vehiculo_responsable"]) ? $_POST["vehiculo_responsable"] : null;
+        $responsable_id = isset($_POST["vehiculo_responsable_id"]) ? $_POST["vehiculo_responsable_id"] : null;
         $fecha_registro = date("Y-m-d H:i:s");
         $condicion = isset($_POST["vehiculo_condicion"]) ? $_POST["vehiculo_condicion"] : null;
         $estado = isset($_POST["vehiculo_estado"]) ? $_POST["vehiculo_estado"] : null;
