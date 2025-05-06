@@ -114,6 +114,10 @@
                             <label for="vehiculo_disco" class="form-label">Discoss</label>
                             <input class="form-control" type="text" name="vehiculo_disco" id="vehiculo_disco">
                         </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="vehiculo_ult_mant" class="form-label">Último Mantenimiento</label>
+                            <input class="form-control" type="date" name="vehiculo_ult_mant" id="vehiculo_ult_mant">
+                        </div>
                     </div>
 
 

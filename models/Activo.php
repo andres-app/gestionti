@@ -150,7 +150,7 @@ class Activo extends Conectar
         $sql = "SELECT v.id, v.sbn, v.serie, v.tipo, v.marca, v.modelo, v.ubicacion, 
                        v.responsable_id,  -- 🔹 Agrega el ID del responsable
                        u.usu_nomape AS responsable, 
-                       v.fecha_registro, v.condicion, v.estado,
+                       v.fecha_registro, v.condicion, v.estado, v.ult_mant,
                        d.hostname, d.procesador, d.sisopera, d.ram, d.disco
                 FROM activos v
                 LEFT JOIN tm_usuario u ON v.responsable_id = u.usu_id  -- 🔹 Correcta relación con el usuario

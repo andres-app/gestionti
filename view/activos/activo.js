@@ -161,6 +161,7 @@ function previsualizar(id) {
             manejarVisibilidadCampo("#vehiculo_sisopera", data.sisopera);
             manejarVisibilidadCampo("#vehiculo_ram", data.ram);
             manejarVisibilidadCampo("#vehiculo_disco", data.disco);
+            $("#vehiculo_ult_mant").val(data.ult_mant);
 
             // ✅ Agregamos el responsable sin que sea sobrescrito después
             // ✅ Aseguramos que el responsable se mantenga sin ser sobrescrito
@@ -368,6 +369,8 @@ function editar(id) {
             $("#vehiculo_sisopera").val(data.sisopera);
             $("#vehiculo_ram").val(data.ram);
             $("#vehiculo_disco").val(data.disco);
+            $("#vehiculo_ult_mant").val(data.ult_mant);
+
 
             let responsableID = data.responsable_id && !isNaN(data.responsable_id) ? data.responsable_id : null;
             console.log("📌 Responsable ID recibido:", responsableID);
