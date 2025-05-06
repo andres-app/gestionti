@@ -161,7 +161,8 @@ function previsualizar(id) {
             manejarVisibilidadCampo("#vehiculo_sisopera", data.sisopera);
             manejarVisibilidadCampo("#vehiculo_ram", data.ram);
             manejarVisibilidadCampo("#vehiculo_disco", data.disco);
-            $("#vehiculo_ult_mant").val(data.ult_mant);
+            $("#vehiculo_ult_mant").val(data.ult_mant).prop("disabled", true);
+
 
             // ✅ Agregamos el responsable sin que sea sobrescrito después
             // ✅ Aseguramos que el responsable se mantenga sin ser sobrescrito
