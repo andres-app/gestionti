@@ -80,9 +80,11 @@ switch ($_GET["op"]) {
         $fecha_registro = isset($_POST["vehiculo_fecha_registro"]) ? $_POST["vehiculo_fecha_registro"] : null;
         $condicion = isset($_POST["vehiculo_condicion"]) ? $_POST["vehiculo_condicion"] : null;
         $estado = isset($_POST["vehiculo_estado"]) ? $_POST["vehiculo_estado"] : null;
+        $ult_mant = $_POST["vehiculo_ult_mant"] ?? null;
+
 
         // Insertar el nuevo vehículo en la base de datos usando el tipo
-        if ($activo->insertar_vehiculo($sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $tipo, $condicion, $estado)) {
+        if ($activo->insertar_vehiculo($sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $tipo, $condicion, $estado, $ult_mant)) {
             echo json_encode(["success" => "Vehículo registrado correctamente."]);
         } else {
             echo json_encode(["error" => "Error al registrar el vehículo."]);
@@ -111,6 +113,8 @@ switch ($_GET["op"]) {
         $sisopera = $_POST["vehiculo_sisopera"] ?? null;
         $ram = $_POST["vehiculo_ram"] ?? null;
         $disco = $_POST["vehiculo_disco"] ?? null;
+        $ult_mant = $_POST["vehiculo_ult_mant"] ?? null;
+
 
         // 🚨 Verificar si algún campo clave está vacío
         if (!$id || !$sbn || !$serie) {
@@ -120,7 +124,7 @@ switch ($_GET["op"]) {
         }
 
         // 🔥 LLAMAMOS A LA FUNCIÓN DE ACTUALIZACIÓN
-        $resultado = $activo->editar_vehiculo($id, $sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $hostname, $procesador, $sisopera, $ram, $disco);
+        $resultado = $activo->editar_vehiculo($id, $sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $ult_mant, $hostname, $procesador, $sisopera, $ram, $disco);
 
         if ($resultado) {
             echo json_encode(["success" => "Vehículo actualizado correctamente."]);

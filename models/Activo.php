@@ -65,18 +65,18 @@ class Activo extends Conectar
      * 
      * @return bool True si la inserción fue exitosa, false en caso de error.
      */
-    public function insertar_vehiculo($sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado)
+    public function insertar_vehiculo($sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $ult_mant)
     {
         $conectar = parent::conexion();
         parent::set_names();
 
         // Consulta SQL para insertar un nuevo vehículo en la base de datos
-        $sql = "INSERT INTO activos (sbn, serie, tipo, marca, modelo, ubicacion, responsable_id, fecha_registro, condicion, estado) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO activos (sbn, serie, tipo, marca, modelo, ubicacion, responsable_id, fecha_registro, condicion, estado, ult_mant) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = $conectar->prepare($sql);
 
-        if ($stmt->execute([$sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado])) {
+        if ($stmt->execute([$sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $ult_mant])) {
             return true;
         } else {
             $error = $stmt->errorInfo();
@@ -88,7 +88,7 @@ class Activo extends Conectar
     /**
      * Método para actualizar los datos de un vehículo.
      */
-    public function editar_vehiculo($id, $sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $hostname, $procesador, $sisopera, $ram, $disco)
+    public function editar_vehiculo($id, $sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $ult_mant, $hostname, $procesador, $sisopera, $ram, $disco)
     {
         $conectar = parent::conexion();
         parent::set_names();
@@ -100,10 +100,10 @@ class Activo extends Conectar
             // 🔹 Actualizar la tabla `activos`
             $sql1 = "UPDATE activos 
                     SET sbn = ?, serie = ?, tipo = ?, marca = ?, modelo = ?, ubicacion = ?, responsable_id = ?, fecha_registro = ?, 
-                        condicion = ?, estado = ?
+                        condicion = ?, estado = ?, ult_mant = ?
                     WHERE id = ?";
             $stmt1 = $conectar->prepare($sql1);
-            $stmt1->execute([$sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $id]);
+            $stmt1->execute([$sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $ult_mant, $id]);
     
             // 🔹 Verificar si el `activo_id` ya está en `detactivo`
             $sql2 = "SELECT COUNT(*) FROM detactivo WHERE activo_id = ?";
