@@ -357,7 +357,7 @@ function editar(id) {
                 return;
             }
 
-            // ✅ Primero asignamos todos los valores al formulario
+            // ✅ Asignación de todos los campos
             $("#vehiculo_id").val(data.id);
             $("#vehiculo_sbn").val(data.sbn);
             $("#vehiculo_serie").val(data.serie);
@@ -367,24 +367,24 @@ function editar(id) {
             $("#vehiculo_ubicacion").val(data.ubicacion);
             $("#vehiculo_fecha_registro").val(data.fecha_registro);
             $("#vehiculo_condicion").val(data.condicion);
-            $("#vehiculo_estado").val(data.estado);
+            $("#vehiculo_estado").val(data.estado); // ⚠️ Asegúrate que sea 1 o 0
             $("#vehiculo_hostname").val(data.hostname);
             $("#vehiculo_procesador").val(data.procesador);
             $("#vehiculo_sisopera").val(data.sisopera);
             $("#vehiculo_ram").val(data.ram);
             $("#vehiculo_disco").val(data.disco);
             $("#vehiculo_ult_mant").val(data.ult_mant);
-
+            $("#vehiculo_sede").val(data.sede);
+            $("#vehiculo_observaciones").val(data.observaciones); // ✅ Agregado
 
             let responsableID = data.responsable_id && !isNaN(data.responsable_id) ? data.responsable_id : null;
             console.log("📌 Responsable ID recibido:", responsableID);
 
-            // ✅ Ahora cargamos los responsables y abrimos el modal solo cuando todo esté listo
             cargarResponsables(responsableID, function () {
                 console.log("🔹 Responsable y demás campos cargados correctamente.");
                 $("#myModalLabel").html("Editar Activo");
                 $(".modal-footer .btn-primary").show();
-                $("#mnt_modal").modal("show"); // 🔥 Solo abrimos aquí el modal
+                $("#mnt_modal").modal("show");
             });
 
         },
@@ -394,6 +394,7 @@ function editar(id) {
         }
     });
 }
+
 
 
 

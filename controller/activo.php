@@ -79,7 +79,7 @@ switch ($_GET["op"]) {
         $responsable_id = isset($_POST["vehiculo_responsable_id"]) ? $_POST["vehiculo_responsable_id"] : null;
         $fecha_registro = date("Y-m-d H:i:s");
         $condicion = isset($_POST["vehiculo_condicion"]) ? $_POST["vehiculo_condicion"] : null;
-        $estado = isset($_POST["vehiculo_estado"]) ? $_POST["vehiculo_estado"] : null;
+        $estado = 1; // Siempre se inserta como ACTIVO por defecto
         $ult_mant = $_POST["vehiculo_ult_mant"] ?? null;
         $sede = $_POST["vehiculo_sede"] ?? null;
         $observaciones = $_POST["vehiculo_observaciones"] ?? null;
@@ -110,7 +110,8 @@ switch ($_GET["op"]) {
         $responsable_id = $_POST["vehiculo_responsable_id"] ?? null;
         $fecha_registro = $_POST["vehiculo_fecha_registro"] ?? null;
         $condicion = $_POST["vehiculo_condicion"] ?? null;
-        $estado = $_POST["vehiculo_estado"] ?? null;
+        $vehiculo_actual = $activo->get_vehiculo_por_id($id); // Obtener el registro actual
+        $estado = $vehiculo_actual["estado"]; // Conservar el estado actual ya registrado
         $hostname = $_POST["vehiculo_hostname"] ?? null;
         $procesador = $_POST["vehiculo_procesador"] ?? null;
         $sisopera = $_POST["vehiculo_sisopera"] ?? null;
