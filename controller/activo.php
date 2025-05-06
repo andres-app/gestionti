@@ -81,10 +81,13 @@ switch ($_GET["op"]) {
         $condicion = isset($_POST["vehiculo_condicion"]) ? $_POST["vehiculo_condicion"] : null;
         $estado = isset($_POST["vehiculo_estado"]) ? $_POST["vehiculo_estado"] : null;
         $ult_mant = $_POST["vehiculo_ult_mant"] ?? null;
+        $sede = $_POST["vehiculo_sede"] ?? null;
+        $observaciones = $_POST["vehiculo_observaciones"] ?? null;
+
 
 
         // Insertar el nuevo vehículo en la base de datos usando el tipo
-        if ($activo->insertar_vehiculo($sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $tipo, $condicion, $estado, $ult_mant)) {
+        if ($activo->insertar_vehiculo($sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $sede, $responsable_id, $fecha_registro, $condicion, $estado, $ult_mant, $observaciones)) {
             echo json_encode(["success" => "Vehículo registrado correctamente."]);
         } else {
             echo json_encode(["error" => "Error al registrar el vehículo."]);
@@ -114,6 +117,8 @@ switch ($_GET["op"]) {
         $ram = $_POST["vehiculo_ram"] ?? null;
         $disco = $_POST["vehiculo_disco"] ?? null;
         $ult_mant = $_POST["vehiculo_ult_mant"] ?? null;
+        $sede = $_POST["vehiculo_sede"] ?? null;
+        $observaciones = $_POST["vehiculo_observaciones"] ?? null;
 
 
         // 🚨 Verificar si algún campo clave está vacío
@@ -124,7 +129,7 @@ switch ($_GET["op"]) {
         }
 
         // 🔥 LLAMAMOS A LA FUNCIÓN DE ACTUALIZACIÓN
-        $resultado = $activo->editar_vehiculo($id, $sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $ult_mant, $hostname, $procesador, $sisopera, $ram, $disco);
+        $resultado = $activo->editar_vehiculo($id, $sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $ult_mant, $hostname, $procesador, $sisopera, $ram, $disco, $sede, $observaciones);
 
         if ($resultado) {
             echo json_encode(["success" => "Vehículo actualizado correctamente."]);

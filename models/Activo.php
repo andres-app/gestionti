@@ -65,18 +65,17 @@ class Activo extends Conectar
      * 
      * @return bool True si la inserción fue exitosa, false en caso de error.
      */
-    public function insertar_vehiculo($sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $ult_mant)
+    public function insertar_vehiculo($sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $sede, $responsable_id, $fecha_registro, $condicion, $estado, $ult_mant, $observaciones)
     {
         $conectar = parent::conexion();
         parent::set_names();
 
-        // Consulta SQL para insertar un nuevo vehículo en la base de datos
-        $sql = "INSERT INTO activos (sbn, serie, tipo, marca, modelo, ubicacion, responsable_id, fecha_registro, condicion, estado, ult_mant) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO activos (sbn, serie, tipo, marca, modelo, ubicacion, sede, responsable_id, fecha_registro, condicion, estado, ult_mant, observaciones) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = $conectar->prepare($sql);
 
-        if ($stmt->execute([$sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $ult_mant])) {
+        if ($stmt->execute([$sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $sede, $responsable_id, $fecha_registro, $condicion, $estado, $ult_mant, $observaciones])) {
             return true;
         } else {
             $error = $stmt->errorInfo();
@@ -85,32 +84,34 @@ class Activo extends Conectar
         }
     }
 
+
+
     /**
      * Método para actualizar los datos de un vehículo.
      */
-    public function editar_vehiculo($id, $sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $ult_mant, $hostname, $procesador, $sisopera, $ram, $disco)
+    public function editar_vehiculo($id, $sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $ult_mant, $hostname, $procesador, $sisopera, $ram, $disco, $sede, $observaciones)
     {
         $conectar = parent::conexion();
         parent::set_names();
-    
+
         try {
             // 🔹 Iniciar una transacción para asegurar que ambas tablas se actualizan correctamente
             $conectar->beginTransaction();
-    
+
             // 🔹 Actualizar la tabla `activos`
             $sql1 = "UPDATE activos 
                     SET sbn = ?, serie = ?, tipo = ?, marca = ?, modelo = ?, ubicacion = ?, responsable_id = ?, fecha_registro = ?, 
-                        condicion = ?, estado = ?, ult_mant = ?
+                        condicion = ?, estado = ?, ult_mant = ?, sede = ?, observaciones = ?
                     WHERE id = ?";
             $stmt1 = $conectar->prepare($sql1);
-            $stmt1->execute([$sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $ult_mant, $id]);
-    
+            $stmt1->execute([$sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $ult_mant, $sede, $observaciones, $id]);
+
             // 🔹 Verificar si el `activo_id` ya está en `detactivo`
             $sql2 = "SELECT COUNT(*) FROM detactivo WHERE activo_id = ?";
             $stmt2 = $conectar->prepare($sql2);
             $stmt2->execute([$id]);
             $existe = $stmt2->fetchColumn();
-    
+
             if ($existe) {
                 // 🔹 Si existe, actualizar `detactivo`
                 $sql3 = "UPDATE detactivo 
@@ -125,7 +126,7 @@ class Activo extends Conectar
                 $stmt4 = $conectar->prepare($sql4);
                 $stmt4->execute([$id, $hostname, $procesador, $sisopera, $ram, $disco]);
             }
-    
+
             // 🔹 Confirmar la transacción si todo salió bien
             $conectar->commit();
             return true;
@@ -136,7 +137,7 @@ class Activo extends Conectar
             return false;
         }
     }
-    
+
 
 
     /**
@@ -146,24 +147,24 @@ class Activo extends Conectar
     {
         $conectar = parent::conexion();
         parent::set_names();
-    
+
         $sql = "SELECT v.id, v.sbn, v.serie, v.tipo, v.marca, v.modelo, v.ubicacion, 
-                       v.responsable_id,  -- 🔹 Agrega el ID del responsable
-                       u.usu_nomape AS responsable, 
-                       v.fecha_registro, v.condicion, v.estado, v.ult_mant,
-                       d.hostname, d.procesador, d.sisopera, d.ram, d.disco
+       v.responsable_id, u.usu_nomape AS responsable, 
+       v.fecha_registro, v.condicion, v.estado, v.ult_mant,
+       v.sede, v.observaciones,
+       d.hostname, d.procesador, d.sisopera, d.ram, d.disco
                 FROM activos v
                 LEFT JOIN tm_usuario u ON v.responsable_id = u.usu_id  -- 🔹 Correcta relación con el usuario
                 LEFT JOIN detactivo d ON v.id = d.activo_id
                 WHERE v.id = ?";
-    
+
         $stmt = $conectar->prepare($sql);
         $stmt->execute([$id]);
-    
+
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-       
-    
+
+
 
     public function get_usuarios()
     {
@@ -283,18 +284,20 @@ class Activo extends Conectar
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function get_tipos_activos() {
+    public function get_tipos_activos()
+    {
         $conectar = parent::conexion();
         parent::set_names();
-    
+
         $sql = "SELECT DISTINCT tipo FROM activos WHERE tipo IS NOT NULL AND tipo != ''";
         $stmt = $conectar->prepare($sql);
         $stmt->execute();
-    
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function get_activos_por_estado() {
+    public function get_activos_por_estado()
+    {
         $conectar = parent::conexion();
         $sql = "SELECT 
                     CASE estado
@@ -305,13 +308,14 @@ class Activo extends Conectar
                     COUNT(*) AS total
                 FROM activos
                 GROUP BY estado";
-    
+
         $sql = $conectar->prepare($sql);
         $sql->execute();
         return $sql->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function get_activos_por_tipo() {
+    public function get_activos_por_tipo()
+    {
         $conectar = parent::conexion();
         $sql = "SELECT tipo, COUNT(*) AS total
                 FROM activos
@@ -321,35 +325,35 @@ class Activo extends Conectar
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
-    public function get_activos_por_ubicacion() {
+
+    public function get_activos_por_ubicacion()
+    {
         $conectar = parent::conexion();
         parent::set_names();
-    
+
         $sql = "SELECT ubicacion, COUNT(*) AS total 
                 FROM activos 
                 WHERE ubicacion IS NOT NULL AND ubicacion != '' 
                 GROUP BY ubicacion";
-    
+
         $stmt = $conectar->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function get_activos_por_condicion() {
+    public function get_activos_por_condicion()
+    {
         $conectar = parent::conexion();
         parent::set_names();
-    
+
         $sql = "SELECT condicion, COUNT(*) AS total 
                 FROM activos 
                 WHERE condicion IS NOT NULL AND condicion != ''
                 GROUP BY condicion";
-    
+
         $stmt = $conectar->prepare($sql);
         $stmt->execute();
-    
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
-    
 }

@@ -76,11 +76,8 @@
                             <input class="form-control" type="text" name="vehiculo_condicion" id="vehiculo_condicion">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="vehiculo_estado" class="form-label">Estado</label>
-                            <select class="form-control" name="vehiculo_estado" id="vehiculo_estado">
-                                <option value="1">Activo</option>
-                                <option value="0">Inactivo</option>
-                            </select>
+                            <label for="vehiculo_sede" class="form-label">Sede</label>
+                            <input class="form-control" type="text" name="vehiculo_sede" id="vehiculo_sede">
                         </div>
                     </div>
                     <!-- 🔹 Hostname y Procesador en una fila -->
@@ -119,17 +116,19 @@
                             <input class="form-control" type="date" name="vehiculo_ult_mant" id="vehiculo_ult_mant">
                         </div>
                     </div>
-
-
-
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="vehiculo_observaciones" class="form-label">Observaciones</label>
+                            <textarea class="form-control" name="vehiculo_observaciones" id="vehiculo_observaciones" rows="3"></textarea>
+                        </div>
+                    </div>
                     <!-- Galería de imágenes en Carrusel -->
-                    <div class="row mt-4">
+                    <!-- <div class="row mt-4">
                         <div class="col-12">
                             <h5>Galería de Fotos</h5>
                             <div id="carouselGaleria" class="carousel slide" data-bs-ride="carousel">
                                 <div class="carousel-inner" id="galeria_fotos"></div>
 
-                                <!-- Botones de navegación del carrusel -->
                                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselGaleria" data-bs-slide="prev" style="filter: invert(0%);">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                     <span class="visually-hidden">Anterior</span>
@@ -140,7 +139,7 @@
                                 </button>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <!-- Modal para mostrar imagen en grande -->
                     <div class="modal fade" id="modalZoomImagen" tabindex="-1" aria-labelledby="modalZoomImagenLabel" aria-hidden="true">

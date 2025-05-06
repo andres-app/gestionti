@@ -155,13 +155,16 @@ function previsualizar(id) {
             $("#vehiculo_fecha_registro").val(data.fecha_registro).prop("disabled", true);
             $("#vehiculo_condicion").val(data.condicion).prop("disabled", true);
             $("#vehiculo_estado").val(data.estado).prop("disabled", true);
+            $("#vehiculo_ult_mant").val(data.ult_mant).prop("disabled", true);
+            $("#vehiculo_sede").val(data.sede).prop("disabled", true);
+            $("#vehiculo_observaciones").val(data.observaciones);
             // 🔹 Aplicar visibilidad a los campos vacíos
             manejarVisibilidadCampo("#vehiculo_hostname", data.hostname);
             manejarVisibilidadCampo("#vehiculo_procesador", data.procesador);
             manejarVisibilidadCampo("#vehiculo_sisopera", data.sisopera);
             manejarVisibilidadCampo("#vehiculo_ram", data.ram);
             manejarVisibilidadCampo("#vehiculo_disco", data.disco);
-            $("#vehiculo_ult_mant").val(data.ult_mant).prop("disabled", true);
+            
 
 
             // ✅ Agregamos el responsable sin que sea sobrescrito después
