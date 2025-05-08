@@ -121,6 +121,11 @@
                             <label for="vehiculo_observaciones" class="form-label">Observaciones</label>
                             <textarea class="form-control" name="vehiculo_observaciones" id="vehiculo_observaciones" rows="3"></textarea>
                         </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="vehiculo_acompra" class="form-label">Año de Compra</label>
+                            <input class="form-control" type="number" name="vehiculo_acompra" id="vehiculo_acompra" min="1900" max="2100">
+                        </div>
+
                     </div>
                     <!-- Galería de imágenes en Carrusel -->
                     <!-- <div class="row mt-4">

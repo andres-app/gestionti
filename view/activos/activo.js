@@ -157,7 +157,8 @@ function previsualizar(id) {
             $("#vehiculo_estado").val(data.estado).prop("disabled", true);
             $("#vehiculo_ult_mant").val(data.ult_mant).prop("disabled", true);
             $("#vehiculo_sede").val(data.sede).prop("disabled", true);
-            $("#vehiculo_observaciones").val(data.observaciones);
+            $("#vehiculo_observaciones").val(data.observaciones).prop("disabled", true);
+            $("#vehiculo_acompra").val(data.acompra).prop("disabled", true);
             // 🔹 Aplicar visibilidad a los campos vacíos
             manejarVisibilidadCampo("#vehiculo_hostname", data.hostname);
             manejarVisibilidadCampo("#vehiculo_procesador", data.procesador);
@@ -187,13 +188,10 @@ function previsualizar(id) {
 
 
 
-/**
- * Restaurar el formulario cuando se cierra el modal.
- * Se habilitan todos los campos y se muestra el botón de guardar.
- */
+// Restaurar el formulario cuando se cierra el modal.
 $("#mnt_modal").on("hidden.bs.modal", function () {
-    // Habilitar todos los campos del formulario
-    $("#mnt_form input, #mnt_form select").prop("disabled", false);
+    // Habilitar todos los campos del formulario, incluyendo textarea
+    $("#mnt_form input, #mnt_form select, #mnt_form textarea").prop("disabled", false);
 
     // Mostrar el botón de guardar nuevamente
     $(".modal-footer .btn-primary").show();
@@ -201,6 +199,7 @@ $("#mnt_modal").on("hidden.bs.modal", function () {
     // Cambiar el título del modal a "Nuevo Registro"
     $("#myModalLabel").html("Nuevo Registro");
 });
+
 
 
 
@@ -375,7 +374,10 @@ function editar(id) {
             $("#vehiculo_disco").val(data.disco);
             $("#vehiculo_ult_mant").val(data.ult_mant);
             $("#vehiculo_sede").val(data.sede);
-            $("#vehiculo_observaciones").val(data.observaciones); // ✅ Agregado
+            $("#vehiculo_observaciones").val(data.observaciones).prop("disabled", false);
+            $("#vehiculo_acompra").val(data.acompra);
+            
+
 
             let responsableID = data.responsable_id && !isNaN(data.responsable_id) ? data.responsable_id : null;
             console.log("📌 Responsable ID recibido:", responsableID);
@@ -417,6 +419,7 @@ $('#mnt_modal').on('shown.bs.modal', function () {
 $("#btnnuevo").on("click", function () {
     $("#vehiculo_id").val('');   // Limpiar el campo de ID del vehículo
     $("#mnt_form")[0].reset();   // Resetea el formulario
+    $("#vehiculo_acompra").val(''); // 🔹 Limpiar campo acompra
 
     // 🕒 Asignar fecha actual
     const fechaActual = new Date();
@@ -430,7 +433,6 @@ $("#btnnuevo").on("click", function () {
         $("#mnt_modal").modal('show');
     });
 });
-
 
 
 // Llamada a la función de inicialización
