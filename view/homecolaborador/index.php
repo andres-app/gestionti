@@ -10,7 +10,7 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
     $activo = new Activo();
     $total_vehiculos = $activo->get_total_activos();
     $proximos_mantenimientos = $activo->get_proximos_mantenimientos();
-?>
+    ?>
     <!doctype html>
     <html lang="es">
 
@@ -33,7 +33,8 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                             <div class="col-12">
                                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                                     <h4 class="mb-sm-0 font-size-18">DASHBOARD</h4>
-                                    <a href="../../controller/descargar_dashboard_excel.php" class="btn btn-outline-primary mb-3">
+                                    <a href="../../controller/descargar_dashboard_excel.php"
+                                        class="btn btn-outline-primary mb-3">
                                         <i class="mdi mdi-download me-1"></i> Descargar Excel
                                     </a>
                                 </div>
@@ -99,35 +100,48 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                             </div>
                         </div>
 
-                        <!-- Fila 2: Gráfico por condición -->
-                        <div class="row g-4 align-items-stretch">
-                            <div class="col-xl-4 col-md-6">
-                                <div class="card shadow h-100">
-                                    <div class="card-header bg-primary text-white">
-                                        <h5 class="my-0 text-white">Distribución por Estado</h5>
-                                    </div>
-                                    <div class="card-body d-flex justify-content-center align-items-center">
-                                        <canvas id="graficoEstado" style="height: 220px; max-height: 220px;"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <?php require_once("../html/footer.php") ?>
+<!-- Fila 2: Estado + Obsolescencia en paralelo -->
+<div class="row g-4 align-items-stretch">
+    <!-- Estado -->
+    <div class="col-xl-6 col-md-6">
+        <div class="card shadow h-100">
+            <div class="card-header bg-primary text-white">
+                <h5 class="my-0 text-white">Distribución por Estado</h5>
+            </div>
+            <div class="card-body d-flex justify-content-center align-items-center">
+                <canvas id="graficoEstado" style="height: 220px; max-height: 220px;"></canvas>
             </div>
         </div>
+    </div>
 
-        <?php require_once("../html/sidebar.php") ?>
-        <div class="rightbar-overlay"></div>
+    <!-- Obsolescencia -->
+    <div class="col-xl-6 col-md-6">
+        <div class="card shadow h-100">
+            <div class="card-header bg-primary text-white">
+                <h5 class="my-0 text-white">Obsolescencia y Garantía</h5>
+            </div>
+            <div class="card-body d-flex justify-content-center align-items-center">
+                <canvas id="graficoResumen" style="height: 220px; max-height: 220px;"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
 
-        <?php require_once("../html/js.php") ?>
-        <script src="homecolaborador.js"></script>
+
+
+                    <?php require_once("../html/footer.php") ?>
+                </div>
+            </div>
+
+            <?php require_once("../html/sidebar.php") ?>
+            <div class="rightbar-overlay"></div>
+
+            <?php require_once("../html/js.php") ?>
+            <script src="homecolaborador.js"></script>
     </body>
 
     </html>
-<?php
+    <?php
 } else {
     header("Location:" . Conectar::ruta() . "index.php");
 }

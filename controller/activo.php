@@ -254,4 +254,10 @@ switch ($_GET["op"]) {
         }
         break;
 
+    case "obsolescencia_garantia":
+        $datos = $activo->get_obsolescencia_garantia();
+        echo json_encode($datos);
+        break;
+
+
 }
