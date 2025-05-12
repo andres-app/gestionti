@@ -37,7 +37,7 @@
         public static function ruta(){
             if ($_SERVER['HTTP_HOST'] == 'localhost') {
                 /* Ruta para el entorno de desarrollo */
-                return "http://localhost/gestionti/";
+                return "http://localhost:8080/gestionti/";
             } else {
                 /* Ruta para el entorno de producción */
                 return "http://10.4.16.83:8080/gestionti/";

@@ -113,7 +113,7 @@ function eliminar(id) {
                 type: "POST",
                 data: { vehiculo_id: id },
                 dataType: "json",
-                success: function(response) {
+                success: function (response) {
                     console.log("📌 Respuesta del servidor:", response);
 
                     if (response.success) {
@@ -123,7 +123,7 @@ function eliminar(id) {
                         Swal.fire('Error', response.error, 'error');
                     }
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     console.log("❌ Error en AJAX:", xhr.responseText);
                     Swal.fire('Error', 'No se pudo eliminar el activo', 'error');
                 }
@@ -165,7 +165,7 @@ function previsualizar(id) {
             manejarVisibilidadCampo("#vehiculo_sisopera", data.sisopera);
             manejarVisibilidadCampo("#vehiculo_ram", data.ram);
             manejarVisibilidadCampo("#vehiculo_disco", data.disco);
-            
+
 
 
             // ✅ Agregamos el responsable sin que sea sobrescrito después
@@ -376,7 +376,7 @@ function editar(id) {
             $("#vehiculo_sede").val(data.sede);
             $("#vehiculo_observaciones").val(data.observaciones).prop("disabled", false);
             $("#vehiculo_acompra").val(data.acompra);
-            
+
 
 
             let responsableID = data.responsable_id && !isNaN(data.responsable_id) ? data.responsable_id : null;
@@ -432,6 +432,38 @@ $("#btnnuevo").on("click", function () {
         $(".modal-footer .btn-primary").show();
         $("#mnt_modal").modal('show');
     });
+});
+
+$(document).ready(function () {
+    function toggleCamposCPU() {
+        const tipo = $('#vehiculo_tipo').val();
+        const esCPU = tipo === 'CPU';
+
+        const camposCPU = [
+            '#vehiculo_hostname',
+            '#vehiculo_procesador',
+            '#vehiculo_sisopera',
+            '#vehiculo_ram',
+            '#vehiculo_disco'
+        ];
+
+        camposCPU.forEach(selector => {
+            const col = $(selector).closest('.col-md-6');
+            if (esCPU) {
+                col.show();
+                $(selector).prop('required', true);
+            } else {
+                col.hide();
+                $(selector).val('').prop('required', false);
+            }
+        });
+    }
+
+    // Inicial al cargar modal
+    toggleCamposCPU();
+
+    // Al cambiar tipo
+    $('#vehiculo_tipo').on('change', toggleCamposCPU);
 });
 
 

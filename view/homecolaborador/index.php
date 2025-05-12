@@ -47,7 +47,7 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                             <!-- Total Activos -->
                             <div class="col-xl-3 col-md-6">
                                 <div class="card shadow text-center h-100">
-                                    <div class="card-header bg-primary text-white">
+                                    <div class="card-header bg-secondary text-white">
                                         <h5 class="my-0 text-white">
                                             <i class="mdi mdi-car-multiple me-2"></i>Total de Activos
                                         </h5>
@@ -61,7 +61,7 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                             <!-- Próximos mantenimientos -->
                             <div class="col-xl-3 col-md-6">
                                 <div class="card shadow text-center h-100">
-                                    <div class="card-header bg-primary text-white">
+                                    <div class="card-header bg-secondary text-white">
                                         <h5 class="my-0 text-white">
                                             <i class="mdi mdi-wrench-outline me-2"></i>Próx. Mantenimiento
                                         </h5>
@@ -75,7 +75,7 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                             <!-- Obsoletos -->
                             <div class="col-xl-3 col-md-6">
                                 <div class="card shadow text-center h-100">
-                                    <div class="card-header bg-primary text-white">
+                                    <div class="card-header bg-secondary text-white">
                                         <h5 class="my-0 text-white">
                                             <i class="mdi mdi-timer-sand me-2"></i>Obsoletos
                                         </h5>
@@ -89,7 +89,7 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                             <!-- Fuera de garantía -->
                             <div class="col-xl-3 col-md-6">
                                 <div class="card shadow text-center h-100">
-                                    <div class="card-header bg-primary text-white">
+                                    <div class="card-header bg-secondary text-white">
                                         <h5 class="my-0 text-white">
                                             <i class="mdi mdi-shield-off-outline me-2"></i>Sin Garantía
                                         </h5>
@@ -105,7 +105,7 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                             <!-- Estado -->
                             <div class="col-xl-4 col-md-6">
                                 <div class="card shadow h-100">
-                                    <div class="card-header bg-primary text-white">
+                                    <div class="card-header bg-secondary text-white">
                                         <h5 class="my-0 text-white">Distribución por Condición</h5>
                                     </div>
                                     <div class="card-body d-flex justify-content-center align-items-center">
@@ -117,7 +117,7 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                             <!-- Tipo -->
                             <div class="col-xl-4 col-md-12">
                                 <div class="card shadow h-100">
-                                    <div class="card-header bg-primary text-white">
+                                    <div class="card-header bg-secondary text-white">
                                         <h5 class="my-0 text-white">Distribución por Tipo</h5>
                                     </div>
                                     <div class="card-body d-flex justify-content-center align-items-center">
@@ -129,7 +129,7 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                             <!-- Ubicación -->
                             <div class="col-xl-4 col-md-6">
                                 <div class="card shadow h-100">
-                                    <div class="card-header bg-primary text-white">
+                                    <div class="card-header bg-secondary text-white">
                                         <h5 class="my-0 text-white">Distribución por Ubicación</h5>
                                     </div>
                                     <div class="card-body d-flex justify-content-center align-items-center">
@@ -144,7 +144,7 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                             <!-- Estado -->
                             <div class="col-xl-6 col-md-6">
                                 <div class="card shadow h-100">
-                                    <div class="card-header bg-primary text-white">
+                                    <div class="card-header bg-secondary text-white">
                                         <h5 class="my-0 text-white">Distribución por Estado</h5>
                                     </div>
                                     <div class="card-body d-flex justify-content-center align-items-center">
@@ -156,7 +156,7 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                             <!-- Obsolescencia -->
                             <div class="col-xl-6 col-md-6">
                                 <div class="card shadow h-100">
-                                    <div class="card-header bg-primary text-white">
+                                    <div class="card-header bg-secondary text-white">
                                         <h5 class="my-0 text-white">Obsolescencia y Garantía</h5>
                                     </div>
                                     <div class="card-body d-flex justify-content-center align-items-center">
