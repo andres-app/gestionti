@@ -40,8 +40,27 @@ $(document).ready(function () {
             { "data": "ram" },
             { "data": "disco" },
             { "data": "acompra" },
+            {
+                "data": "acompra",
+                "render": function (acompra) {
+                    if (!acompra || acompra < 1990) return "—";
+                    const year = new Date().getFullYear();
+                    const edad = year - acompra;
+                    return edad >= 5 ? "Obsoleto" : "Vigente";
+                }
+            },
+            {
+                "data": "acompra",
+                "render": function (acompra) {
+                    if (!acompra || acompra < 1990) return "—";
+                    const year = new Date().getFullYear();
+                    const edad = year - acompra;
+                    return edad >= 3 ? "Sin Garantía" : "Con Garantía";
+                }
+            },
             { "data": "fecha" }
         ]
+
     });
 
     $("#btn_exportar_pdf").on("click", function () {

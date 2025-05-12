@@ -70,10 +70,17 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                                                 </div>
 
                                                 <div class="col-md-4 mb-3">
-                                                    <label class="form-label">Fecha</label>
-                                                    <input type="date" class="form-control" id="reporte_fecha">
+                                                    <label class="form-label">Año de Registro</label>
+                                                    <select class="form-control" id="reporte_fecha">
+                                                        <option value="">Todos</option>
+                                                        <?php
+                                                        $año_actual = date("Y");
+                                                        for ($i = $año_actual; $i >= 2000; $i--) {
+                                                            echo "<option value='$i'>$i</option>";
+                                                        }
+                                                        ?>
+                                                    </select>
                                                 </div>
-
                                                 <div class="col-md-4 mb-3">
                                                     <label class="form-label">Obsolescencia</label>
                                                     <select class="form-control" id="filtro_obsolescencia">
@@ -130,9 +137,12 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                                                     <th>RAM</th>
                                                     <th>Disco</th>
                                                     <th>Año Compra</th>
-                                                    <th>Fecha</th>
+                                                    <th>Obsolescencia</th> <!-- NUEVO -->
+                                                    <th>Garantía</th> <!-- NUEVO -->
+                                                    <th>Fecha Reg.</th>
                                                 </tr>
                                             </thead>
+
                                             <tbody>
                                                 <!-- Se llenará dinámicamente -->
                                             </tbody>

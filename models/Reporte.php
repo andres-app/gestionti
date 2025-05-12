@@ -39,7 +39,7 @@ class Reporte extends Conectar {
         }
 
         if (!empty($fecha)) {
-            $sql .= " AND DATE(a.fecha_registro) = ?";
+            $sql .= " AND YEAR(a.fecha_registro) = ?";
             $params[] = $fecha;
         }
 
