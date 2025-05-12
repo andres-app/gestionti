@@ -125,11 +125,12 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                                                     <th>Modelo</th>
                                                     <th>Ubicación</th>
                                                     <th>Hostname</th>
-                                                    <th>Procesador:</th>
-                                                    <th>Sis. Ope:</th>
-                                                    <th>RAM:</th>
-                                                    <th>Disco:</th>
-                                                    <th>Fecha:</th>
+                                                    <th>Procesador</th>
+                                                    <th>Sis. Ope</th>
+                                                    <th>RAM</th>
+                                                    <th>Disco</th>
+                                                    <th>Año Compra</th>
+                                                    <th>Fecha</th>
                                                 </tr>
                                             </thead>
                                             <tbody>

@@ -39,6 +39,7 @@ $(document).ready(function () {
             { "data": "sisopera" },
             { "data": "ram" },
             { "data": "disco" },
+            { "data": "acompra" },
             { "data": "fecha" }
         ]
     });
