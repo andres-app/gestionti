@@ -8,7 +8,7 @@
         protected $dbh;
 
         /* TODO: Método para establecer la conexión a la base de datos */
-        protected function conexion(){
+        public function conexion() {
             try{
                 /* TODO: Detectar entorno */
                 if (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) {
@@ -37,7 +37,7 @@
         public static function ruta(){
             if ($_SERVER['HTTP_HOST'] == 'localhost') {
                 /* Ruta para el entorno de desarrollo */
-                return "http://localhost:8080/gestionti/";
+                return "http://localhost/gestionti/";
             } else {
                 /* Ruta para el entorno de producción */
                 return "http://10.4.16.83:8080/gestionti/";

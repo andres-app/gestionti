@@ -27,3 +27,7 @@
 <link href="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone.css" rel="stylesheet" type="text/css" />
 
 
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+
+

@@ -226,4 +226,32 @@ switch ($_GET["op"]) {
         $datos = $activo->get_activos_por_condicion();
         echo json_encode($datos);
         break;
+
+    case 'buscar_codigo':
+        require_once("../config/conexion.php");
+
+        $conectar = new Conectar();
+        $pdo = $conectar->conexion();
+
+        $codigo = $_GET["codigo"];
+        $stmt = $pdo->prepare("SELECT * FROM activos WHERE sbn = ? OR serie = ?");
+        $stmt->execute([$codigo, $codigo]);
+        $activo = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($activo) {
+            // Obtener detalles técnicos si es tipo CPU
+            $stmt_det = $pdo->prepare("SELECT * FROM detactivo WHERE activo_id = ?");
+            $stmt_det->execute([$activo['id']]);
+            $detalle = $stmt_det->fetch(PDO::FETCH_ASSOC);
+
+            echo json_encode([
+                "success" => true,
+                "activo" => $activo,
+                "detalle" => $detalle ?: []
+            ]);
+        } else {
+            echo json_encode(["success" => false]);
+        }
+        break;
+
 }

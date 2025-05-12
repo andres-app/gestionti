@@ -1,4 +1,4 @@
-<!-- JAVASCRIPT -->
+<!-- view/hml/js.php -->
 <script src="../../assets/js/jquery.min.js"></script>
 <script src="../../assets/js/bootstrap.bundle.min.js"></script>
 <script src="../../assets/js/metisMenu.min.js"></script>
@@ -37,3 +37,5 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
+<script src="https://unpkg.com/quagga@0.12.1/dist/quagga.min.js"></script>
+
