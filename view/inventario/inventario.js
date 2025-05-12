@@ -24,6 +24,41 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
             Quagga.start();
+            Quagga.onDetected(function (result) {
+                if (!result.codeResult || !result.codeResult.code) return;
+
+                const code = result.codeResult.code;
+                document.getElementById('codigo_activo').value = code;
+                Swal.fire('Escaneado', 'Código: ' + code, 'success');
+
+                // Detener escaneo
+                Quagga.stop();
+                document.getElementById('preview').classList.add('d-none');
+                escanerActivo = false;
+                document.getElementById('btn_escanear').classList.remove('d-none');
+                document.getElementById('btn_detener').classList.add('d-none');
+
+                // Buscar datos del activo
+                fetch('../../controller/activo.php?op=buscar_codigo&codigo=' + code)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            const a = data.activo || {};
+                            const d = data.detalle || {};
+                            const set = (id, val) => document.getElementById(id).value = val || '';
+                            set('sbn', a.sbn); set('serie', a.serie); set('tipo', a.tipo); set('marca', a.marca);
+                            set('modelo', a.modelo); set('responsable', a.responsable_id); set('ubicacion', a.ubicacion);
+                            set('sede', a.sede); set('condicion', a.condicion); set('observaciones', a.observaciones);
+                            set('acompra', a.acompra); set('fecha_registro', a.fecha_registro); set('ult_mant', a.ult_mant);
+                            set('hostname', d.hostname); set('procesador', d.procesador); set('sisopera', d.sisopera);
+                            set('ram', d.ram); set('disco', d.disco);
+                            document.getElementById('form_inventario').classList.remove('d-none');
+                        } else {
+                            Swal.fire('Advertencia', 'Activo no registrado previamente', 'warning');
+                        }
+                    });
+            });
+
             escanerActivo = true;
             document.getElementById('btn_escanear').classList.add('d-none');
             document.getElementById('btn_detener').classList.remove('d-none');
