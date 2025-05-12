@@ -13,10 +13,26 @@ document.addEventListener('DOMContentLoaded', function () {
                 name: "Live",
                 type: "LiveStream",
                 target: document.querySelector('#preview'),
-                constraints: { facingMode: "environment" }
+                constraints: {
+                    facingMode: "environment",
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 },
+                    aspectRatio: { ideal: 16 / 9 }
+                }
             },
             decoder: {
-                readers: ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader"]
+                readers: ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader"],
+                multiple: false // más preciso para escanear uno a la vez
+            },
+            locate: true, // activa localización automática
+            frequency: 10, // reduce FPS procesados para más análisis
+            numOfWorkers: 2, // usa menos hilos (más estable en móviles)
+            locator: {
+                halfSample: true,
+                patchSize: "medium", // prueba también "small" o "x-small" si hay muchos errores
+                debug: {
+                    showCanvas: false
+                }
             }
         }, function (err) {
             if (err) {
