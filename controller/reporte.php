@@ -7,11 +7,14 @@ $reporte = new Reporte();
 switch ($_GET["op"]) {
 
     case "listar":
-        $usuario_id = isset($_GET["usuario"]) && !empty($_GET["usuario"]) ? $_GET["usuario"] : null;
-        $tipo_activo = isset($_GET["tipo_activo"]) && !empty($_GET["tipo_activo"]) ? $_GET["tipo_activo"] : null;
-        $fecha = isset($_GET["fecha"]) && !empty($_GET["fecha"]) ? $_GET["fecha"] : null;
+        $usuario_id     = $_GET["usuario"] ?? null;
+        $tipo_activo    = $_GET["tipo_activo"] ?? null;
+        $fecha          = $_GET["fecha"] ?? null;
+        $obsolescencia  = $_GET["obsolescencia"] ?? null;
+        $garantia       = $_GET["garantia"] ?? null;
 
-        $datos = $reporte->get_reportes($usuario_id, $tipo_activo, $fecha);
+        $datos = $reporte->get_reportes($usuario_id, $tipo_activo, $fecha, $obsolescencia, $garantia);
+
 
         if (!$datos || count($datos) == 0) {
             echo json_encode(["data" => []]);

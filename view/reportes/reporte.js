@@ -6,11 +6,14 @@ $(document).ready(function () {
         "ajax": {
             url: "../../controller/reporte.php?op=listar",
             type: "GET",
-            data: function (d) {
+            "data": function (d) {
                 d.usuario = $("#reporte_usuario").val();
                 d.tipo_activo = $("#reporte_tipo_activo").val();
                 d.fecha = $("#reporte_fecha").val();
+                d.obsolescencia = $("#filtro_obsolescencia").val(); // Nuevo
+                d.garantia = $("#filtro_garantia").val(); // Nuevo
             },
+
             dataType: "json",
             error: function (xhr, status, error) {
                 console.log("❌ Error en AJAX:", xhr.responseText);
@@ -44,26 +47,28 @@ $(document).ready(function () {
         let usuario = $("#reporte_usuario").val() || "";
         let tipo_activo = $("#reporte_tipo_activo").val() || "";
         let fecha = $("#reporte_fecha").val() || "";
+        let obsolescencia = $("#filtro_obsolescencia").val() || "";
+        let garantia = $("#filtro_garantia").val() || "";
 
-        let url = `../../controller/reporte.php?op=exportar_pdf&usuario=${usuario}&tipo_activo=${tipo_activo}&fecha=${fecha}`;
-
+        let url = `../../controller/reporte.php?op=exportar_pdf&usuario=${usuario}&tipo_activo=${tipo_activo}&fecha=${fecha}&obsolescencia=${obsolescencia}&garantia=${garantia}`;
         window.open(url, '_blank');
     });
 
-    // Evento para exportar a Excel
     $("#btn_exportar_excel").on("click", function () {
         let usuario = $("#reporte_usuario").val() || "";
         let tipo_activo = $("#reporte_tipo_activo").val() || "";
         let fecha = $("#reporte_fecha").val() || "";
+        let obsolescencia = $("#filtro_obsolescencia").val() || "";
+        let garantia = $("#filtro_garantia").val() || "";
 
-        let url = `../../controller/reporte.php?op=exportar_excel&usuario=${usuario}&tipo_activo=${tipo_activo}&fecha=${fecha}`;
-
-        window.location.href = url; // Redirecciona para descargar el archivo
+        let url = `../../controller/reporte.php?op=exportar_excel&usuario=${usuario}&tipo_activo=${tipo_activo}&fecha=${fecha}&obsolescencia=${obsolescencia}&garantia=${garantia}`;
+        window.location.href = url;
     });
 
 
 
-    $("#reporte_usuario, #reporte_tipo_activo, #reporte_fecha").on("change", function () {
+
+    $("#reporte_usuario, #reporte_tipo_activo, #reporte_fecha, #filtro_obsolescencia, #filtro_garantia").on("change", function () {
         let usuario = $("#reporte_usuario").val() || "";
         let tipo_activo = $("#reporte_tipo_activo").val() || "";
         let fecha = $("#reporte_fecha").val() || "";

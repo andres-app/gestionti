@@ -2,8 +2,9 @@
 
 class Reporte extends Conectar {
 
-    public function get_reportes($usuario_id = null, $tipo_activo = null, $fecha = null) {
+    public function get_reportes($usuario_id = null, $tipo_activo = null, $fecha = null, $obsolescencia = null, $garantia = null) {
         $conectar = parent::conexion();
+
         $sql = "SELECT 
                     a.id, 
                     u.usu_nomape AS usuario, 
@@ -18,33 +19,46 @@ class Reporte extends Conectar {
                     d.sisopera, 
                     d.ram, 
                     d.disco, 
-                    a.fecha_registro AS fecha 
+                    a.fecha_registro AS fecha,
+                    a.acompra
                 FROM activos a
                 LEFT JOIN tm_usuario u ON a.responsable_id = u.usu_id
                 LEFT JOIN detactivo d ON a.id = d.activo_id
-                WHERE 1=1";
-    
+                WHERE a.estado = 1";
+
         $params = [];
-    
+
         if (!empty($usuario_id)) {
             $sql .= " AND a.responsable_id = ?";
             $params[] = $usuario_id;
         }
+
         if (!empty($tipo_activo)) {
             $sql .= " AND a.tipo = ?";
             $params[] = $tipo_activo;
         }
+
         if (!empty($fecha)) {
             $sql .= " AND DATE(a.fecha_registro) = ?";
             $params[] = $fecha;
         }
-    
-        error_log("📌 SQL Ejecutado: " . $sql);
-    
+
+        if ($obsolescencia === "obsoleto") {
+            $sql .= " AND (YEAR(CURDATE()) - a.acompra) >= 5";
+        } elseif ($obsolescencia === "vigente") {
+            $sql .= " AND (YEAR(CURDATE()) - a.acompra) < 5";
+        }
+
+        if ($garantia === "sin") {
+            $sql .= " AND (YEAR(CURDATE()) - a.acompra) >= 3";
+        } elseif ($garantia === "con") {
+            $sql .= " AND (YEAR(CURDATE()) - a.acompra) < 3";
+        }
+
+        error_log("📌 SQL Ejecutado: " . $sql . " | Parámetros: " . json_encode($params));
+
         $stmt = $conectar->prepare($sql);
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
-    
-}   
+}

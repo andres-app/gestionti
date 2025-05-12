@@ -52,40 +52,56 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                                         <h4 class="card-title">Generar Reporte</h4>
                                         <p class="card-title-desc">Filtra y genera reportes personalizados.</p>
                                     </div>
-
                                     <div class="card-body">
                                         <form id="reporte_form">
                                             <div class="row">
-                                                <div class="col-md-4">
+                                                <div class="col-md-4 mb-3">
                                                     <label class="form-label">Usuario</label>
                                                     <select class="form-control" id="reporte_usuario">
                                                         <option value="">Seleccione un usuario</option>
                                                     </select>
                                                 </div>
 
-                                                <div class="col-md-4">
+                                                <div class="col-md-4 mb-3">
                                                     <label class="form-label">Tipo de Activo</label>
                                                     <select class="form-control" id="reporte_tipo_activo">
                                                         <option value="">Seleccione un tipo de activo</option>
                                                     </select>
-
                                                 </div>
 
-                                                <div class="col-md-4">
+                                                <div class="col-md-4 mb-3">
                                                     <label class="form-label">Fecha</label>
                                                     <input type="date" class="form-control" id="reporte_fecha">
                                                 </div>
+
+                                                <div class="col-md-4 mb-3">
+                                                    <label class="form-label">Obsolescencia</label>
+                                                    <select class="form-control" id="filtro_obsolescencia">
+                                                        <option value="">Todos</option>
+                                                        <option value="vigente">Vigente (&lt; 5 años)</option>
+                                                        <option value="obsoleto">Obsoleto (≥ 5 años)</option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-md-4 mb-3">
+                                                    <label class="form-label">Garantía</label>
+                                                    <select class="form-control" id="filtro_garantia">
+                                                        <option value="">Todos</option>
+                                                        <option value="con">Con Garantía (&lt; 3 años)</option>
+                                                        <option value="sin">Sin Garantía (≥ 3 años)</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                            <br>
- <!-- Botones para exportar con iconos -->
-<button type="button" id="btn_exportar_pdf" class="btn btn-danger">
-    <i class="fas fa-file-pdf"></i> PDF
-</button>
 
-<button type="button" id="btn_exportar_excel" class="btn btn-success">
-    <i class="fas fa-file-excel"></i> Excel
-</button>
+                                            <div class="mt-3">
+                                                <button type="button" id="btn_exportar_pdf" class="btn btn-danger me-2">
+                                                    <i class="fas fa-file-pdf"></i> PDF
+                                                </button>
 
+                                                <button type="button" id="btn_exportar_excel" class="btn btn-success">
+                                                    <i class="fas fa-file-excel"></i> Excel
+                                                </button>
+                                            </div>
                                         </form>
                                     </div>
                                 </div>
