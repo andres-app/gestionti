@@ -10,6 +10,7 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
     $activo = new Activo();
     $total_vehiculos = $activo->get_total_activos();
     $proximos_mantenimientos = $activo->get_proximos_mantenimientos();
+    $dataResumen = $activo->get_obsolescencia_garantia();
     ?>
     <!doctype html>
     <html lang="es">
@@ -40,13 +41,10 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                                 </div>
 
                             </div>
-                        </div>
-
-
-
-
-                        <!-- Total de Activos -->
+                        </div>  
+                        <!-- Resumen de indicadores -->
                         <div class="row mb-4">
+                            <!-- Total Activos -->
                             <div class="col-xl-3 col-md-6">
                                 <div class="card shadow text-center h-100">
                                     <div class="card-header bg-primary text-white">
@@ -59,8 +57,49 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
+                            <!-- Próximos mantenimientos -->
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card shadow text-center h-100">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5 class="my-0 text-white">
+                                            <i class="mdi mdi-wrench-outline me-2"></i>Próx. Mantenimiento
+                                        </h5>
+                                    </div>
+                                    <div class="card-body d-flex align-items-center justify-content-center">
+                                        <h3 class="card-title mb-0"><?= count($proximos_mantenimientos); ?></h3>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Obsoletos -->
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card shadow text-center h-100">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5 class="my-0 text-white">
+                                            <i class="mdi mdi-timer-sand me-2"></i>Obsoletos
+                                        </h5>
+                                    </div>
+                                    <div class="card-body d-flex align-items-center justify-content-center">
+                                        <h3 class="card-title mb-0"><?= $dataResumen['obsoletos']; ?></h3>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Fuera de garantía -->
+                            <div class="col-xl-3 col-md-6">
+                                <div class="card shadow text-center h-100">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5 class="my-0 text-white">
+                                            <i class="mdi mdi-shield-off-outline me-2"></i>Sin Garantía
+                                        </h5>
+                                    </div>
+                                    <div class="card-body d-flex align-items-center justify-content-center">
+                                        <h3 class="card-title mb-0"><?= $dataResumen['fuera_garantia']; ?></h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <!-- Fila de 3 gráficos -->
                         <div class="row g-4 align-items-stretch mb-4">
                             <!-- Estado -->
@@ -100,44 +139,47 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                             </div>
                         </div>
 
-<!-- Fila 2: Estado + Obsolescencia en paralelo -->
-<div class="row g-4 align-items-stretch">
-    <!-- Estado -->
-    <div class="col-xl-6 col-md-6">
-        <div class="card shadow h-100">
-            <div class="card-header bg-primary text-white">
-                <h5 class="my-0 text-white">Distribución por Estado</h5>
-            </div>
-            <div class="card-body d-flex justify-content-center align-items-center">
-                <canvas id="graficoEstado" style="height: 220px; max-height: 220px;"></canvas>
-            </div>
-        </div>
-    </div>
+                        <!-- Fila 2: Estado + Obsolescencia en paralelo -->
+                        <div class="row g-4 align-items-stretch">
+                            <!-- Estado -->
+                            <div class="col-xl-6 col-md-6">
+                                <div class="card shadow h-100">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5 class="my-0 text-white">Distribución por Estado</h5>
+                                    </div>
+                                    <div class="card-body d-flex justify-content-center align-items-center">
+                                        <canvas id="graficoEstado" style="height: 220px; max-height: 220px;"></canvas>
+                                    </div>
+                                </div>
+                            </div>
 
-    <!-- Obsolescencia -->
-    <div class="col-xl-6 col-md-6">
-        <div class="card shadow h-100">
-            <div class="card-header bg-primary text-white">
-                <h5 class="my-0 text-white">Obsolescencia y Garantía</h5>
-            </div>
-            <div class="card-body d-flex justify-content-center align-items-center">
-                <canvas id="graficoResumen" style="height: 220px; max-height: 220px;"></canvas>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-                    <?php require_once("../html/footer.php") ?>
+                            <!-- Obsolescencia -->
+                            <div class="col-xl-6 col-md-6">
+                                <div class="card shadow h-100">
+                                    <div class="card-header bg-primary text-white">
+                                        <h5 class="my-0 text-white">Obsolescencia y Garantía</h5>
+                                    </div>
+                                    <div class="card-body d-flex justify-content-center align-items-center">
+                                        <canvas id="graficoResumen" style="height: 220px; max-height: 220px;"></canvas>
+                                    </div>
+                                    <div class="card-footer bg-white border-top-0 px-3 py-2 text-end">
+                                        <a href="../../controller/descargar_resumen_obsolescencia.php"
+                                            class="btn btn-sm btn-outline-secondary px-3 py-1">
+                                            <i class="mdi mdi-file-excel text-success me-1"></i> Descargar Excel
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <?php require_once("../html/footer.php") ?>
+                    </div>
                 </div>
-            </div>
 
-            <?php require_once("../html/sidebar.php") ?>
-            <div class="rightbar-overlay"></div>
+                <?php require_once("../html/sidebar.php") ?>
+                <div class="rightbar-overlay"></div>
 
-            <?php require_once("../html/js.php") ?>
-            <script src="homecolaborador.js"></script>
+                <?php require_once("../html/js.php") ?>
+                <script src="homecolaborador.js"></script>
     </body>
 
     </html>
