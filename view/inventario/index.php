@@ -26,7 +26,9 @@
             <!-- Cámara -->
             <div class="row mb-4">
                 <div class="col-12">
-                    <div class="ratio ratio-16x9 border border-secondary rounded shadow-sm d-none" id="preview">
+                    <div id="preview" style="position:relative;width:100%;max-width:800px;height:auto;aspect-ratio:16/9;margin:auto;overflow:hidden;" class="border border-secondary rounded shadow-sm d-none">
+
+
                         <!-- QuaggaJS insertará el video aquí -->
                     </div>
                     <small class="text-muted d-block text-center mt-2">Escanea el código QR o de barras del

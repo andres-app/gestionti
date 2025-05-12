@@ -40,6 +40,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
             Quagga.start();
+
+            setTimeout(() => {
+                const video = document.querySelector('#preview video');
+                if (video) {
+                    video.setAttribute('playsinline', 'true'); // Evita pantalla completa en iOS
+                    video.style.width = "100%";
+                    video.style.height = "100%";
+                    video.style.objectFit = "cover";
+                    video.style.transform = "rotate(90deg)";
+                    video.style.transformOrigin = "center center";
+                }
+            }, 1000);
+
+
+
+
             Quagga.onDetected(function (result) {
                 if (!result.codeResult || !result.codeResult.code) return;
 
