@@ -361,7 +361,7 @@ class Activo extends Conectar
     {
         $conectar = parent::conexion();
         parent::set_names();
-    
+
         $sql = "SELECT
                     COUNT(*) AS total,
                     SUM(CASE WHEN YEAR(CURDATE()) - acompra >= 5 THEN 1 ELSE 0 END) AS obsoletos,
@@ -370,10 +370,20 @@ class Activo extends Conectar
                     SUM(CASE WHEN YEAR(CURDATE()) - acompra < 3 THEN 1 ELSE 0 END) AS con_garantia
                 FROM activos
                 WHERE estado = 1 AND acompra IS NOT NULL AND acompra > 1990";
-    
+
         $stmt = $conectar->prepare($sql);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
-    }    
+    }
 
+    public function tiene_baja($activo_id)
+    {
+        $conectar = parent::conexion();
+        parent::set_names();
+
+        $sql = "SELECT COUNT(*) FROM bajas WHERE activo_id = ?";
+        $stmt = $conectar->prepare($sql);
+        $stmt->execute([$activo_id]);
+        return $stmt->fetchColumn() > 0;
+    }
 }

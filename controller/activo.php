@@ -49,6 +49,9 @@ switch ($_GET["op"]) {
                     <button type="button" class="btn btn-soft-warning waves-effect waves-light btn-sm" onClick="editar(' . $row["id"] . ')">
                         <i class="bx bx-edit-alt font-size-16 align-middle"></i>
                     </button>
+                    <button type="button" class="btn btn-soft-secondary btn-sm" onclick="abrirModalBaja(' . $row["id"] . ')">
+                        <i class="fas fa-file-upload me-1"></i> Baja
+                    </button>
                     <button type="button" class="btn btn-soft-danger waves-effect waves-light btn-sm" onClick="eliminar(' . $row["id"] . ')">
                         <i class="bx bx-trash-alt font-size-16 align-middle"></i>
                     </button>';
@@ -259,7 +262,13 @@ switch ($_GET["op"]) {
         echo json_encode($datos);
         break;
 
-        
+    case "tiene_baja":
+        if (!isset($_POST["activo_id"])) {
+            echo json_encode(["error" => "ID no enviado"]);
+            exit;
+        }
 
-
+        $existe = $activo->tiene_baja($_POST["activo_id"]);
+        echo json_encode(["tiene_baja" => $existe]);
+        break;
 }

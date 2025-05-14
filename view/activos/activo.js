@@ -466,6 +466,59 @@ $(document).ready(function () {
     $('#vehiculo_tipo').on('change', toggleCamposCPU);
 });
 
+function abrirModalBaja(id) {
+    $.ajax({
+        url: '../../controller/activo.php?op=tiene_baja',
+        type: 'POST',
+        data: { activo_id: id },
+        dataType: 'json',
+        success: function (response) {
+            if (response.tiene_baja) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Este activo ya tiene una baja registrada',
+                    text: 'No puedes registrar otra baja para este activo.',
+                    confirmButtonColor: '#3085d6'
+                });
+            } else {
+                $('#baja_activo_id').val(id);
+                $('#form_baja_activo')[0].reset();
+                $('#modalBajaActivo').modal('show');
+            }
+        },
+        error: function () {
+            Swal.fire('Error', 'No se pudo verificar si el activo ya tiene baja.', 'error');
+        }
+    });
+}
+
+
+$('#form_baja_activo').on('submit', function (e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+
+    $.ajax({
+        url: '../../controller/baja.php?op=registrar',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (resp) {
+            console.log("RESPUESTA CRUDA:", resp);  // 👈 Revisa qué devuelve exactamente
+            const res = JSON.parse(resp); // Esto es lo que lanza el error si no es JSON válido
+
+            if (res.success) {
+                Swal.fire('Listo', 'Baja registrada correctamente', 'success');
+                $('#modalBajaActivo').modal('hide');
+                tabla.ajax.reload();
+            } else {
+                Swal.fire('Error', res.error || 'No se pudo registrar la baja.', 'error');
+            }
+        }
+    });
+});
+
+
 
 // Llamada a la función de inicialización
 init();
