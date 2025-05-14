@@ -518,6 +518,45 @@ $('#form_baja_activo').on('submit', function (e) {
     });
 });
 
+function verHistorial(id) {
+    console.log("📌 ID enviado a historial:", id);
+
+    $.ajax({
+        url: '../../controller/activo.php?op=historial',
+        type: 'POST',
+        data: { activo_id: id },
+        dataType: 'json',
+        success: function (data) {
+            console.log("📜 Historial recibido:", data);
+
+            let html = "";
+            if (data.length > 0) {
+                data.forEach(item => {
+                    html += `
+                        <tr>
+                            <td>${item.fecha}</td>
+                            <td>${item.usuario}</td>
+                            <td>${item.accion}</td>
+                            <td>${item.detalle}</td>
+                        </tr>`;
+                });
+            } else {
+                html = '<tr><td colspan="4" class="text-center">No hay historial registrado.</td></tr>';
+            }
+
+            $('#historial_body').html(html);
+            $('#modalHistorial').modal('show');
+        },
+        error: function () {
+            Swal.fire('Error', 'No se pudo cargar el historial', 'error');
+        }
+    });
+}
+
+
+
+
+
 
 
 // Llamada a la función de inicialización

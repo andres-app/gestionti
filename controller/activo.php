@@ -2,6 +2,7 @@
 require_once("../config/conexion.php");
 require_once("../models/Activo.php");
 
+
 // Crear instancia del tipo Vehículo
 $activo = new Activo();
 $total_activos = $activo->get_total_activos(); // Obtenemos el total de vehículos
@@ -43,19 +44,21 @@ switch ($_GET["op"]) {
 
             // 🔹 Botones de acción
             $sub_array["acciones"] = '
-                    <button type="button" class="btn btn-soft-info waves-effect waves-light btn-sm" onClick="previsualizar(' . $row["id"] . ')">
-                        <i class="bx bx-show-alt font-size-16 align-middle"></i>
-                    </button>
-                    <button type="button" class="btn btn-soft-warning waves-effect waves-light btn-sm" onClick="editar(' . $row["id"] . ')">
-                        <i class="bx bx-edit-alt font-size-16 align-middle"></i>
-                    </button>
-                    <button type="button" class="btn btn-soft-secondary btn-sm" onclick="abrirModalBaja(' . $row["id"] . ')">
-                        <i class="fas fa-file-upload me-1"></i> Baja
-                    </button>
-                    <button type="button" class="btn btn-soft-danger waves-effect waves-light btn-sm" onClick="eliminar(' . $row["id"] . ')">
-                        <i class="bx bx-trash-alt font-size-16 align-middle"></i>
-                    </button>';
-
+                <button type="button" class="btn btn-soft-info btn-sm" onClick="previsualizar(' . $row["id"] . ')">
+                    <i class="bx bx-show-alt"></i>
+                </button>
+                <button type="button" class="btn btn-soft-warning btn-sm" onClick="editar(' . $row["id"] . ')">
+                    <i class="bx bx-edit-alt"></i>
+                </button>
+                <button type="button" class="btn btn-soft-secondary btn-sm" onclick="abrirModalBaja(' . $row["id"] . ')">
+                    <i class="fas fa-file-upload me-1"></i>
+                </button>
+                <button type="button" class="btn btn-soft-dark btn-sm" onclick="verHistorial(' . $row["id"] . ')">
+                    <i class="fas fa-history me-1"></i> Historial
+                </button>
+                <button type="button" class="btn btn-soft-danger btn-sm" onClick="eliminar(' . $row["id"] . ')">
+                    <i class="bx bx-trash-alt"></i>
+                </button>';
             $data[] = $sub_array;
         }
 
@@ -72,30 +75,61 @@ switch ($_GET["op"]) {
 
     // Caso para insertar un nuevo vehículo
     case "insertar":
-        // Capturar los datos enviados desde el formulario
-        $sbn = isset($_POST["vehiculo_sbn"]) ? $_POST["vehiculo_sbn"] : null;
-        $serie = isset($_POST["vehiculo_serie"]) ? $_POST["vehiculo_serie"] : null;
-        $tipo = isset($_POST["vehiculo_tipo"]) ? $_POST["vehiculo_tipo"] : null;
-        $marca = isset($_POST["vehiculo_marca"]) ? $_POST["vehiculo_marca"] : null;
-        $modelo = isset($_POST["vehiculo_modelo"]) ? $_POST["vehiculo_modelo"] : null;
-        $ubicacion = isset($_POST["vehiculo_ubicacion"]) ? $_POST["vehiculo_ubicacion"] : null;
-        $responsable_id = isset($_POST["vehiculo_responsable_id"]) ? $_POST["vehiculo_responsable_id"] : null;
+        $sbn = $_POST["vehiculo_sbn"] ?? null;
+        $serie = $_POST["vehiculo_serie"] ?? null;
+        $tipo = $_POST["vehiculo_tipo"] ?? null;
+        $marca = $_POST["vehiculo_marca"] ?? null;
+        $modelo = $_POST["vehiculo_modelo"] ?? null;
+        $ubicacion = $_POST["vehiculo_ubicacion"] ?? null;
+        $responsable_id = $_POST["vehiculo_responsable_id"] ?? null;
         $fecha_registro = date("Y-m-d H:i:s");
-        $condicion = isset($_POST["vehiculo_condicion"]) ? $_POST["vehiculo_condicion"] : null;
-        $estado = 1; // Siempre se inserta como ACTIVO por defecto
+        $condicion = $_POST["vehiculo_condicion"] ?? null;
+        $estado = 1;
         $ult_mant = $_POST["vehiculo_ult_mant"] ?? null;
         $sede = $_POST["vehiculo_sede"] ?? null;
         $observaciones = $_POST["vehiculo_observaciones"] ?? null;
         $acompra = $_POST["vehiculo_acompra"] ?? null;
 
+        // Ejecutar y guardar resultado
+        $resultado = $activo->insertar_vehiculo(
+            $sbn,
+            $serie,
+            $tipo,
+            $marca,
+            $modelo,
+            $ubicacion,
+            $sede,
+            $responsable_id,
+            $fecha_registro,
+            $condicion,
+            $estado,
+            $ult_mant,
+            $observaciones,
+            $acompra
+        );
 
+        if ($resultado) {
+            require_once(__DIR__ . "/../models/Auditoria.php");
+            $auditoria = new Auditoria();
 
-        // Insertar el nuevo vehículo en la base de datos usando el tipo
-        if ($activo->insertar_vehiculo($sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $sede, $responsable_id, $fecha_registro, $condicion, $estado, $ult_mant, $observaciones, $acompra)) {
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+
+            $usuario_id = $_SESSION["usu_id"] ?? 0;
+            $accion = "Registro de nuevo activo";
+            $detalle = "Se registró un nuevo activo con SBN: $sbn";
+
+            $pdo = (new Conectar())->conexion();
+            $id = $pdo->lastInsertId();
+
+            $auditoria->registrar_accion($id, $usuario_id, $accion, $detalle);
+
             echo json_encode(["success" => "Vehículo registrado correctamente."]);
         } else {
             echo json_encode(["error" => "Error al registrar el vehículo."]);
         }
+
         break;
 
     // Caso para editar un vehículo existente
@@ -138,11 +172,26 @@ switch ($_GET["op"]) {
         // 🔥 LLAMAMOS A LA FUNCIÓN DE ACTUALIZACIÓN
         $resultado = $activo->editar_vehiculo($id, $sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $ult_mant, $hostname, $procesador, $sisopera, $ram, $disco, $sede, $observaciones, $acompra);
 
+
+        require_once(__DIR__ . "/../models/Auditoria.php");
+        $auditoria = new Auditoria();
+
         if ($resultado) {
+            require_once(__DIR__ . "/../models/Auditoria.php");
+            $auditoria = new Auditoria();
+
+            $usuario_id = $_SESSION["usu_id"] ?? 0;
+            $accion = "Edición de activo";
+            $detalle = "El usuario actualizó el activo ID $id";
+
+            $auditoria->registrar_accion($id, $usuario_id, $accion, $detalle);
+
+            // ✅ ÚNICA respuesta JSON
             echo json_encode(["success" => "Vehículo actualizado correctamente."]);
         } else {
             echo json_encode(["error" => "Error al actualizar el vehículo."]);
         }
+
         break;
 
 
@@ -270,5 +319,20 @@ switch ($_GET["op"]) {
 
         $existe = $activo->tiene_baja($_POST["activo_id"]);
         echo json_encode(["tiene_baja" => $existe]);
+        break;
+
+    case "historial":
+        require_once("../models/Auditoria.php");
+        $auditoria = new Auditoria();
+
+        $activo_id = $_POST["activo_id"] ?? null;
+
+        if (!$activo_id) {
+            echo json_encode([]); // Si no se envía, devolver vacío
+            exit;
+        }
+
+        $historial = $auditoria->obtener_historial($activo_id);
+        echo json_encode($historial);
         break;
 }

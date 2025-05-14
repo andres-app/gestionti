@@ -36,5 +36,17 @@ switch ($_GET["op"]) {
         }
 
         echo json_encode(["success" => $res]);
+
+        require_once(__DIR__ . '/../models/Auditoria.php');
+        $auditoria = new Auditoria();
+
+        session_start(); // asegúrate de iniciar la sesión para acceder a $_SESSION["usu_id"]
+
+        $usuario_id = $_SESSION["usu_id"];
+        $accion = "Baja de activo";
+        $detalle = "Motivo: $motivo, Archivo: $archivo";
+
+        $auditoria->registrar_accion($activo_id, $usuario_id, $accion, $detalle);
+
         break;
 }

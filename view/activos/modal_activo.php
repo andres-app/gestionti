@@ -161,6 +161,24 @@
                         </div>
                     </div>
 
+                    <!-- Modal Historial -->
+                    <div class="modal fade" id="modalHistorial" tabindex="-1" aria-labelledby="modalHistorialLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header bg-dark text-white">
+                                    <h5 class="modal-title" id="modalHistorialLabel">Historial del Activo</h5>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <ul class="list-group" id="lista_historial">
+                                        <!-- Aquí se inyectará el historial vía JS -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
 
 
 

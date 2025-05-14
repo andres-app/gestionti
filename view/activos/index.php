@@ -2,6 +2,8 @@
 // Requerimos los archivos necesarios para la conexión a la base de datos y el tipo Rol
 require_once("../../config/conexion.php");
 require_once("../../models/Rol.php");
+require_once("modal_historial.php");
+
 
 // Crear una instancia del tipo Rol para validar permisos de acceso
 $rol = new Rol();
@@ -13,12 +15,13 @@ $datos = $rol->validar_menu_x_rol($_SESSION["rol_id"], "activos");
 if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
 ?>
 
-<!doctype html>
-<html lang="es">
+    <!doctype html>
+    <html lang="es">
+
     <head>
         <!-- Título de la página -->
         <title>Gestión TI - INPE</title>
-        
+
         <!-- Incluir el archivo de configuración del <head> -->
         <?php require_once("../html/head.php") ?>
     </head>
@@ -93,7 +96,7 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div> <!-- Fin del contenedor-fluid -->
                 </div> <!-- Fin del contenido de la página -->
 
@@ -121,12 +124,16 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
         <!-- Incluir el script para gestionar los vehículos (activo.js) -->
         <script type="text/javascript" src="activo.js"></script>
 
+        <!-- Incluir el modal para ver el historial del activo -->
+        <?php require_once("modal_historial.php"); ?>
+
     </body>
-</html>
+
+    </html>
 
 <?php
-    } else {
-        // Si el usuario no está autenticado o no tiene permisos, redirigir al inicio de sesión
-        header("Location:" . Conectar::ruta() . "index.php");
-    }
+} else {
+    // Si el usuario no está autenticado o no tiene permisos, redirigir al inicio de sesión
+    header("Location:" . Conectar::ruta() . "index.php");
+}
 ?>

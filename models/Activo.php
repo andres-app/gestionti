@@ -386,4 +386,15 @@ class Activo extends Conectar
         $stmt->execute([$activo_id]);
         return $stmt->fetchColumn() > 0;
     }
+
+    public function registrar_auditoria($activo_id, $usuario_id, $accion, $descripcion) {
+    $conectar = parent::conexion();
+    parent::set_names();
+
+    $sql = "INSERT INTO auditoria (activo_id, usuario_id, accion, descripcion)
+            VALUES (?, ?, ?, ?)";
+    $stmt = $conectar->prepare($sql);
+    return $stmt->execute([$activo_id, $usuario_id, $accion, $descripcion]);
+}
+
 }
