@@ -43,22 +43,27 @@ switch ($_GET["op"]) {
             $sub_array["disco"] = $row["disco"];
 
             // 🔹 Botones de acción
-            $sub_array["acciones"] = '
-                <button type="button" class="btn btn-soft-info btn-sm" onClick="previsualizar(' . $row["id"] . ')">
-                    <i class="bx bx-show-alt"></i>
+$sub_array["acciones"] = '
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-soft-info btn-sm" title="Previsualizar" onClick="previsualizar(' . $row["id"] . ')">
+                <i class="bx bx-show-alt"></i>
+            </button>
+            <button type="button" class="btn btn-soft-warning btn-sm" title="Editar" onClick="editar(' . $row["id"] . ')">
+                <i class="bx bx-edit-alt"></i>
+            </button>
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-soft-dark btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" title="Más acciones">
+                    <i class="bx bx-dots-horizontal-rounded"></i>
                 </button>
-                <button type="button" class="btn btn-soft-warning btn-sm" onClick="editar(' . $row["id"] . ')">
-                    <i class="bx bx-edit-alt"></i>
-                </button>
-                <button type="button" class="btn btn-soft-secondary btn-sm" onclick="abrirModalBaja(' . $row["id"] . ')">
-                    <i class="fas fa-file-upload me-1"></i>
-                </button>
-                <button type="button" class="btn btn-soft-dark btn-sm" onclick="verHistorial(' . $row["id"] . ')">
-                    <i class="fas fa-history me-1"></i> Historial
-                </button>
-                <button type="button" class="btn btn-soft-danger btn-sm" onClick="eliminar(' . $row["id"] . ')">
-                    <i class="bx bx-trash-alt"></i>
-                </button>';
+                <ul class="dropdown-menu dropdown-menu-end"> <!-- CORREGIDO -->
+                    <li><a class="dropdown-item" href="#" onclick="abrirModalBaja(' . $row["id"] . ')"><i class="fas fa-file-upload me-2"></i>Registrar baja</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="verHistorial(' . $row["id"] . ')"><i class="fas fa-history me-2"></i>Ver historial</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger" href="#" onclick="eliminar(' . $row["id"] . ')"><i class="bx bx-trash-alt me-2"></i>Eliminar</a></li>
+                </ul>
+            </div>
+        </div>';
+
             $data[] = $sub_array;
         }
 

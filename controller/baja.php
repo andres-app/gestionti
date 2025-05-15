@@ -40,7 +40,10 @@ switch ($_GET["op"]) {
         require_once(__DIR__ . '/../models/Auditoria.php');
         $auditoria = new Auditoria();
 
-        session_start(); // asegúrate de iniciar la sesión para acceder a $_SESSION["usu_id"]
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
 
         $usuario_id = $_SESSION["usu_id"];
         $accion = "Baja de activo";
