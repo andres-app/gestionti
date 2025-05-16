@@ -65,17 +65,17 @@ class Activo extends Conectar
      * 
      * @return bool True si la inserción fue exitosa, false en caso de error.
      */
-    public function insertar_vehiculo($sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $sede, $responsable_id, $fecha_registro, $condicion, $estado, $ult_mant, $observaciones, $acompra)
+    public function insertar_vehiculo($sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $sede, $responsable_id, $fecha_registro, $condicion, $estado, $observaciones, $acompra)
     {
         $conectar = parent::conexion();
         parent::set_names();
 
-        $sql = "INSERT INTO activos (sbn, serie, tipo, marca, modelo, ubicacion, sede, responsable_id, fecha_registro, condicion, estado, ult_mant, observaciones, acompra)
+        $sql = "INSERT INTO activos (sbn, serie, tipo, marca, modelo, ubicacion, sede, responsable_id, fecha_registro, condicion, estado, observaciones, acompra)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = $conectar->prepare($sql);
 
-        if ($stmt->execute([$sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $sede, $responsable_id, $fecha_registro, $condicion, $estado, $ult_mant, $observaciones, $acompra])) {
+        if ($stmt->execute([$sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $sede, $responsable_id, $fecha_registro, $condicion, $estado, $observaciones, $acompra])) {
             return true;
         } else {
             $error = $stmt->errorInfo();
@@ -89,7 +89,7 @@ class Activo extends Conectar
     /**
      * Método para actualizar los datos de un vehículo.
      */
-    public function editar_vehiculo($id, $sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $ult_mant, $hostname, $procesador, $sisopera, $ram, $disco, $sede, $observaciones, $acompra)
+    public function editar_vehiculo($id, $sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $hostname, $procesador, $sisopera, $ram, $disco, $sede, $observaciones, $acompra)
     {
         $conectar = parent::conexion();
         parent::set_names();
@@ -101,10 +101,10 @@ class Activo extends Conectar
             // 🔹 Actualizar la tabla `activos`
             $sql1 = "UPDATE activos 
                     SET sbn = ?, serie = ?, tipo = ?, marca = ?, modelo = ?, ubicacion = ?, responsable_id = ?, fecha_registro = ?, 
-                        condicion = ?, estado = ?, ult_mant = ?, sede = ?, observaciones = ?, acompra = ?
+                        condicion = ?, estado = ?, sede = ?, observaciones = ?, acompra = ?
                     WHERE id = ?";
             $stmt1 = $conectar->prepare($sql1);
-            $stmt1->execute([$sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $ult_mant, $sede, $observaciones, $acompra, $id]);
+            $stmt1->execute([$sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $sede, $observaciones, $acompra, $id]);
 
             // 🔹 Verificar si el `activo_id` ya está en `detactivo`
             $sql2 = "SELECT COUNT(*) FROM detactivo WHERE activo_id = ?";
@@ -150,7 +150,7 @@ class Activo extends Conectar
 
         $sql = "SELECT v.id, v.sbn, v.serie, v.tipo, v.marca, v.modelo, v.ubicacion, 
        v.responsable_id, u.usu_nomape AS responsable, 
-       v.fecha_registro, v.condicion, v.estado, v.ult_mant,
+       v.fecha_registro, v.condicion, v.estado,
        v.sede, v.observaciones,v.acompra,
        d.hostname, d.procesador, d.sisopera, d.ram, d.disco
             FROM activos v
@@ -403,5 +403,29 @@ class Activo extends Conectar
 
         $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
         return $resultado ? $resultado['fecha'] : null;
+    }
+
+    public function get_activos_prox_mantenimiento()
+    {
+        $conectar = parent::conexion();
+
+        $sql = "
+        SELECT COUNT(*) as total FROM activos a
+        LEFT JOIN (
+            SELECT activo_id, MAX(fecha) as ultima_fecha
+            FROM mantenimientos
+            GROUP BY activo_id
+        ) m ON a.id = m.activo_id
+        WHERE (
+            (m.ultima_fecha IS NULL AND YEAR(NOW()) - acompra >= 1)
+            OR
+            (m.ultima_fecha IS NOT NULL AND DATEDIFF(NOW(), m.ultima_fecha) >= 365)
+        ) AND a.estado = 1
+    ";
+
+        $stmt = $conectar->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }

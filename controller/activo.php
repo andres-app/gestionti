@@ -89,7 +89,6 @@ switch ($_GET["op"]) {
         $fecha_registro = date("Y-m-d H:i:s");
         $condicion = $_POST["vehiculo_condicion"] ?? null;
         $estado = 1;
-        $ult_mant = $_POST["vehiculo_ult_mant"] ?? null;
         $sede = $_POST["vehiculo_sede"] ?? null;
         $observaciones = $_POST["vehiculo_observaciones"] ?? null;
         $acompra = $_POST["vehiculo_acompra"] ?? null;
@@ -107,7 +106,6 @@ switch ($_GET["op"]) {
             $fecha_registro,
             $condicion,
             $estado,
-            $ult_mant,
             $observaciones,
             $acompra
         );
@@ -159,7 +157,6 @@ switch ($_GET["op"]) {
         $sisopera = $_POST["vehiculo_sisopera"] ?? null;
         $ram = $_POST["vehiculo_ram"] ?? null;
         $disco = $_POST["vehiculo_disco"] ?? null;
-        $ult_mant = $_POST["vehiculo_ult_mant"] ?? null;
         $sede = $_POST["vehiculo_sede"] ?? null;
         $observaciones = $_POST["vehiculo_observaciones"] ?? null;
         $acompra = $_POST["vehiculo_acompra"] ?? null;
@@ -174,7 +171,7 @@ switch ($_GET["op"]) {
         }
 
         // 🔥 LLAMAMOS A LA FUNCIÓN DE ACTUALIZACIÓN
-        $resultado = $activo->editar_vehiculo($id, $sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $ult_mant, $hostname, $procesador, $sisopera, $ram, $disco, $sede, $observaciones, $acompra);
+        $resultado = $activo->editar_vehiculo($id, $sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $hostname, $procesador, $sisopera, $ram, $disco, $sede, $observaciones, $acompra);
 
 
         require_once(__DIR__ . "/../models/Auditoria.php");

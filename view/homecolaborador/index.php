@@ -10,7 +10,8 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
     $activo = new Activo();
     $total_vehiculos = $activo->get_total_activos();
     $dataResumen = $activo->get_obsolescencia_garantia();
-    ?>
+    $dataMantenimiento = $activo->get_activos_prox_mantenimiento();
+?>
     <!doctype html>
     <html lang="es">
 
@@ -40,7 +41,7 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                                 </div>
 
                             </div>
-                        </div>  
+                        </div>
                         <!-- Resumen de indicadores -->
                         <div class="row mb-4">
                             <!-- Total Activos -->
@@ -65,9 +66,12 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                                             <i class="mdi mdi-wrench-outline me-2"></i>Próx. Mantenimiento
                                         </h5>
                                     </div>
-
+                                    <div class="card-body d-flex align-items-center justify-content-center">
+                                        <h3 class="card-title mb-0"><?= $dataMantenimiento['total']; ?></h3>
+                                    </div>
                                 </div>
                             </div>
+
 
                             <!-- Obsoletos -->
                             <div class="col-xl-3 col-md-6">
@@ -180,7 +184,7 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
     </body>
 
     </html>
-    <?php
+<?php
 } else {
     header("Location:" . Conectar::ruta() . "index.php");
 }
