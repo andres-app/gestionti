@@ -41,7 +41,7 @@ switch ($_GET["op"]) {
             $sub_array["disco"] = $row["disco"];
 
             // 🔹 Botones de acción
-$sub_array["acciones"] = '
+            $sub_array["acciones"] = '
         <div class="btn-group" role="group">
             <button type="button" class="btn btn-soft-info btn-sm" title="Previsualizar" onClick="previsualizar(' . $row["id"] . ')">
                 <i class="bx bx-show-alt"></i>
@@ -214,16 +214,14 @@ $sub_array["acciones"] = '
             $datos = $activo->get_vehiculo_por_id($_POST["vehiculo_id"]);
 
             if ($datos) {
-                // 🔹 Asegurarnos de que la respuesta sea JSON sin errores
                 header('Content-Type: application/json');
-                echo json_encode($datos, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+                echo json_encode($datos);
             } else {
                 echo json_encode(["error" => "No se encontraron datos para el ID del vehículo."]);
             }
-        } else {
-            echo json_encode(["error" => "No se proporcionó un ID de vehículo válido."]);
         }
-        break;
+        break; // ✅ ESTE break FALTABA
+
 
 
 

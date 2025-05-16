@@ -153,16 +153,23 @@ class Activo extends Conectar
        v.fecha_registro, v.condicion, v.estado, v.ult_mant,
        v.sede, v.observaciones,v.acompra,
        d.hostname, d.procesador, d.sisopera, d.ram, d.disco
-                FROM activos v
-                LEFT JOIN tm_usuario u ON v.responsable_id = u.usu_id  -- 🔹 Correcta relación con el usuario
-                LEFT JOIN detactivo d ON v.id = d.activo_id
-                WHERE v.id = ?";
+            FROM activos v
+            LEFT JOIN tm_usuario u ON v.responsable_id = u.usu_id
+            LEFT JOIN detactivo d ON v.id = d.activo_id
+            WHERE v.id = ?";
 
         $stmt = $conectar->prepare($sql);
         $stmt->execute([$id]);
 
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $datos = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // 🔹 Aquí agregas la última fecha real de mantenimiento
+        $ultimo_mantenimiento = $this->get_ultimo_mantenimiento($id);
+        $datos['ult_mant_real'] = $ultimo_mantenimiento;
+
+        return $datos;
     }
+
 
 
 
@@ -378,5 +385,23 @@ class Activo extends Conectar
             VALUES (?, ?, ?, ?)";
         $stmt = $conectar->prepare($sql);
         return $stmt->execute([$activo_id, $usuario_id, $accion, $descripcion]);
+    }
+
+    public function get_ultimo_mantenimiento($activo_id)
+    {
+        $conectar = parent::conexion();
+        parent::set_names();
+
+        $sql = "SELECT fecha 
+            FROM mantenimientos 
+            WHERE activo_id = ? 
+            ORDER BY fecha DESC 
+            LIMIT 1";
+
+        $stmt = $conectar->prepare($sql);
+        $stmt->execute([$activo_id]);
+
+        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $resultado ? $resultado['fecha'] : null;
     }
 }

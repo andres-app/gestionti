@@ -154,7 +154,8 @@ function previsualizar(id) {
             $("#vehiculo_fecha_registro").val(data.fecha_registro).prop("disabled", true);
             $("#vehiculo_condicion").val(data.condicion).prop("disabled", true);
             $("#vehiculo_estado").val(data.estado).prop("disabled", true);
-            $("#vehiculo_ult_mant").val(data.ult_mant).prop("disabled", true);
+            const ultimaFecha = data.ult_mant_real ? data.ult_mant_real : 'Sin mantenimiento registrado';
+            $("#vehiculo_ult_mant").val(ultimaFecha).prop("disabled", true);
             $("#vehiculo_sede").val(data.sede).prop("disabled", true);
             $("#vehiculo_observaciones").val(data.observaciones).prop("disabled", true);
             $("#vehiculo_acompra").val(data.acompra).prop("disabled", true);
@@ -366,7 +367,8 @@ function editar(id) {
             $("#vehiculo_sisopera").val(data.sisopera);
             $("#vehiculo_ram").val(data.ram);
             $("#vehiculo_disco").val(data.disco);
-            $("#vehiculo_ult_mant").val(data.ult_mant);
+            const ultimaFecha = data.ult_mant_real ? data.ult_mant_real : 'Sin mantenimiento registrado';
+            $("#vehiculo_ult_mant").val(ultimaFecha);
             $("#vehiculo_sede").val(data.sede);
             $("#vehiculo_observaciones").val(data.observaciones).prop("disabled", false);
             $("#vehiculo_acompra").val(data.acompra);
