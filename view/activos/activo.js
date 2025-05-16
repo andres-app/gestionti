@@ -89,7 +89,6 @@ function cargarResponsables(responsable_id = null, callback = null) {
     });
 }
 
-
 /**
  * Función para eliminar un vehículo.
  * Solicita confirmación antes de proceder.
@@ -186,8 +185,6 @@ function previsualizar(id) {
 }
 
 
-
-
 // Restaurar el formulario cuando se cierra el modal.
 $("#mnt_modal").on("hidden.bs.modal", function () {
     // Habilitar todos los campos del formulario, incluyendo textarea
@@ -199,8 +196,6 @@ $("#mnt_modal").on("hidden.bs.modal", function () {
     // Cambiar el título del modal a "Nuevo Registro"
     $("#myModalLabel").html("Nuevo Registro");
 });
-
-
 
 
 /**
@@ -336,7 +331,6 @@ function manejarVisibilidadCampo(selector, valor) {
     }
 }
 
-
 /**
  * Modificación en la función editar para que también cargue las fotos
  */
@@ -377,8 +371,6 @@ function editar(id) {
             $("#vehiculo_observaciones").val(data.observaciones).prop("disabled", false);
             $("#vehiculo_acompra").val(data.acompra);
 
-
-
             let responsableID = data.responsable_id && !isNaN(data.responsable_id) ? data.responsable_id : null;
             console.log("📌 Responsable ID recibido:", responsableID);
 
@@ -396,12 +388,6 @@ function editar(id) {
         }
     });
 }
-
-
-
-
-
-
 
 // Cargar fotos cuando se abre el modal
 $('#mnt_modal').on('shown.bs.modal', function () {
@@ -553,11 +539,73 @@ function verHistorial(id) {
     });
 }
 
+// === FUNCIONES DE MANTENIMIENTO ===
 
+function abrirModalMantenimiento(id) {
+    $('#mantenimiento_activo_id').val(id);
+    $('#form_mantenimiento')[0].reset();
+    cargarHistorialMantenimientos(id);
+    $('#modalMantenimiento').modal('show');
+}
 
+$('#form_mantenimiento').on('submit', function (e) {
+    e.preventDefault();
 
+    const formData = new FormData(this);
+    $.ajax({
+        url: '../../controller/mantenimiento.php?op=registrar',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (resp) {
+            console.log("🔴 RESPUESTA CRUDA:", resp);  // 👈 Agrega esto
 
+            const res = JSON.parse(resp); // Aquí es donde revienta
 
+            if (res.success) {
+                Swal.fire('Listo', 'Mantenimiento registrado correctamente', 'success');
+                cargarHistorialMantenimientos($('#mantenimiento_activo_id').val());
+                $('#form_mantenimiento')[0].reset();
+            } else {
+                Swal.fire('Error', 'No se pudo registrar el mantenimiento', 'error');
+            }
+        },
+        error: function () {
+            Swal.fire('Error', 'Error de conexión con el servidor', 'error');
+        }
+    });
+});
+
+function cargarHistorialMantenimientos(id) {
+    $.ajax({
+        url: '../../controller/mantenimiento.php?op=listar',
+        type: 'POST',
+        data: { activo_id: id },
+        dataType: 'json',
+        success: function (data) {
+            let html = '';
+            if (data.length === 0) {
+                html = '<tr><td colspan="4" class="text-center">Sin mantenimientos registrados</td></tr>';
+            } else {
+                data.forEach(row => {
+                    html += `
+                        <tr>
+                            <td>${row.fecha}</td>
+                            <td>${row.usuario}</td>
+                            <td>${row.proveedor}</td>
+                            <td>${row.detalle}</td>
+                        </tr>
+                    `;
+                });
+            }
+            $('#mantenimientos_body').html(html);
+        },
+        error: function () {
+            $('#mantenimientos_body').html('<tr><td colspan="4" class="text-center text-danger">Error al cargar mantenimientos</td></tr>');
+        }
+    });
+}
 
 // Llamada a la función de inicialización
 init();

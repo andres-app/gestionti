@@ -113,6 +113,9 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
         <!-- Incluir el modal para el registro de baja -->
         <?php require_once("modal_baja.php"); ?>
 
+        <!-- Incluir el modal para mantenimiento -->
+        <?php require_once("modal_mantenimiento.php"); ?>
+
         <!-- Incluir la barra lateral -->
         <?php require_once("../html/sidebar.php") ?>
 

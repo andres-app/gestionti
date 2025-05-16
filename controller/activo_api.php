@@ -20,13 +20,7 @@ class Activo extends Conectar {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    public function get_proximos_mantenimientos() {
-        $conexion = parent::conexion();
-        $sql = "SELECT * FROM vehiculos WHERE mantenimiento_pendiente = 1";
-        $stmt = $conexion->prepare($sql);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+
 }
 
 // Instancia de Activo
@@ -46,11 +40,7 @@ if ($_SERVER['SERVER_NAME'] === 'localhost') {
     print_r($activo->get_vehiculos());
     echo "</pre>";
     
-    // Obtener próximos mantenimientos
-    echo "<h4>Próximos Mantenimientos:</h4>";
-    echo "<pre>";
-    print_r($activo->get_proximos_mantenimientos());
-    echo "</pre>";
+
 } else {
     // Switch para operaciones basadas en el valor 'op'
     $op = isset($_GET['op']) ? $_GET['op'] : '';
@@ -64,11 +54,6 @@ if ($_SERVER['SERVER_NAME'] === 'localhost') {
         case 'listar':
             $vehiculos = $activo->get_vehiculos();
             echo json_encode($vehiculos);
-            break;
-
-        case 'proximos_mantenimientos':
-            $proximos = $activo->get_proximos_mantenimientos();
-            echo json_encode($proximos);
             break;
 
         default:

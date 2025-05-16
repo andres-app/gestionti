@@ -9,7 +9,6 @@ $datos = $rol->validar_menu_x_rol($_SESSION["rol_id"], "iniciocolaborador");
 if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
     $activo = new Activo();
     $total_vehiculos = $activo->get_total_activos();
-    $proximos_mantenimientos = $activo->get_proximos_mantenimientos();
     $dataResumen = $activo->get_obsolescencia_garantia();
     ?>
     <!doctype html>
@@ -66,9 +65,7 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                                             <i class="mdi mdi-wrench-outline me-2"></i>Próx. Mantenimiento
                                         </h5>
                                     </div>
-                                    <div class="card-body d-flex align-items-center justify-content-center">
-                                        <h3 class="card-title mb-0"><?= count($proximos_mantenimientos); ?></h3>
-                                    </div>
+
                                 </div>
                             </div>
 

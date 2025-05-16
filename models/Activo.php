@@ -204,27 +204,6 @@ class Activo extends Conectar
     /**
      * Método para obtener los próximos mantenimientos de la tabla mantenimiento.
      */
-    public function get_proximos_mantenimientos()
-    {
-        $conectar = parent::conexion();
-        parent::set_names();
-
-        $sql = "SELECT v.id, v.sbn, v.serie, v.tipo, v.marca, m.fecha_proximo_mantenimiento,
-                       CASE 
-                           WHEN m.fecha_proximo_mantenimiento < CURDATE() THEN 'Vencido'
-                           ELSE 'Próximo'
-                       END AS estado_mantenimiento
-                FROM activos v
-                JOIN mantenimiento m ON v.id = m.vehiculo_id
-                WHERE v.estado = 1 
-                AND m.realizado = 0
-                ORDER BY m.fecha_proximo_mantenimiento ASC";
-
-        $stmt = $conectar->prepare($sql);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
 
     /**
      * Método para insertar un nuevo registro de mantenimiento.

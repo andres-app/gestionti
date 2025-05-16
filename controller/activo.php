@@ -8,8 +8,6 @@ $activo = new Activo();
 $total_activos = $activo->get_total_activos(); // Obtenemos el total de vehículos
 
 
-// Obtener vehículos con próximos mantenimientos
-$proximos_mantenimientos = $activo->get_proximos_mantenimientos();
 
 
 // Evaluar el valor del parámetro "op" para determinar qué operación realizar
@@ -55,9 +53,10 @@ $sub_array["acciones"] = '
                 <button type="button" class="btn btn-soft-dark btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" title="Más acciones">
                     <i class="bx bx-dots-horizontal-rounded"></i>
                 </button>
-                <ul class="dropdown-menu dropdown-menu-end"> <!-- CORREGIDO -->
+                <ul class="dropdown-menu dropdown-menu-end">
                     <li><a class="dropdown-item" href="#" onclick="abrirModalBaja(' . $row["id"] . ')"><i class="fas fa-file-upload me-2"></i>Registrar baja</a></li>
                     <li><a class="dropdown-item" href="#" onclick="verHistorial(' . $row["id"] . ')"><i class="fas fa-history me-2"></i>Ver historial</a></li>
+                    <li><a class="dropdown-item" href="#" title="Mantenimientos" onclick="abrirModalMantenimiento(' . $row["id"] . ')"><i class="fas fa-history me-2"></i>Ver Mantenimientos</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item text-danger" href="#" onclick="eliminar(' . $row["id"] . ')"><i class="bx bx-trash-alt me-2"></i>Eliminar</a></li>
                 </ul>
