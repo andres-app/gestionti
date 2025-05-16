@@ -273,8 +273,8 @@ $sub_array["acciones"] = '
         echo json_encode($datos);
         break;
 
-    case "activos_ubicacion":
-        $datos = $activo->get_activos_por_ubicacion();
+    case "activos_sede":
+        $datos = $activo->get_activos_por_sede();
         echo json_encode($datos);
         break;
 

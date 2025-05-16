@@ -1,5 +1,11 @@
 document.addEventListener("DOMContentLoaded", function () {
 
+    const coloresPasteles = [
+        '#A0CED9', '#FFB6B9', '#C3FBD8',
+        '#F6D186', '#E2F0CB', '#CBAACB',
+        '#FFF5BA'
+    ];
+
     // Gráfico por estado
     fetch("../../controller/activo.php?op=activos_estado")
         .then(res => res.json())
@@ -8,10 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const valores = data.map(d => parseInt(d.total));
 
             const ctx = document.getElementById('graficoEstado');
-            if (!ctx) {
-                console.error("❌ No se encontró el canvas con ID 'graficoEstado'");
-                return;
-            }
+            if (!ctx) return;
 
             new Chart(ctx.getContext('2d'), {
                 type: 'bar',
@@ -20,25 +23,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     datasets: [{
                         label: 'Cantidad de Activos',
                         data: valores,
-                        backgroundColor: [
-                            'rgba(75, 192, 192, 0.5)',
-                            'rgba(255, 99, 132, 0.5)',
-                            'rgba(255, 205, 86, 0.5)'
-                        ],
-                        borderColor: [
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(255, 205, 86, 1)'
-                        ],
+                        backgroundColor: coloresPasteles,
+                        borderColor: '#ffffff',
                         borderWidth: 1
                     }]
                 },
                 options: {
                     responsive: true,
                     scales: {
-                        y: {
-                            beginAtZero: true
-                        }
+                        y: { beginAtZero: true }
                     }
                 }
             });
@@ -61,10 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     datasets: [{
                         label: 'Cantidad por Tipo',
                         data: valores,
-                        backgroundColor: [
-                            '#FF6384', '#36A2EB', '#FFCE56',
-                            '#4BC0C0', '#9966FF', '#FF9F40'
-                        ],
+                        backgroundColor: coloresPasteles,
                         borderColor: '#fff',
                         borderWidth: 1
                     }]
@@ -72,22 +62,20 @@ document.addEventListener("DOMContentLoaded", function () {
                 options: {
                     responsive: true,
                     plugins: {
-                        legend: {
-                            position: 'bottom'
-                        }
+                        legend: { position: 'bottom' }
                     }
                 }
             });
         });
 
-    // Gráfico por ubicación
-    fetch("../../controller/activo.php?op=activos_ubicacion")
+    // Gráfico por sede
+    fetch("../../controller/activo.php?op=activos_sede")
         .then(res => res.json())
         .then(data => {
-            const labels = data.map(d => d.ubicacion);
+            const labels = data.map(d => d.sede);
             const valores = data.map(d => parseInt(d.total));
 
-            const ctx = document.getElementById('graficoUbicacion');
+            const ctx = document.getElementById('graficoSede');
             if (!ctx) return;
 
             new Chart(ctx.getContext('2d'), {
@@ -95,21 +83,29 @@ document.addEventListener("DOMContentLoaded", function () {
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Cantidad por Ubicación',
+                        label: 'Cantidad por Sede',
                         data: valores,
-                        backgroundColor: [
-                            '#FF6384', '#36A2EB', '#FFCE56',
-                            '#4BC0C0', '#9966FF', '#FF9F40', '#C9CBCF'
-                        ],
-                        borderColor: '#fff',
-                        borderWidth: 1
+                        backgroundColor: coloresPasteles,
+                        borderColor: '#ffffff',
+                        borderWidth: 2
                     }]
                 },
                 options: {
                     responsive: true,
                     plugins: {
                         legend: {
-                            position: 'bottom'
+                            position: 'bottom',
+                            labels: {
+                                color: '#444',
+                                font: { size: 13 }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: '#fff',
+                            titleColor: '#333',
+                            bodyColor: '#555',
+                            borderColor: '#ccc',
+                            borderWidth: 1
                         }
                     }
                 }
@@ -133,10 +129,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     datasets: [{
                         label: 'Condición',
                         data: valores,
-                        backgroundColor: [
-                            '#FF6384', '#36A2EB', '#FFCE56',
-                            '#4BC0C0', '#9966FF', '#FF9F40'
-                        ],
+                        backgroundColor: coloresPasteles,
                         borderColor: '#fff',
                         borderWidth: 1
                     }]
@@ -144,23 +137,18 @@ document.addEventListener("DOMContentLoaded", function () {
                 options: {
                     responsive: true,
                     plugins: {
-                        legend: {
-                            position: 'bottom'
-                        }
+                        legend: { position: 'bottom' }
                     }
                 }
             });
         });
 
-    // ✅ Gráfico: Obsolescencia y garantía
+    // Gráfico: Obsolescencia y garantía
     fetch("../../controller/activo.php?op=obsolescencia_garantia")
         .then(response => response.json())
         .then(data => {
             const canvas = document.getElementById('graficoResumen');
-            if (!canvas) {
-                console.error("❌ No se encontró el canvas 'graficoResumen'");
-                return;
-            }
+            if (!canvas) return;
 
             const ctx = canvas.getContext('2d');
             new Chart(ctx, {
@@ -170,7 +158,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     datasets: [{
                         label: 'Cantidad de Equipos',
                         data: [data.obsoletos, data.fuera_garantia],
-                        backgroundColor: ['#f87171', '#60a5fa']
+                        backgroundColor: [coloresPasteles[0], coloresPasteles[1]],
+                        borderColor: '#ffffff',
+                        borderWidth: 1
                     }]
                 },
                 options: {
@@ -183,9 +173,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         }
                     },
                     scales: {
-                        y: {
-                            beginAtZero: true
-                        }
+                        y: { beginAtZero: true }
                     }
                 }
             });

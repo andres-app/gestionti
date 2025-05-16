@@ -305,20 +305,23 @@ class Activo extends Conectar
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function get_activos_por_ubicacion()
+    public function get_activos_por_sede()
     {
         $conectar = parent::conexion();
         parent::set_names();
 
-        $sql = "SELECT ubicacion, COUNT(*) AS total 
-                FROM activos 
-                WHERE ubicacion IS NOT NULL AND ubicacion != '' 
-                GROUP BY ubicacion";
+        $sql = "SELECT sede, COUNT(*) AS total 
+            FROM activos 
+            WHERE sede IS NOT NULL AND sede != '' 
+            GROUP BY sede
+            ORDER BY sede";
 
         $stmt = $conectar->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+
 
     public function get_activos_por_condicion()
     {
@@ -366,14 +369,14 @@ class Activo extends Conectar
         return $stmt->fetchColumn() > 0;
     }
 
-    public function registrar_auditoria($activo_id, $usuario_id, $accion, $descripcion) {
-    $conectar = parent::conexion();
-    parent::set_names();
+    public function registrar_auditoria($activo_id, $usuario_id, $accion, $descripcion)
+    {
+        $conectar = parent::conexion();
+        parent::set_names();
 
-    $sql = "INSERT INTO auditoria (activo_id, usuario_id, accion, descripcion)
+        $sql = "INSERT INTO auditoria (activo_id, usuario_id, accion, descripcion)
             VALUES (?, ?, ?, ?)";
-    $stmt = $conectar->prepare($sql);
-    return $stmt->execute([$activo_id, $usuario_id, $accion, $descripcion]);
-}
-
+        $stmt = $conectar->prepare($sql);
+        return $stmt->execute([$activo_id, $usuario_id, $accion, $descripcion]);
+    }
 }

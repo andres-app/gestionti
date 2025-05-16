@@ -127,10 +127,10 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                             <div class="col-xl-4 col-md-6">
                                 <div class="card shadow h-100">
                                     <div class="card-header bg-secondary text-white">
-                                        <h5 class="my-0 text-white">Distribución por Ubicación</h5>
+                                        <h5 class="my-0 text-white">Distribución por Sede</h5>
                                     </div>
                                     <div class="card-body d-flex justify-content-center align-items-center">
-                                        <canvas id="graficoUbicacion" style="height: 220px; max-height: 220px;"></canvas>
+                                        <canvas id="graficoSede" style="height: 220px; max-height: 220px;"></canvas>
                                     </div>
                                 </div>
                             </div>
