@@ -71,12 +71,12 @@ class Activo extends Conectar
         parent::set_names();
 
         $sql = "INSERT INTO activos (sbn, serie, tipo, marca, modelo, ubicacion, sede, responsable_id, fecha_registro, condicion, estado, observaciones, acompra)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = $conectar->prepare($sql);
 
         if ($stmt->execute([$sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $sede, $responsable_id, $fecha_registro, $condicion, $estado, $observaciones, $acompra])) {
-            return true;
+            return $conectar->lastInsertId(); // Retornar ID insertado
         } else {
             $error = $stmt->errorInfo();
             error_log("Error en la consulta: " . $error[2]);

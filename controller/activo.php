@@ -110,27 +110,23 @@ switch ($_GET["op"]) {
             $acompra
         );
 
-        if ($resultado) {
+        if ($resultado && is_numeric($resultado)) {
             require_once(__DIR__ . "/../models/Auditoria.php");
             $auditoria = new Auditoria();
-
-            if (session_status() === PHP_SESSION_NONE) {
-                session_start();
-            }
 
             $usuario_id = $_SESSION["usu_id"] ?? 0;
             $accion = "Registro de nuevo activo";
             $detalle = "Se registró un nuevo activo con SBN: $sbn";
 
-            $pdo = (new Conectar())->conexion();
-            $id = $pdo->lastInsertId();
-
-            $auditoria->registrar_accion($id, $usuario_id, $accion, $detalle);
+            $auditoria->registrar_accion($resultado, $usuario_id, $accion, $detalle);
 
             echo json_encode(["success" => "Vehículo registrado correctamente."]);
         } else {
             echo json_encode(["error" => "Error al registrar el vehículo."]);
         }
+
+
+
 
         break;
 
