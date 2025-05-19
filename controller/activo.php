@@ -56,7 +56,7 @@ switch ($_GET["op"]) {
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li><a class="dropdown-item" href="#" onclick="abrirModalBaja(' . $row["id"] . ')"><i class="fas fa-file-upload me-2"></i>Registrar baja</a></li>
                     <li><a class="dropdown-item" href="#" onclick="verHistorial(' . $row["id"] . ')"><i class="fas fa-history me-2"></i>Ver historial</a></li>
-                    <li><a class="dropdown-item" href="#" title="Mantenimientos" onclick="abrirModalMantenimiento(' . $row["id"] . ')"><i class="fas fa-history me-2"></i>Ver Mantenimientos</a></li>
+                    <li><a class="dropdown-item" href="#" title="Mantenimientos" onclick="abrirModalMantenimiento(' . $row["id"] . ')"><i class="fas fa-tools me-2"></i>Ver Mantenimientos</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item text-danger" href="#" onclick="eliminar(' . $row["id"] . ')"><i class="bx bx-trash-alt me-2"></i>Eliminar</a></li>
                 </ul>
