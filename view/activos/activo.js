@@ -569,8 +569,13 @@ function abrirModalMantenimiento(id) {
     $('#mantenimiento_activo_id').val(id);
     $('#form_mantenimiento')[0].reset();
     cargarHistorialMantenimientos(id);
+    
+    // 🟢 Establecer fecha actual por defecto
+    document.getElementById("fecha").valueAsDate = new Date();
+
     $('#modalMantenimiento').modal('show');
 }
+
 
 $('#form_mantenimiento').on('submit', function (e) {
     e.preventDefault();
