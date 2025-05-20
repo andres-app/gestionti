@@ -9,7 +9,7 @@
       </div>
       <div class="modal-body px-4 pb-4">
 
-        <form id="form_mantenimiento" class="needs-validation" novalidate>
+        <form id="form_mantenimiento" class="needs-validation" novalidate enctype="multipart/form-data">
           <input type="hidden" id="mantenimiento_activo_id" name="activo_id">
 
           <div class="row g-3 mb-3">
@@ -28,11 +28,23 @@
             <textarea name="detalle" id="detalle" rows="3" class="form-control rounded-3" placeholder="Descripción técnica, repuestos, diagnóstico..." required></textarea>
           </div>
 
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <label for="orden_servicio" class="form-label fw-medium">📄 Orden de Servicio</label>
+              <input type="file" name="orden_servicio" id="orden_servicio" class="form-control rounded-pill" accept=".pdf,.jpg,.png,.doc,.docx">
+            </div>
+            <div class="col-md-6">
+              <label for="documento_conformidad" class="form-label fw-medium">📄 Documento de Conformidad</label>
+              <input type="file" name="documento_conformidad" id="documento_conformidad" class="form-control rounded-pill" accept=".pdf,.jpg,.png,.doc,.docx">
+            </div>
+          </div>
+
           <div class="d-flex justify-content-end">
             <button type="submit" class="btn btn-primary rounded-pill px-4">
               <i class="fas fa-save me-2"></i>Registrar Mantenimiento
             </button>
           </div>
+
         </form>
 
         <hr class="my-4">
@@ -46,10 +58,14 @@
                 <th>Usuario</th>
                 <th>Proveedor</th>
                 <th>Detalle</th>
+                <th>Orden Servicio</th>
+                <th>Conformidad</th>
               </tr>
             </thead>
             <tbody id="mantenimientos_body">
-              <tr><td colspan="4" class="text-center text-muted">Sin registros</td></tr>
+              <tr>
+                <td colspan="4" class="text-center text-muted">Sin registros</td>
+              </tr>
             </tbody>
           </table>
         </div>

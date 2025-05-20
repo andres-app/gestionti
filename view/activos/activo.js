@@ -619,6 +619,17 @@ function cargarHistorialMantenimientos(id) {
                             <td>${row.usuario}</td>
                             <td>${row.proveedor}</td>
                             <td>${row.detalle}</td>
+                            <td class="text-center">
+    ${row.orden_servicio 
+        ? `<a href="../../${row.orden_servicio}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-file-pdf"></i></a>` 
+        : '<span class="text-muted">-</span>'}
+</td>
+<td class="text-center">
+    ${row.documento_conformidad 
+        ? `<a href="../../${row.documento_conformidad}" target="_blank" class="btn btn-sm btn-outline-success"><i class="fas fa-file-pdf"></i></a>` 
+        : '<span class="text-muted">-</span>'}
+</td>
+
                         </tr>
                     `;
                 });
@@ -626,10 +637,11 @@ function cargarHistorialMantenimientos(id) {
             $('#mantenimientos_body').html(html);
         },
         error: function () {
-            $('#mantenimientos_body').html('<tr><td colspan="4" class="text-center text-danger">Error al cargar mantenimientos</td></tr>');
+            $('#mantenimientos_body').html('<tr><td colspan="6" class="text-center text-danger">Error al cargar mantenimientos</td></tr>');
         }
     });
 }
+
 
 // Llamada a la función de inicialización
 init();
