@@ -67,10 +67,20 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
 
                                     <div class="card-body">
                                         <!-- Botón para registrar un nuevo vehículo -->
-                                        <button type="button" id="btnnuevo" class="btn btn-primary waves-effect waves-light">
-                                            Nuevo Registro
-                                        </button>
-                                        <br><br>
+                                        <div class="d-flex justify-content-between align-items-end flex-wrap mb-3">
+                                            <button type="button" id="btnnuevo" class="btn btn-primary waves-effect waves-light mb-2">
+                                                Nuevo Registro
+                                            </button>
+
+                                            <div class="form-group mb-2">
+                                                <select id="filtro_condicion" class="form-select">
+                                                    <option value="activo">Activos Vigentes</option>
+                                                    <option value="baja">Activos de Baja</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+
 
                                         <!-- Tabla para mostrar la lista de vehículos registrados -->
                                         <table id="listado_table" class="table table-bordered dt-responsive nowrap w-100">

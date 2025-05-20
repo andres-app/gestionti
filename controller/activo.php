@@ -15,7 +15,8 @@ switch ($_GET["op"]) {
 
     // Caso para listar todos los vehículos
     case "listar":
-        $datos = $activo->get_activos();
+        $condicion = $_GET["condicion"] ?? ""; // ← Aquí recibimos el filtro enviado desde el JS
+        $datos = $activo->get_activos($condicion); // ← Y lo pasamos al modelo
         if ($datos === false) {
             echo json_encode(["error" => "Error al obtener los activos"]);
             exit;
@@ -34,15 +35,28 @@ switch ($_GET["op"]) {
             $sub_array["responsable"] = $row["responsable"];
 
             // 🔹 Datos para el modal (NO se mostrarán en DataTable)
-            $sub_array["hostname"] = $row["hostname"];
-            $sub_array["procesador"] = $row["procesador"];
-            $sub_array["sisopera"] = $row["sisopera"];
-            $sub_array["ram"] = $row["ram"];
-            $sub_array["disco"] = $row["disco"];
+            $sub_array["hostname"]   = $row["hostname"]   ?? null;
+            $sub_array["procesador"] = $row["procesador"] ?? null;
+            $sub_array["sisopera"]   = $row["sisopera"]   ?? null;
+            $sub_array["ram"]        = $row["ram"]        ?? null;
+            $sub_array["disco"]      = $row["disco"]      ?? null;
 
 
-            if ($row["tiene_baja"]) {
-                $sub_array["acciones"] = '<span class="badge bg-danger">De Baja</span>';
+
+if ($row["tiene_baja"]) {
+    $sub_array["acciones"] = '
+    <div class="btn-group" role="group">
+        <button type="button" class="btn btn-soft-danger btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" title="De Baja">
+            <i class="fas fa-ban"></i> De Baja
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="#" onclick="verHistorial(' . $row["id"] . ')">
+                <i class="fas fa-history me-2"></i>Ver historial</a></li>
+            <li><a class="dropdown-item" href="#" onclick="abrirModalMantenimiento(' . $row["id"] . ')">
+                <i class="fas fa-tools me-2"></i>Ver mantenimientos</a></li>
+        </ul>
+    </div>';
+
             } else {
                 $sub_array["acciones"] = '
         <div class="btn-group" role="group">

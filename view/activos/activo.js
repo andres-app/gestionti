@@ -213,6 +213,9 @@ $(document).ready(function () {
             url: '../../controller/activo.php?op=listar',
             type: "GET",
             dataType: "json",
+            data: function (d) {
+                d.condicion = $("#filtro_condicion").val(); // ✅ este es el filtro de condición
+            },
             error: function (e) {
                 Swal.fire('Error', 'No se pudo cargar la lista de activos', 'error');
             }
@@ -250,6 +253,11 @@ $(document).ready(function () {
                 "sPrevious": "Anterior"
             }
         }
+    });
+
+    // ⏬ Esto hace que la tabla se actualice cuando cambias el filtro
+    $("#filtro_condicion").on("change", function () {
+        tabla.ajax.reload();
     });
 });
 
@@ -569,7 +577,7 @@ function abrirModalMantenimiento(id) {
     $('#mantenimiento_activo_id').val(id);
     $('#form_mantenimiento')[0].reset();
     cargarHistorialMantenimientos(id);
-    
+
     // 🟢 Establecer fecha actual por defecto
     document.getElementById("fecha").valueAsDate = new Date();
 
@@ -625,14 +633,14 @@ function cargarHistorialMantenimientos(id) {
                             <td>${row.proveedor}</td>
                             <td>${row.detalle}</td>
                             <td class="text-center">
-    ${row.orden_servicio 
-        ? `<a href="../../${row.orden_servicio}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-file-pdf"></i></a>` 
-        : '<span class="text-muted">-</span>'}
+    ${row.orden_servicio
+                            ? `<a href="../../${row.orden_servicio}" target="_blank" class="btn btn-sm btn-outline-primary"><i class="fas fa-file-pdf"></i></a>`
+                            : '<span class="text-muted">-</span>'}
 </td>
 <td class="text-center">
-    ${row.documento_conformidad 
-        ? `<a href="../../${row.documento_conformidad}" target="_blank" class="btn btn-sm btn-outline-success"><i class="fas fa-file-pdf"></i></a>` 
-        : '<span class="text-muted">-</span>'}
+    ${row.documento_conformidad
+                            ? `<a href="../../${row.documento_conformidad}" target="_blank" class="btn btn-sm btn-outline-success"><i class="fas fa-file-pdf"></i></a>`
+                            : '<span class="text-muted">-</span>'}
 </td>
 
                         </tr>
