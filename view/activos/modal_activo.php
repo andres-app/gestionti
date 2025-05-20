@@ -52,7 +52,7 @@
                             <input class="form-control" type="text" name="vehiculo_modelo" id="vehiculo_modelo">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="vehiculo_ubicacion" class="form-label">Ubicación</label>
+                            <label for="vehiculo_ubicacion" class="form-label">Area</label>
                             <input class="form-control" type="text" name="vehiculo_ubicacion" id="vehiculo_ubicacion">
                         </div>
                     </div>
@@ -73,11 +73,22 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="vehiculo_condicion" class="form-label">Condición</label>
-                            <input class="form-control" type="text" name="vehiculo_condicion" id="vehiculo_condicion">
+                            <select class="form-control" name="vehiculo_condicion" id="vehiculo_condicion" required>
+                                <option value="">Seleccione una condición</option>
+                                <option value="Bueno">Bueno</option>
+                                <option value="Regular">Regular</option>
+                                <option value="Malo">Malo</option>
+                            </select>
                         </div>
+
                         <div class="col-md-6 mb-3">
                             <label for="vehiculo_sede" class="form-label">Sede</label>
-                            <input class="form-control" type="text" name="vehiculo_sede" id="vehiculo_sede">
+                            <select class="form-control" name="vehiculo_sede" id="vehiculo_sede" required>
+                                <option value="">Seleccione una sede</option>
+                                <option value="SEDE CENTRAL">SEDE CENTRAL</option>
+                                <option value="PASAJE ACUÑA">PASAJE ACUÑA</option>
+                                <option value="CAMANA">CAMANA</option>
+                            </select>
                         </div>
                     </div>
                     <!-- 🔹 Hostname y Procesador en una fila -->
@@ -113,7 +124,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="vehiculo_ult_mant" class="form-label">Último Mantenimiento</label>
-                            <input class="form-control" type="text"  id="vehiculo_ult_mant" readonly>
+                            <input class="form-control" type="text" id="vehiculo_ult_mant" readonly>
                         </div>
                     </div>
                     <div class="row">
