@@ -12,6 +12,7 @@ $(document).ready(function () {
                 d.fecha = $("#reporte_fecha").val();
                 d.obsolescencia = $("#filtro_obsolescencia").val(); // Nuevo
                 d.garantia = $("#filtro_garantia").val(); // Nuevo
+                d.condicion = $("#filtro_condicion").val();
             },
 
             dataType: "json",
@@ -88,7 +89,7 @@ $(document).ready(function () {
 
 
 
-    $("#reporte_usuario, #reporte_tipo_activo, #reporte_fecha, #filtro_obsolescencia, #filtro_garantia").on("change", function () {
+    $("#reporte_usuario, #reporte_tipo_activo, #reporte_fecha, #filtro_obsolescencia, #filtro_garantia, #filtro_condicion").on("change", function () {
         let usuario = $("#reporte_usuario").val() || "";
         let tipo_activo = $("#reporte_tipo_activo").val() || "";
         let fecha = $("#reporte_fecha").val() || "";

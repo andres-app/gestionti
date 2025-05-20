@@ -188,15 +188,12 @@ function previsualizar(id) {
 
 // Restaurar el formulario cuando se cierra el modal.
 $("#mnt_modal").on("hidden.bs.modal", function () {
-    // Habilitar todos los campos del formulario, incluyendo textarea
     $("#mnt_form input, #mnt_form select, #mnt_form textarea").prop("disabled", false);
-
-    // Mostrar el botón de guardar nuevamente
     $(".modal-footer .btn-primary").show();
-
-    // Cambiar el título del modal a "Nuevo Registro"
-    $("#myModalLabel").html("Nuevo Registro");
+    $("#alerta-baja").remove(); // Eliminar alerta si quedó
+    $("#mnt_form")[0].reset();
 });
+
 
 
 /**
@@ -375,6 +372,31 @@ function editar(id) {
 
             let responsableID = data.responsable_id && !isNaN(data.responsable_id) ? data.responsable_id : null;
             console.log("📌 Responsable ID recibido:", responsableID);
+
+            // Verifica si está dado de baja
+            const esDeBaja = data.condicion && data.condicion.toLowerCase() === 'de baja';
+
+            if (esDeBaja) {
+                // Mostrar alerta visual
+                if ($("#alerta-baja").length === 0) {
+                    $(".modal-body").prepend(`
+            <div id="alerta-baja" class="alert alert-warning" role="alert">
+                Este activo está registrado como <strong>De Baja</strong>. No se permiten modificaciones.
+            </div>
+        `);
+                }
+
+                // Deshabilitar todos los campos
+                $("#mnt_form input, #mnt_form select, #mnt_form textarea").prop("disabled", true);
+
+                // Ocultar botón guardar
+                $(".modal-footer .btn-primary").hide();
+            } else {
+                $("#alerta-baja").remove(); // Quita la alerta si no aplica
+                $("#mnt_form input, #mnt_form select, #mnt_form textarea").prop("disabled", false);
+                $(".modal-footer .btn-primary").show();
+            }
+
 
             cargarResponsables(responsableID, function () {
                 console.log("🔹 Responsable y demás campos cargados correctamente.");

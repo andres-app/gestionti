@@ -12,8 +12,10 @@ switch ($_GET["op"]) {
         $fecha          = $_GET["fecha"] ?? null;
         $obsolescencia  = $_GET["obsolescencia"] ?? null;
         $garantia       = $_GET["garantia"] ?? null;
+        $condicion = $_GET["condicion"] ?? null;
 
-        $datos = $reporte->get_reportes($usuario_id, $tipo_activo, $fecha, $obsolescencia, $garantia);
+        $datos = $reporte->get_reportes($usuario_id, $tipo_activo, $fecha, $obsolescencia, $garantia, $condicion);
+
 
 
         if (!$datos || count($datos) == 0) {
@@ -84,8 +86,10 @@ switch ($_GET["op"]) {
         $usuario_id = isset($_GET["usuario"]) ? $_GET["usuario"] : null;
         $tipo_activo = isset($_GET["tipo_activo"]) ? $_GET["tipo_activo"] : null;
         $fecha = isset($_GET["fecha"]) ? $_GET["fecha"] : null;
+        $condicion = $_GET["condicion"] ?? null;
 
-        $datos = $reporte->get_reportes($usuario_id, $tipo_activo, $fecha);
+        $datos = $reporte->get_reportes($usuario_id, $tipo_activo, $fecha, null, null, $condicion);
+
 
         if (!$datos || count($datos) == 0) {
             echo json_encode(["error" => "No hay datos para exportar"]);
@@ -158,8 +162,10 @@ switch ($_GET["op"]) {
         $usuario_id = isset($_GET["usuario"]) ? $_GET["usuario"] : null;
         $tipo_activo = isset($_GET["tipo_activo"]) ? $_GET["tipo_activo"] : null;
         $fecha = isset($_GET["fecha"]) ? $_GET["fecha"] : null;
+        $condicion = $_GET["condicion"] ?? null;
 
-        $datos = $reporte->get_reportes($usuario_id, $tipo_activo, $fecha);
+        $datos = $reporte->get_reportes($usuario_id, $tipo_activo, $fecha, null, null, $condicion);
+
 
         if (!$datos || count($datos) == 0) {
             die("No hay datos para exportar.");

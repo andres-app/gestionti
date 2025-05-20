@@ -23,20 +23,26 @@ class Activo extends Conectar
         $conectar = parent::conexion();
         parent::set_names();
 
-        // Consulta para obtener todos los activos con datos de `detactivo`
-        $sql = "SELECT v.id, v.sbn, v.serie, v.tipo, v.marca, v.modelo, v.ubicacion, 
-                       u.usu_nomape AS responsable, d.hostname, d.procesador, d.sisopera, d.ram, d.disco
-                FROM activos v
-                LEFT JOIN tm_usuario u ON v.responsable_id = u.usu_id
-                LEFT JOIN detactivo d ON v.id = d.activo_id
-                WHERE v.estado = 1
-                ORDER BY v.id DESC";
+        // Consulta para obtener activos que NO están de baja
+        $sql = "SELECT 
+            v.id, v.sbn, v.serie, v.tipo, v.marca, v.modelo, v.ubicacion, 
+            u.usu_nomape AS responsable, 
+            d.hostname, d.procesador, d.sisopera, d.ram, d.disco,
+            CASE WHEN b.activo_id IS NOT NULL THEN 1 ELSE 0 END AS tiene_baja
+        FROM activos v
+        LEFT JOIN tm_usuario u ON v.responsable_id = u.usu_id
+        LEFT JOIN detactivo d ON v.id = d.activo_id
+        LEFT JOIN bajas b ON v.id = b.activo_id
+        WHERE v.estado = 1 AND b.activo_id IS NULL
+        ORDER BY v.id DESC";
+
 
         $stmt = $conectar->prepare($sql);
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
 
     public function get_total_activos()

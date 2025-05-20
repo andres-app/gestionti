@@ -98,6 +98,15 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                                                         <option value="sin">Sin Garantía (≥ 3 años)</option>
                                                     </select>
                                                 </div>
+
+                                                <div class="col-md-4 mb-3">
+                                                    <label class="form-label">Condición</label>
+                                                    <select class="form-control" id="filtro_condicion">
+                                                        <option value="">Todos</option>
+                                                        <option value="activo">Activos</option>
+                                                        <option value="baja">De Baja</option>
+                                                    </select>
+                                                </div>
                                             </div>
 
                                             <div class="mt-3">

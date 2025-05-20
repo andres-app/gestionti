@@ -40,8 +40,11 @@ switch ($_GET["op"]) {
             $sub_array["ram"] = $row["ram"];
             $sub_array["disco"] = $row["disco"];
 
-            // 🔹 Botones de acción
-            $sub_array["acciones"] = '
+
+            if ($row["tiene_baja"]) {
+                $sub_array["acciones"] = '<span class="badge bg-danger">De Baja</span>';
+            } else {
+                $sub_array["acciones"] = '
         <div class="btn-group" role="group">
             <button type="button" class="btn btn-soft-info btn-sm" title="Previsualizar" onClick="previsualizar(' . $row["id"] . ')">
                 <i class="bx bx-show-alt"></i>
@@ -62,10 +65,9 @@ switch ($_GET["op"]) {
                 </ul>
             </div>
         </div>';
-
+            }
             $data[] = $sub_array;
         }
-
         $results = array(
             "sEcho" => 1,
             "iTotalRecords" => count($data),
