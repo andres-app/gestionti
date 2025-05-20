@@ -341,10 +341,16 @@ class Activo extends Conectar
         $conectar = parent::conexion();
         parent::set_names();
 
-        $sql = "SELECT condicion, COUNT(*) AS total 
-                FROM activos 
-                WHERE condicion IS NOT NULL AND condicion != ''
-                GROUP BY condicion";
+        $sql = "SELECT 
+            CASE 
+                WHEN EXISTS (SELECT 1 FROM bajas b WHERE b.activo_id = a.id) THEN 'De Baja'
+                ELSE a.condicion
+            END AS condicion,
+            COUNT(*) AS total
+        FROM activos a
+        WHERE a.estado = 1
+        GROUP BY condicion";
+
 
         $stmt = $conectar->prepare($sql);
         $stmt->execute();
