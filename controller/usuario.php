@@ -218,63 +218,61 @@ switch ($_GET["op"]) {
         }
         break;
 
-        case "actualizar_perfil":
-            // Obtener el ID del usuario desde la sesión
-            $usu_id = $_SESSION["usu_id"];
-        
-            // Validar si se cambió el nombre
-            $usu_nomape = !empty($_POST["usu_nomape"]) ? $_POST["usu_nomape"] : $_SESSION["usu_nomape"];
-        
-            // Validar si se cambió la contraseña (si no, no actualizarla)
-            $usu_pass = !empty($_POST["usu_pass"]) ? password_hash($_POST["usu_pass"], PASSWORD_DEFAULT) : null;
-        
-            // Validar si se subió una nueva imagen
-            if (!empty($_FILES["usu_img"]["name"])) {
-                $nombre_imagen = time() . "_" . $_FILES["usu_img"]["name"];
-                $ruta_imagen = "../../assets/picture/" . $nombre_imagen;
-        
-                // Mueve la imagen al servidor
-                if (move_uploaded_file($_FILES["usu_img"]["tmp_name"], $ruta_imagen)) {
-                    // Actualiza la sesión y la base de datos con la nueva imagen
-                    $_SESSION["usu_img"] = $ruta_imagen;
-                    // $usuario->update_imagen($usu_id, $ruta_imagen);  // Método que debes implementar para actualizar la imagen en la base de datos
-                } else {
-                    echo "Error al subir la imagen.";
-                }
+    case "actualizar_perfil":
+        // Obtener el ID del usuario desde la sesión
+        $usu_id = $_SESSION["usu_id"];
+
+        // Validar si se cambió el nombre
+        $usu_nomape = !empty($_POST["usu_nomape"]) ? $_POST["usu_nomape"] : $_SESSION["usu_nomape"];
+
+        // Validar si se cambió la contraseña (si no, no actualizarla)
+        $usu_pass = !empty($_POST["usu_pass"]) ? password_hash($_POST["usu_pass"], PASSWORD_DEFAULT) : null;
+
+        // Validar si se subió una nueva imagen
+        if (!empty($_FILES["usu_img"]["name"])) {
+            $nombre_imagen = time() . "_" . $_FILES["usu_img"]["name"];
+            $ruta_imagen = "../../assets/picture/" . $nombre_imagen;
+
+            // Mueve la imagen al servidor
+            if (move_uploaded_file($_FILES["usu_img"]["tmp_name"], $ruta_imagen)) {
+                // Actualiza la sesión y la base de datos con la nueva imagen
+                $_SESSION["usu_img"] = $ruta_imagen;
+                // $usuario->update_imagen($usu_id, $ruta_imagen);  // Método que debes implementar para actualizar la imagen en la base de datos
             } else {
-                $ruta_imagen = $_SESSION["usu_img"];  // Mantén la imagen anterior si no se subió una nueva
+                echo "Error al subir la imagen.";
             }
-        
-            // Actualizar los datos en la base de datos
-            $usuario->update_perfil($usu_id, $usu_nomape, $ruta_imagen, $usu_pass);
-        
-            // Actualizar los datos en la sesión
-            $_SESSION["usu_nomape"] = $usu_nomape;
-        
-            // Verificar si la contraseña fue cambiada
-            if ($usu_pass) {
-                $_SESSION["mensaje"] = "Los datos han sido actualizada correctamente.";
-            }
-        
-            // Detectar el entorno y definir la URL de redirección
-            $host = $_SERVER['HTTP_HOST'];
-            $uri = "/view/perfil/perfil.php";  // Ajustamos la ruta correcta
-        
-            // Verifica si es producción o localhost
-            if ($host == 'localhost') {
-                // Redirección para localhost
-                $url = "http://localhost/gestionti" . $uri;
-            } else {
-                // Redirección manual para producción
-                $url = "https://$host" . $uri;  // En producción, eliminamos el subdirectorio template
-            }
-        
-            // Redirigir al perfil
-            header("Location: $url");
-            exit();
-        
-            break;
-        
-       
+        } else {
+            $ruta_imagen = $_SESSION["usu_img"];  // Mantén la imagen anterior si no se subió una nueva
+        }
+
+        // Actualizar los datos en la base de datos
+        $usuario->update_perfil($usu_id, $usu_nomape, $ruta_imagen, $usu_pass);
+
+        // Actualizar los datos en la sesión
+        $_SESSION["usu_nomape"] = $usu_nomape;
+
+        // Verificar si la contraseña fue cambiada
+        if ($usu_pass) {
+            $_SESSION["mensaje"] = "Los datos han sido actualizada correctamente.";
+        }
+
+        // Detectar el entorno y definir la URL de redirección
+        $host = $_SERVER['HTTP_HOST'];
+        $uri = "/view/perfil/perfil.php";  // Ajustamos la ruta correcta
+
+        // Verifica si es producción o localhost
+        if ($host == 'localhost') {
+            // Redirección para localhost
+            $url = "http://localhost/gestionti" . $uri;
+        } else {
+            // Redirección manual para producción
+            $url = "https://$host" . $uri;  // En producción, eliminamos el subdirectorio template
+        }
+
+        $_SESSION["mensaje"] = "Los datos han sido actualizados correctamente.";
+        header("Location: ../view/perfil/perfil.php");
+        exit();
+
+
+        break;
 }
-?>
