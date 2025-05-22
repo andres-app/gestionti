@@ -160,17 +160,20 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                                     <div class="card-header bg-secondary text-white">
                                         <h5 class="my-0 text-white">Obsolescencia y Garantía</h5>
                                     </div>
-                                    <div class="card-body d-flex justify-content-center align-items-center">
-                                        <canvas id="graficoResumen" style="height: 220px; max-height: 220px;"></canvas>
-                                    </div>
-                                    <div class="card-footer bg-dark text-end border-top-0 px-3 py-2">
-                                        <a href="../../controller/descargar_resumen_obsolescencia.php"
-                                            class="btn btn-sm btn-outline-secondary px-3 py-1">
-                                            <i class="mdi mdi-file-excel text-success me-1"></i> Descargar Excel
-                                        </a>
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-center">
+                                            <canvas id="graficoResumen" style="height: 220px; max-height: 220px;"></canvas>
+                                        </div>
+                                        <div class="text-end mt-3">
+                                            <a href="../../controller/descargar_resumen_obsolescencia.php"
+                                                class="btn btn-sm btn-outline-light px-3 py-1">
+                                                <i class="mdi mdi-file-excel text-success me-1"></i> Descargar Excel
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                         <?php require_once("../html/footer.php") ?>
                     </div>
