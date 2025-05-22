@@ -16,6 +16,9 @@
                 <th><i class="fas fa-calendar-alt me-1 text-muted"></i>Fecha</th>
                 <th><i class="fas fa-user me-1 text-muted"></i>Usuario</th>
                 <th><i class="fas fa-tasks me-1 text-muted"></i>Acción</th>
+                <th><i class="fas fa-database me-1 text-muted"></i>Campo</th>
+                <th><i class="fas fa-arrow-left me-1 text-muted"></i>Anterior</th>
+                <th><i class="fas fa-arrow-right me-1 text-muted"></i>Nuevo</th>
                 <th><i class="fas fa-info-circle me-1 text-muted"></i>Detalle</th>
               </tr>
             </thead>

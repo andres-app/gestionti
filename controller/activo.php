@@ -43,8 +43,8 @@ switch ($_GET["op"]) {
 
 
 
-if ($row["tiene_baja"]) {
-    $sub_array["acciones"] = '
+            if ($row["tiene_baja"]) {
+                $sub_array["acciones"] = '
     <div class="btn-group" role="group">
         <button type="button" class="btn btn-soft-danger btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" title="De Baja">
             <i class="fas fa-ban"></i> De Baja
@@ -56,7 +56,6 @@ if ($row["tiene_baja"]) {
                 <i class="fas fa-tools me-2"></i>Ver mantenimientos</a></li>
         </ul>
     </div>';
-
             } else {
                 $sub_array["acciones"] = '
         <div class="btn-group" role="group">
@@ -195,9 +194,47 @@ if ($row["tiene_baja"]) {
 
             $usuario_id = $_SESSION["usu_id"] ?? 0;
             $accion = "Edición de activo";
-            $detalle = "El usuario actualizó el activo ID $id";
 
-            $auditoria->registrar_accion($id, $usuario_id, $accion, $detalle);
+            // Comparar campo por campo
+            $campos = [
+                "sbn",
+                "serie",
+                "tipo",
+                "marca",
+                "modelo",
+                "ubicacion",
+                "responsable_id",
+                "fecha_registro",
+                "condicion",
+                "estado",
+                "sede",
+                "observaciones",
+                "acompra",
+                "hostname",
+                "procesador",
+                "sisopera",
+                "ram",
+                "disco"
+            ];
+
+            foreach ($campos as $campo) {
+                $valor_antiguo = $vehiculo_actual[$campo] ?? null;
+                $valor_nuevo = $$campo;
+
+                if ($valor_antiguo != $valor_nuevo) {
+                    if ($campo === "responsable_id") {
+                        $valor_antiguo_nombre = $auditoria->obtener_nombre_usuario($valor_antiguo);
+                        $valor_nuevo_nombre = $auditoria->obtener_nombre_usuario($valor_nuevo);
+
+                        $detalle = "Se cambió el responsable: de '$valor_antiguo_nombre' a '$valor_nuevo_nombre'";
+                    } else {
+                        $detalle = "Se modificó el campo '$campo': '$valor_antiguo' → '$valor_nuevo'";
+                    }
+
+                    $auditoria->registrar_cambio($id, $usuario_id, $accion, $campo, $valor_antiguo, $valor_nuevo, $detalle);
+                }
+            }
+
 
             // ✅ ÚNICA respuesta JSON
             echo json_encode(["success" => "Vehículo actualizado correctamente."]);

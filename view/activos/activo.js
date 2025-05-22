@@ -551,13 +551,17 @@ function verHistorial(id) {
             if (data.length > 0) {
                 data.forEach(item => {
                     html += `
-                        <tr>
-                            <td>${item.fecha}</td>
-                            <td>${item.usuario}</td>
-                            <td>${item.accion}</td>
-                            <td>${item.detalle}</td>
-                        </tr>`;
+                    <tr>
+                    <td>${item.fecha}</td>
+                    <td>${item.usuario}</td>
+                    <td>${item.accion}</td>
+                    <td>${item.campo_modificado || '-'}</td>
+                    <td>${item.valor_anterior || '-'}</td>
+                    <td>${item.valor_nuevo || '-'}</td>
+                    <td>${item.descripcion}</td>
+                    </tr>`;
                 });
+
             } else {
                 html = '<tr><td colspan="4" class="text-center">No hay historial registrado.</td></tr>';
             }
