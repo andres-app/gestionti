@@ -1,6 +1,10 @@
 <!-- jQuery SIEMPRE debe ir primero -->
 <script src="../../assets/js/jquery.min.js"></script>
 
+<!-- Select2 (librería externa) -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <!-- Bootstrap y demás plugins dependientes -->
 <script src="../../assets/js/bootstrap.bundle.min.js"></script>
 <script src="../../assets/js/metisMenu.min.js"></script>

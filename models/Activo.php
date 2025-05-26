@@ -440,4 +440,24 @@ class Activo extends Conectar
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function get_activos_disponibles_osin()
+    {
+        $conectar = parent::conexion();
+        parent::set_names();
+
+        $sql = "SELECT id, tipo, sbn, serie 
+            FROM activos 
+            WHERE ubicacion = 'OSIN' 
+              AND estado = 1 
+              AND id NOT IN (
+                SELECT activo_id FROM prestamos WHERE estado = 'Prestado'
+              )
+            ORDER BY tipo ASC";
+
+        $stmt = $conectar->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

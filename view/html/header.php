@@ -1,3 +1,10 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+?>
+
+
 <header id="page-topbar">
     <div class="navbar-header">
         <div class="d-flex">
