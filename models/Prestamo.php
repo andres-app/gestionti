@@ -2,24 +2,26 @@
 class Prestamo extends Conectar
 {
     // Registrar un nuevo préstamo
-    public function registrar_prestamo($activo_id, $usuario_origen_id, $usuario_destino_id, $fecha_prestamo, $fecha_devolucion_estimada, $observaciones)
-    {
-        $conectar = parent::conexion();
-        parent::set_names();
+public function registrar_prestamo($activo_id, $usuario_origen_id, $usuario_destino_id, $fecha_prestamo, $fecha_devolucion_estimada, $observaciones)
+{
+    $conectar = parent::conexion();
+    parent::set_names();
 
-        $sql = "INSERT INTO prestamos (activo_id, usuario_origen_id, usuario_destino_id, fecha_prestamo, fecha_devolucion_estimada, observaciones)
-                VALUES (?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO prestamos (activo_id, usuario_origen_id, usuario_destino_id, fecha_prestamo, fecha_devolucion_estimada, observaciones, estado)
+            VALUES (?, ?, ?, ?, ?, ?, 'Prestado')";
 
-        $stmt = $conectar->prepare($sql);
-        return $stmt->execute([
-            $activo_id,
-            $usuario_origen_id,
-            $usuario_destino_id,
-            $fecha_prestamo,
-            $fecha_devolucion_estimada,
-            $observaciones
-        ]);
-    }
+    $stmt = $conectar->prepare($sql);
+    return $stmt->execute([
+        $activo_id,
+        $usuario_origen_id,
+        $usuario_destino_id,
+        $fecha_prestamo,
+        $fecha_devolucion_estimada,
+        $observaciones
+    ]);
+}
+
+
 
     // Listar todos los préstamos
     public function listar_prestamos()

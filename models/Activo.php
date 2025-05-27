@@ -446,14 +446,16 @@ class Activo extends Conectar
         $conectar = parent::conexion();
         parent::set_names();
 
-        $sql = "SELECT id, tipo, sbn, serie 
-            FROM activos 
-            WHERE ubicacion = 'OSIN' 
-              AND estado = 1 
-              AND id NOT IN (
-                SELECT activo_id FROM prestamos WHERE estado = 'Prestado'
+        $sql = "SELECT a.id, a.sbn, a.serie, a.tipo
+            FROM activos a
+            WHERE a.estado = 1
+              AND a.ubicacion = 'OSIN'
+              AND NOT EXISTS (
+                  SELECT 1 FROM prestamos p
+                  WHERE p.activo_id = a.id
+                  AND p.estado = 'Prestado'
               )
-            ORDER BY tipo ASC";
+            ORDER BY a.tipo, a.sbn";
 
         $stmt = $conectar->prepare($sql);
         $stmt->execute();

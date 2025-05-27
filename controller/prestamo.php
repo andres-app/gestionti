@@ -14,11 +14,11 @@ switch ($_GET["op"]) {
 
     case "insertar":
         $activo_id = $_POST["activo_id"];
-        $usuario_origen_id = $_SESSION["usu_id"];
         $usuario_destino_id = $_POST["usuario_destino"];
+        $usuario_origen_id = $_SESSION["usu_id"]; // quien presta
         $fecha_prestamo = $_POST["fecha_prestamo"];
-        $fecha_devolucion_estimada = $_POST["fecha_devolucion_estimada"] ?? null;
-        $observaciones = $_POST["observaciones"] ?? "";
+        $fecha_devolucion_estimada = $_POST["fecha_devolucion_estimada"];
+        $observaciones = $_POST["observaciones"];
 
         $resultado = $prestamo->registrar_prestamo(
             $activo_id,
@@ -28,6 +28,7 @@ switch ($_GET["op"]) {
             $fecha_devolucion_estimada,
             $observaciones
         );
+
 
         echo json_encode(["success" => $resultado]);
         break;

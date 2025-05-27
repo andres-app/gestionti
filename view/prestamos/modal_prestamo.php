@@ -10,7 +10,7 @@
                 <div class="modal-body">
 
                     <div class="mb-3">
-                        <label class="form-label">Usuario que realiza el préstamo</label>
+                        <label class="form-label">Responsable del préstamo</label>
                         <input type="text" class="form-control" value="<?php echo $_SESSION['usu_nomape']; ?>" readonly>
                     </div>
 
