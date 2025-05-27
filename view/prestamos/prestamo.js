@@ -15,7 +15,20 @@ function init() {
     $("#form_prestamo").on("submit", function (e) {
         e.preventDefault();
 
-        var formData = new FormData(this);
+        const fechaPrestamo = new Date($("#fecha_prestamo").val());
+        const fechaDevolucion = new Date($("#fecha_devolucion_estimada").val());
+
+        if (!fechaPrestamo || !fechaDevolucion || isNaN(fechaPrestamo) || isNaN(fechaDevolucion)) {
+            Swal.fire("Error", "Debe ingresar fechas válidas.", "warning");
+            return;
+        }
+
+        if (fechaDevolucion <= fechaPrestamo) {
+            Swal.fire("Error", "La fecha de devolución debe ser posterior a la de préstamo.", "warning");
+            return;
+        }
+
+        const formData = new FormData(this);
 
         $.ajax({
             url: "../../controller/prestamo.php?op=insertar",
@@ -35,6 +48,7 @@ function init() {
             }
         });
     });
+
 }
 
 // Listado de préstamos

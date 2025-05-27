@@ -5,6 +5,7 @@
 }
 
 
+
     /* TODO: Definición de la clase Conectar */
     class Conectar{
         /* TODO: Propiedad protegida para almacenar la conexión a la base de datos */
