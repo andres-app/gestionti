@@ -107,21 +107,32 @@ function limpiarFormulario() {
 function marcarDevuelto(id) {
     Swal.fire({
         title: '¿Confirmar devolución?',
-        text: 'El activo será marcado como devuelto.',
-        icon: 'warning',
+        html: `
+            <textarea id="observacion_devolucion" class="form-control" rows="4"
+                placeholder="Ingrese observaciones de la devolución (opcional)"></textarea>
+        `,
+        icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Sí, devolver',
-        cancelButtonText: 'Cancelar'
+        cancelButtonText: 'Cancelar',
+        preConfirm: () => {
+            return document.getElementById('observacion_devolucion').value.trim();
+        }
     }).then((result) => {
         if (result.isConfirmed) {
+            const observacion = result.value;
+
             $.ajax({
                 url: '../../controller/prestamo.php?op=marcar_devuelto',
                 type: 'POST',
-                data: { id: id },
+                data: {
+                    id: id,
+                    observaciones: observacion
+                },
                 success: function (resp) {
-                    let res = JSON.parse(resp);
+                    const res = JSON.parse(resp);
                     if (res.success) {
-                        Swal.fire('Listo', 'Activo devuelto correctamente.', 'success');
+                        Swal.fire('Listo', 'El activo fue marcado como devuelto.', 'success');
                         tabla.ajax.reload();
                     } else {
                         Swal.fire('Error', res.error || 'No se pudo devolver.', 'error');
@@ -134,6 +145,7 @@ function marcarDevuelto(id) {
         }
     });
 }
+
 
 // Cargar activos disponibles en OSIN
 function cargarActivosOSIN() {
@@ -178,6 +190,32 @@ $('#activo_id').select2({
     width: '100%',
     dropdownParent: $('#modalPrestamo')  // IMPORTANTE: esto hace que el dropdown aparezca dentro del modal
 });
+
+function verObservaciones(texto) {
+    const partes = texto.split("Devolución:");
+    const entrega = partes[0]?.trim() || 'Sin observaciones de entrega';
+    const devolucion = partes[1]?.trim();
+
+    Swal.fire({
+        title: '📝 Observaciones del Préstamo',
+        icon: 'info',
+        html: `
+            <div style="text-align: left; font-size: 14px;">
+                <div style="margin-bottom: 1rem; background: #f0f8ff; padding: .75rem; border-radius: .25rem;">
+                    <strong>📤 Entrega:</strong><br>${entrega}
+                </div>
+                ${devolucion ? `
+                <div style="background: #e8f5e9; padding: .75rem; border-radius: .25rem;">
+                    <strong>🔄 Devolución:</strong><br>${devolucion}
+                </div>` : ''}
+            </div>
+        `,
+        confirmButtonText: 'Cerrar'
+    });
+}
+
+
+
 
 
 init();

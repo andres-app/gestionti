@@ -39,9 +39,11 @@ switch ($_GET["op"]) {
 
     case "marcar_devuelto":
         $prestamo_id = $_POST["id"] ?? null;
+        $observaciones = $_POST["observaciones"] ?? '';
+
 
         if ($prestamo_id) {
-            $resultado = $prestamo->marcar_como_devuelto($prestamo_id);
+            $resultado = $prestamo->marcar_como_devuelto($prestamo_id, $observaciones);
             echo json_encode(["success" => $resultado]);
         } else {
             echo json_encode(["success" => false, "error" => "ID no recibido"]);
