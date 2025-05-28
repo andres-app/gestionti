@@ -1,7 +1,6 @@
 <?php
 require_once("../../config/conexion.php");
 require_once("../../models/Rol.php");
-require_once("modal_prestamo.php");
 
 $rol = new Rol();
 $datos = $rol->validar_menu_x_rol($_SESSION["rol_id"], "prestamos");
@@ -33,7 +32,7 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                                 <h4 class="mb-sm-0 font-size-18">Lista de Préstamos - Área OSIN</h4>
                                 <div class="page-title-right">
                                     <ol class="breadcrumb m-0">
-                                        <li class="breadcrumb-item"><a href="javascript: void(0);">Página</a></li>
+                                        <li class="breadcrumb-item"><a href="javascript:void(0);">Página</a></li>
                                         <li class="breadcrumb-item active">Lista de Préstamos</li>
                                     </ol>
                                 </div>
@@ -81,19 +80,22 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                         </div>
                     </div>
 
-                </div>
-            </div>
+                </div> <!-- .container-fluid -->
+            </div> <!-- .page-content -->
 
             <?php require_once("../html/footer.php") ?>
-        </div>
-    </div>
+        </div> <!-- .main-content -->
+
+    </div> <!-- #layout-wrapper -->
 
     <?php require_once("../html/sidebar.php") ?>
     <div class="rightbar-overlay"></div>
-    <?php require_once("../html/js.php") ?>
 
-    <!-- Script del módulo -->
-    <script type="text/javascript" src="prestamo.js"></script>
+    <?php require_once("modal_prestamo.php"); ?> <!-- ✅ MOVIDO AQUÍ -->
+
+    <?php require_once("../html/js.php") ?>
+    <script src="prestamo.js" type="text/javascript"></script>
+
 </body>
 </html>
 

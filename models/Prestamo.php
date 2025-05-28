@@ -2,24 +2,24 @@
 class Prestamo extends Conectar
 {
     // Registrar un nuevo préstamo
-public function registrar_prestamo($activo_id, $usuario_origen_id, $usuario_destino_id, $fecha_prestamo, $fecha_devolucion_estimada, $observaciones)
-{
-    $conectar = parent::conexion();
-    parent::set_names();
+    public function registrar_prestamo($activo_id, $usuario_origen_id, $usuario_destino_id, $fecha_prestamo, $fecha_devolucion_estimada, $observaciones)
+    {
+        $conectar = parent::conexion();
+        parent::set_names();
 
-    $sql = "INSERT INTO prestamos (activo_id, usuario_origen_id, usuario_destino_id, fecha_prestamo, fecha_devolucion_estimada, observaciones, estado)
+        $sql = "INSERT INTO prestamos (activo_id, usuario_origen_id, usuario_destino_id, fecha_prestamo, fecha_devolucion_estimada, observaciones, estado)
             VALUES (?, ?, ?, ?, ?, ?, 'Prestado')";
 
-    $stmt = $conectar->prepare($sql);
-    return $stmt->execute([
-        $activo_id,
-        $usuario_origen_id,
-        $usuario_destino_id,
-        $fecha_prestamo,
-        $fecha_devolucion_estimada,
-        $observaciones
-    ]);
-}
+        $stmt = $conectar->prepare($sql);
+        return $stmt->execute([
+            $activo_id,
+            $usuario_origen_id,
+            $usuario_destino_id,
+            $fecha_prestamo,
+            $fecha_devolucion_estimada,
+            $observaciones
+        ]);
+    }
 
 
 
@@ -55,7 +55,7 @@ public function registrar_prestamo($activo_id, $usuario_origen_id, $usuario_dest
         foreach ($resultado as &$row) {
             // Preparar el botón de observaciones (solo si hay texto)
             $observacion = !empty($row["observaciones"]) ? $row["observaciones"] : 'Sin observaciones';
-            $btnObs = '<button class="btn btn-outline-info btn-sm ms-1" title="Ver observaciones" onclick="verObservaciones(`' . htmlspecialchars($observacion, ENT_QUOTES) . '`)">
+            $btnObs = '<button class="btn btn-outline-primary btn-sm ms-1" title="Ver observaciones" onclick="verObservaciones(`' . htmlspecialchars($observacion, ENT_QUOTES) . '`)">
                     <i class="fas fa-comment-alt"></i>
                </button>';
 
@@ -69,10 +69,15 @@ public function registrar_prestamo($activo_id, $usuario_origen_id, $usuario_dest
             </div>';
             } else {
                 $row["acciones"] = '
-            <div class="btn-group">
-                <span class="badge bg-secondary">Devuelto</span>
-                ' . $btnObs . '
-            </div>';
+            <div class="d-flex flex-wrap gap-1">
+                <button class="btn btn-secondary btn-sm" disabled>
+                    <i class="fas fa-check-circle"></i> Devuelto
+                </button>
+                <button class="btn btn-outline-primary btn-sm" onclick="verObservaciones(`' . htmlspecialchars($row["observaciones"], ENT_QUOTES) . '`)">
+                    <i class="fas fa-comment-alt"></i>
+                </button>
+            </div>
+        ';
             }
         }
 

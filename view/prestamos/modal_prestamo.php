@@ -14,30 +14,29 @@
                         <input type="text" class="form-control" value="<?php echo $_SESSION['usu_nomape']; ?>" readonly>
                     </div>
 
-
-                    <!-- Selección de activo OSIN -->
+                    <!-- Activo OSIN -->
                     <div class="mb-3">
                         <label for="activo_id" class="form-label">Activo OSIN</label>
                         <select id="activo_id" name="activo_id" class="form-select" required>
-                            <option value="">Seleccione un activo...</option>
-                            <!-- Se llena dinámicamente -->
+                            <!-- sin option por defecto aquí -->
                         </select>
                     </div>
 
-                    <!-- Usuario destino -->
+                    <!-- Usuario Destino -->
                     <div class="mb-3">
                         <label for="usuario_destino" class="form-label">Usuario Destino</label>
                         <select id="usuario_destino" name="usuario_destino" class="form-select" required>
-                            <option value="">Seleccione...</option>
+                            <!-- sin option por defecto aquí -->
                         </select>
                     </div>
 
-                    <!-- Fechas -->
+                    <!-- Fecha de Préstamo -->
                     <div class="mb-3">
                         <label for="fecha_prestamo" class="form-label">Fecha de Préstamo</label>
                         <input type="datetime-local" id="fecha_prestamo" name="fecha_prestamo" class="form-control" required>
                     </div>
 
+                    <!-- Fecha Devolución Estimada -->
                     <div class="mb-3">
                         <label for="fecha_devolucion_estimada" class="form-label">Fecha Devolución Estimada</label>
                         <input type="date" id="fecha_devolucion_estimada" name="fecha_devolucion_estimada" class="form-control">

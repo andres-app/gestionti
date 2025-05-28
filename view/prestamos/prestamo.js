@@ -1,17 +1,25 @@
 var tabla;
 
-// Inicialización
+// Ejecutar cuando el DOM esté completamente cargado
+document.addEventListener('DOMContentLoaded', function () {
+    init();
+});
+
+// Función principal
 function init() {
     listarPrestamos();
+    cargarActivosOSIN();
+    cargarUsuariosDestino();
 
-    // Evento: botón nuevo préstamo
+    // Botón: abrir modal nuevo préstamo
     $("#btn_nuevo_prestamo").on("click", function () {
         limpiarFormulario();
         cargarUsuariosDestino();
+        cargarActivosOSIN();
         $("#modalPrestamo").modal("show");
     });
 
-    // Evento: envío del formulario
+    // Envío de formulario con validación
     $("#form_prestamo").on("submit", function (e) {
         e.preventDefault();
 
@@ -48,19 +56,15 @@ function init() {
             }
         });
     });
-
 }
 
-// Listado de préstamos
+// Tabla de préstamos
 function listarPrestamos() {
     tabla = $("#tabla_prestamos").DataTable({
         ajax: {
             url: "../../controller/prestamo.php?op=listar",
             type: "GET",
-            dataType: "json",
-            error: function () {
-                Swal.fire("Error", "No se pudo cargar la lista", "error");
-            }
+            dataType: "json"
         },
         responsive: true,
         destroy: true,
@@ -90,58 +94,90 @@ function listarPrestamos() {
     });
 }
 
-// Cargar usuarios destino al select
+// Cargar activos OSIN en el select
+function cargarActivosOSIN() {
+    $.ajax({
+        url: '../../controller/prestamo.php?op=activos_osin',
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            if ($.fn.select2 && $('#activo_id').hasClass("select2-hidden-accessible")) {
+                $('#activo_id').select2('destroy');
+            }
+
+            let html = '<option value=""></option>'; // opción vacía correcta
+            data.forEach(activo => {
+                html += `<option value="${activo.id}">[${activo.tipo}] ${activo.sbn} - Serie: ${activo.serie}</option>`;
+            });
+            $("#activo_id").html(html).select2({
+                placeholder: "Seleccione un activo...",
+                allowClear: true,
+                width: '100%',
+                dropdownParent: $('#modalPrestamo')
+            });
+
+        }
+    });
+}
+
+
+// Cargar usuarios destino en el select
 function cargarUsuariosDestino() {
     $.ajax({
         url: "../../controller/prestamo.php?op=usuarios_destino",
         type: "GET",
         dataType: "json",
         success: function (data) {
-            let html = '<option value="">Seleccione...</option>';
+            if ($.fn.select2 && $('#usuario_destino').hasClass("select2-hidden-accessible")) {
+                $('#usuario_destino').select2('destroy');
+            }
+
+            let html = '<option value=""></option>'; // opción vacía correcta
             data.forEach(user => {
                 html += `<option value="${user.usu_id}">${user.usu_nomape}</option>`;
             });
-            $("#usuario_destino").html(html);
-        },
-        error: function () {
-            Swal.fire("Error", "No se pudieron cargar los usuarios destino", "error");
+            $("#usuario_destino").html(html).select2({
+                placeholder: "Seleccione...",
+                allowClear: true,
+                width: '100%',
+                dropdownParent: $('#modalPrestamo')
+            });
+
         }
     });
 }
 
-// Limpiar modal
+
+
+
+
+// Limpiar formulario
 function limpiarFormulario() {
     $("#form_prestamo")[0].reset();
-    $("#prestamo_id").val('');
-    $("#activo_id").val(''); // deberías establecerlo según qué activo se está prestando
-    $("#fecha_prestamo").val(new Date().toISOString().slice(0, 16)); // set default fecha/hora
+    $("#activo_id").val('').trigger('change');
+    $("#usuario_destino").val('').trigger('change');
+    $("#fecha_prestamo").val(new Date().toISOString().slice(0, 16));
 }
 
-// Función para marcar préstamo como devuelto
+// Marcar como devuelto con observación
 function marcarDevuelto(id) {
     Swal.fire({
         title: '¿Confirmar devolución?',
-        html: `
-            <textarea id="observacion_devolucion" class="form-control" rows="4"
-                placeholder="Ingrese observaciones de la devolución (opcional)"></textarea>
-        `,
+        html: `<textarea id="observacion_devolucion" class="form-control" rows="4"
+                placeholder="Ingrese observaciones de la devolución (opcional)"></textarea>`,
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Sí, devolver',
         cancelButtonText: 'Cancelar',
-        preConfirm: () => {
-            return document.getElementById('observacion_devolucion').value.trim();
-        }
+        preConfirm: () => document.getElementById('observacion_devolucion').value.trim()
     }).then((result) => {
         if (result.isConfirmed) {
-            const observacion = result.value;
-
             $.ajax({
                 url: '../../controller/prestamo.php?op=marcar_devuelto',
                 type: 'POST',
                 data: {
                     id: id,
-                    observaciones: observacion
+                    observaciones: result.value
                 },
                 success: function (resp) {
                     const res = JSON.parse(resp);
@@ -160,51 +196,7 @@ function marcarDevuelto(id) {
     });
 }
 
-
-// Cargar activos disponibles en OSIN
-function cargarActivosOSIN() {
-    $.ajax({
-        url: '../../controller/prestamo.php?op=activos_osin',
-        type: 'GET',
-        dataType: 'json',
-        success: function (data) {
-            let html = '<option value="">Seleccione un activo...</option>';
-            data.forEach(activo => {
-                html += `<option value="${activo.id}">
-                    [${activo.tipo}] ${activo.sbn} - Serie: ${activo.serie}
-                </option>`;
-            });
-            $("#activo_id").html(html);
-
-            // Inicializar Select2 DESPUÉS de llenar el select
-            $('#activo_id').select2({
-                placeholder: "Seleccione un activo",
-                width: '100%',
-                dropdownParent: $('#modalPrestamo') // ⚠️ Asegúrate de que el ID del modal es correcto
-            });
-        },
-        error: function () {
-            Swal.fire('Error', 'No se pudieron cargar los activos disponibles.', 'error');
-        }
-    });
-}
-
-
-
-
-$("#btn_nuevo_prestamo").on("click", function () {
-    limpiarFormulario();
-    cargarUsuariosDestino();
-    cargarActivosOSIN();
-    $("#modalPrestamo").modal("show");
-});
-
-$('#activo_id').select2({
-    placeholder: "Seleccione un activo",
-    width: '100%',
-    dropdownParent: $('#modalPrestamo')  // IMPORTANTE: esto hace que el dropdown aparezca dentro del modal
-});
-
+// Mostrar observaciones en ventana modal
 function verObservaciones(texto) {
     const partes = texto.split("Devolución:");
     const entrega = partes[0]?.trim() || 'Sin observaciones de entrega';
@@ -227,9 +219,3 @@ function verObservaciones(texto) {
         confirmButtonText: 'Cerrar'
     });
 }
-
-
-
-
-
-init();

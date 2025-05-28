@@ -1,23 +1,24 @@
 <!-- jQuery SIEMPRE debe ir primero -->
 <script src="../../assets/js/jquery.min.js"></script>
 
-<!-- Select2 (librería externa) -->
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<!-- Select2 (solo JS, el CSS ya debe estar en head.php) -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-<!-- Bootstrap y demás plugins dependientes -->
+<!-- Bootstrap y plugins dependientes -->
 <script src="../../assets/js/bootstrap.bundle.min.js"></script>
 <script src="../../assets/js/metisMenu.min.js"></script>
 <script src="../../assets/js/simplebar.min.js"></script>
 <script src="../../assets/js/waves.min.js"></script>
 <script src="../../assets/js/feather.min.js"></script>
 <script src="../../assets/js/pace.min.js"></script>
-<script src="../../assets/js/choices.min.js"></script>
 
-<!-- Sweet Alerts -->
+<!-- Elimina si no usas Choices -->
+<!-- <script src="../../assets/js/choices.min.js"></script> -->
+
+<!-- Sweet Alert 2 -->
 <script src="../../assets/js/sweetalert2.min.js"></script>
 
-<!-- DataTables -->
+<!-- DataTables y extensiones -->
 <script src="../../assets/js/jquery.dataTables.min.js"></script>
 <script src="../../assets/js/dataTables.bootstrap4.min.js"></script>
 <script src="../../assets/js/dataTables.buttons.min.js"></script>
@@ -31,10 +32,10 @@
 <script src="../../assets/js/dataTables.responsive.min.js"></script>
 <script src="../../assets/js/responsive.bootstrap4.min.js"></script>
 
-<!-- Librerías externas -->
+<!-- Librerías externas adicionales -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://unpkg.com/dropzone@6.0.0-beta.1/dist/dropzone-min.js"></script>
 <script src="https://unpkg.com/quagga@0.12.1/dist/quagga.min.js"></script>
 
-<!-- Script final de la plantilla -->
+<!-- Script de la plantilla (debe ir al final) -->
 <script src="../../assets/js/app.js"></script>
