@@ -73,6 +73,7 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                                                         <th>Destino</th>
                                                         <th>Fecha Préstamo</th>
                                                         <th>Dev. Estimada</th>
+                                                        <th>Dev. Real</th>
                                                         <th>Estado</th>
                                                         <th>Acciones</th>
                                                     </tr>

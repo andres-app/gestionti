@@ -78,9 +78,11 @@ function listarPrestamos(estado = "Prestado") {
             { data: "destino" },
             { data: "fecha_prestamo" },
             { data: "fecha_devolucion_estimada" },
+            { data: "fecha_devolucion_real" }, // NUEVO
             { data: "estado" },
             { data: "acciones" }
         ],
+
         language: {
             sSearch: "Buscar:",
             sZeroRecords: "No se encontraron resultados",
@@ -170,13 +172,27 @@ function limpiarFormulario() {
 function marcarDevuelto(id) {
     Swal.fire({
         title: '¿Confirmar devolución?',
-        html: `<textarea id="observacion_devolucion" class="form-control" rows="4"
-                placeholder="Ingrese observaciones de la devolución (opcional)"></textarea>`,
+        html: `
+            <label class="form-label text-start d-block mb-1">Observaciones (opcional):</label>
+            <textarea id="observacion_devolucion" class="form-control mb-3" rows="3"
+                placeholder="Ingrese observaciones de la devolución (opcional)"></textarea>
+
+            <label class="form-label text-start d-block mb-1">Fecha de Devolución Real:</label>
+            <input type="datetime-local" id="fecha_devolucion_real" class="form-control" value="${new Date().toISOString().slice(0, 16)}">
+        `,
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Sí, devolver',
         cancelButtonText: 'Cancelar',
-        preConfirm: () => document.getElementById('observacion_devolucion').value.trim()
+        preConfirm: () => {
+            const observacion = document.getElementById('observacion_devolucion').value.trim();
+            const fechaReal = document.getElementById('fecha_devolucion_real').value;
+            if (!fechaReal) {
+                Swal.showValidationMessage('La fecha de devolución real es obligatoria.');
+                return false;
+            }
+            return { observacion, fechaReal };
+        }
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
@@ -184,7 +200,8 @@ function marcarDevuelto(id) {
                 type: 'POST',
                 data: {
                     id: id,
-                    observaciones: result.value
+                    observaciones: result.value.observacion,
+                    fecha_devolucion_real: result.value.fechaReal
                 },
                 success: function (resp) {
                     const res = JSON.parse(resp);
