@@ -59,12 +59,13 @@ function init() {
 }
 
 // Tabla de préstamos
-function listarPrestamos() {
+function listarPrestamos(estado = "todos") {
     tabla = $("#tabla_prestamos").DataTable({
         ajax: {
             url: "../../controller/prestamo.php?op=listar",
             type: "GET",
-            dataType: "json"
+            data: { estado: estado },
+            dataType: "json",
         },
         responsive: true,
         destroy: true,
@@ -93,6 +94,12 @@ function listarPrestamos() {
         }
     });
 }
+
+$("#filtro_estado").on("change", function () {
+    const estadoSeleccionado = $(this).val();
+    listarPrestamos(estadoSeleccionado);
+});
+
 
 // Cargar activos OSIN en el select
 function cargarActivosOSIN() {

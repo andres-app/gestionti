@@ -24,66 +24,68 @@ class Prestamo extends Conectar
 
 
     // Listar todos los préstamos
-    public function listar_prestamos()
+    public function listar_prestamos($estado)
     {
         $conectar = parent::conexion();
         parent::set_names();
 
         $sql = "SELECT 
-            p.id,
-            a.sbn AS activo,
-            uo.usu_nomape AS origen,
-            ud.usu_nomape AS destino,
-            p.fecha_prestamo,
-            p.fecha_devolucion_estimada,
-            p.estado,
-            p.observaciones
-        FROM prestamos p
-        INNER JOIN activos a ON p.activo_id = a.id
-        INNER JOIN tm_usuario uo ON p.usuario_origen_id = uo.usu_id
-        INNER JOIN tm_usuario ud ON p.usuario_destino_id = ud.usu_id
-        WHERE a.ubicacion = 'OSIN'
-        ORDER BY p.id DESC";
-
+                p.id,
+                a.sbn AS activo,
+                uo.usu_nomape AS origen,
+                ud.usu_nomape AS destino,
+                p.fecha_prestamo,
+                p.fecha_devolucion_estimada,
+                p.estado,
+                p.observaciones
+            FROM prestamos p
+            INNER JOIN activos a ON p.activo_id = a.id
+            INNER JOIN tm_usuario uo ON p.usuario_origen_id = uo.usu_id
+            INNER JOIN tm_usuario ud ON p.usuario_destino_id = ud.usu_id
+            WHERE a.ubicacion = 'OSIN' AND p.estado = ?
+            ORDER BY p.id DESC";
 
         $stmt = $conectar->prepare($sql);
-        $stmt->execute();
+        $stmt->execute([$estado]);
 
         $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Añadir acciones
+        // Añadir acciones (igual que ya lo haces)
         foreach ($resultado as &$row) {
-            // Preparar el botón de observaciones (solo si hay texto)
             $observacion = !empty($row["observaciones"]) ? $row["observaciones"] : 'Sin observaciones';
-            $btnObs = '<button class="btn btn-outline-primary btn-sm ms-1" title="Ver observaciones" onclick="verObservaciones(`' . htmlspecialchars($observacion, ENT_QUOTES) . '`)">
+            $btnObs = '<button class="btn btn-outline-primary btn-sm" title="Ver observaciones" onclick="verObservaciones(`' . htmlspecialchars($observacion, ENT_QUOTES) . '`)">
                     <i class="fas fa-comment-alt"></i>
-               </button>';
+              </button>';
 
-            if ($row["estado"] === "Prestado") {
+            if (trim($row["estado"]) === "Prestado") {
                 $row["acciones"] = '
-            <div class="btn-group">
-                <button class="btn btn-success btn-sm" onclick="marcarDevuelto(' . $row["id"] . ')">
-                    <i class="fas fa-undo-alt"></i> Devolver
-                </button>
-                ' . $btnObs . '
-            </div>';
+    <div class="d-flex flex-row gap-1">
+        <button class="btn btn-success btn-sm" onclick="marcarDevuelto(' . $row["id"] . ')">
+            <i class="fas fa-undo-alt"></i> Devolver
+        </button>
+        <button class="btn btn-outline-primary btn-sm" title="Ver observaciones" onclick="verObservaciones(`' . htmlspecialchars($observacion, ENT_QUOTES) . '`)">
+            <i class="fas fa-comment-alt"></i>
+        </button>
+    </div>';
             } else {
                 $row["acciones"] = '
-            <div class="d-flex flex-wrap gap-1">
-                <button class="btn btn-secondary btn-sm" disabled>
-                    <i class="fas fa-check-circle"></i> Devuelto
-                </button>
-                <button class="btn btn-outline-primary btn-sm" onclick="verObservaciones(`' . htmlspecialchars($row["observaciones"], ENT_QUOTES) . '`)">
-                    <i class="fas fa-comment-alt"></i>
-                </button>
-            </div>
-        ';
+    <div class="d-flex flex-row gap-1">
+        <button class="btn btn-secondary btn-sm" disabled>
+            <i class="fas fa-check-circle"></i> Devuelto
+        </button>
+        <button class="btn btn-outline-primary btn-sm" title="Ver observaciones" onclick="verObservaciones(`' . htmlspecialchars($observacion, ENT_QUOTES) . '`)">
+            <i class="fas fa-comment-alt"></i>
+        </button>
+    </div>';
             }
         }
 
 
+
         return $resultado;
     }
+
+
 
     public function marcar_como_devuelto($prestamo_id, $observaciones = '')
     {

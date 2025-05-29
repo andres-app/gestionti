@@ -50,9 +50,11 @@ switch ($_GET["op"]) {
         break;
 
     case "listar":
-        $datos = $prestamo->listar_prestamos();
+        $estado = $_GET['estado'] ?? 'Prestado'; // Valor por defecto
+        $datos = $prestamo->listar_prestamos($estado);
         echo json_encode(["data" => $datos]);
         break;
+
 
     case "marcar_devuelto":
         $prestamo_id = $_POST["id"] ?? null;
