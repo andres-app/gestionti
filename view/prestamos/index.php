@@ -51,19 +51,17 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                                     </div>
 
                                     <div class="card-body">
-                                        <div class="d-flex justify-content-end mb-3">
-                                            <select id="filtro_estado" class="form-select w-auto">
+                                        <!-- Botón a la izquierda y filtro a la derecha -->
+                                        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+                                            <button type="button" id="btn_nuevo_prestamo" class="btn btn-primary waves-effect waves-light mb-2">
+                                                <i class="fas fa-plus"></i> Nuevo Préstamo
+                                            </button>
+
+                                            <select id="filtro_estado" class="form-select w-auto mb-2">
                                                 <option value="Prestado">Prestados</option>
                                                 <option value="Devuelto">Devueltos</option>
                                             </select>
                                         </div>
-
-
-                                        <!-- Botón -->
-                                        <button type="button" id="btn_nuevo_prestamo" class="btn btn-primary waves-effect waves-light mb-3">
-                                            <i class="fas fa-plus"></i> Nuevo Préstamo
-                                        </button>
-
                                         <!-- Tabla -->
                                         <div class="table-responsive">
                                             <table id="tabla_prestamos" class="table table-bordered dt-responsive nowrap w-100">
