@@ -165,7 +165,7 @@ function limpiarFormulario() {
     $("#form_prestamo")[0].reset();
     $("#activo_id").val('').trigger('change');
     $("#usuario_destino").val('').trigger('change');
-    $("#fecha_prestamo").val(new Date().toISOString().slice(0, 16));
+    $("#fecha_prestamo").val(new Date().toISOString().split("T")[0]);
 }
 
 // Marcar como devuelto con observación
@@ -173,13 +173,13 @@ function marcarDevuelto(id) {
     Swal.fire({
         title: '¿Confirmar devolución?',
         html: `
-            <label class="form-label text-start d-block mb-1">Observaciones (opcional):</label>
-            <textarea id="observacion_devolucion" class="form-control mb-3" rows="3"
-                placeholder="Ingrese observaciones de la devolución (opcional)"></textarea>
-
-            <label class="form-label text-start d-block mb-1">Fecha de Devolución Real:</label>
-            <input type="datetime-local" id="fecha_devolucion_real" class="form-control" value="${new Date().toISOString().slice(0, 16)}">
+            <label for="observacion_devolucion" class="form-label">Observaciones (opcional):</label>
+            <textarea id="observacion_devolucion" class="form-control mb-2" rows="4" placeholder="Ingrese observaciones de la devolución (opcional)"></textarea>
+            
+            <label for="fecha_devolucion_real" class="form-label">Fecha de Devolución Real:</label>
+            <input type="date" id="fecha_devolucion_real" class="form-control" value="${new Date().toISOString().split("T")[0]}" />
         `,
+
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Sí, devolver',

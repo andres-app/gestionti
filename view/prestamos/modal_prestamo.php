@@ -33,7 +33,7 @@
                     <!-- Fecha de Préstamo -->
                     <div class="mb-3">
                         <label for="fecha_prestamo" class="form-label">Fecha de Préstamo</label>
-                        <input type="datetime-local" id="fecha_prestamo" name="fecha_prestamo" class="form-control" required>
+                        <input type="date" id="fecha_prestamo" name="fecha_prestamo" class="form-control" required>
                     </div>
 
                     <!-- Fecha Devolución Estimada -->
