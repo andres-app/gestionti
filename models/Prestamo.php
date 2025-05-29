@@ -30,23 +30,30 @@ class Prestamo extends Conectar
         parent::set_names();
 
         $sql = "SELECT 
-                p.id,
-                a.sbn AS activo,
-                uo.usu_nomape AS origen,
-                ud.usu_nomape AS destino,
-                p.fecha_prestamo,
-                p.fecha_devolucion_estimada,
-                p.estado,
-                p.observaciones
-            FROM prestamos p
-            INNER JOIN activos a ON p.activo_id = a.id
-            INNER JOIN tm_usuario uo ON p.usuario_origen_id = uo.usu_id
-            INNER JOIN tm_usuario ud ON p.usuario_destino_id = ud.usu_id
-            WHERE a.ubicacion = 'OSIN' AND p.estado = ?
-            ORDER BY p.id DESC";
+            p.id,
+            a.sbn AS activo,
+            uo.usu_nomape AS origen,
+            ud.usu_nomape AS destino,
+            p.fecha_prestamo,
+            p.fecha_devolucion_estimada,
+            p.estado,
+            p.observaciones
+        FROM prestamos p
+        INNER JOIN activos a ON p.activo_id = a.id
+        INNER JOIN tm_usuario uo ON p.usuario_origen_id = uo.usu_id
+        INNER JOIN tm_usuario ud ON p.usuario_destino_id = ud.usu_id
+        WHERE a.ubicacion = 'OSIN'";
 
-        $stmt = $conectar->prepare($sql);
-        $stmt->execute([$estado]);
+        // ✅ Solo aplica filtro si no es 'todos'
+        if ($estado !== "todos") {
+            $sql .= " AND p.estado = ?";
+            $stmt = $conectar->prepare($sql);
+            $stmt->execute([$estado]);
+        } else {
+            $sql .= " ORDER BY p.id DESC";
+            $stmt = $conectar->prepare($sql);
+            $stmt->execute();
+        }
 
         $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

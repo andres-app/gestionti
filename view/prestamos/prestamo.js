@@ -59,7 +59,7 @@ function init() {
 }
 
 // Tabla de préstamos
-function listarPrestamos(estado = "todos") {
+function listarPrestamos(estado = "Prestado") {
     tabla = $("#tabla_prestamos").DataTable({
         ajax: {
             url: "../../controller/prestamo.php?op=listar",
