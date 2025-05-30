@@ -16,6 +16,8 @@
                 <div class="modal-body">
 
                     <input type="hidden" id="vehiculo_id" name="vehiculo_id">
+                    <input type="hidden" id="vehiculo_estado" name="vehiculo_estado" value="1">
+
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -52,8 +54,10 @@
                             <input class="form-control" type="text" name="vehiculo_modelo" id="vehiculo_modelo">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="vehiculo_ubicacion" class="form-label">Area</label>
-                            <input class="form-control" type="text" name="vehiculo_ubicacion" id="vehiculo_ubicacion">
+                            <label for="vehiculo_ubicacion" class="form-label">Área</label>
+                            <select class="form-control" name="vehiculo_ubicacion" id="vehiculo_ubicacion" required>
+                                <option value="">Seleccione un área</option>
+                            </select>
                         </div>
                     </div>
 

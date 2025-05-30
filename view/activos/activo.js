@@ -6,11 +6,16 @@ var tabla;
  * Se configura el evento 'submit' para el formulario de creación o edición de vehículos.
  */
 function init() {
-    // Configuración del evento submit para el formulario de creación o edición
+    // 🔁 Remueve cualquier posible event listener duplicado
+    $("#mnt_form").off("submit");
+
+    // ✅ Asegura que solo haya un listener
     $("#mnt_form").on("submit", function (e) {
-        guardaryeditar(e); // Llamar a la función para guardar o editar un registro
+        e.preventDefault(); // Esto es obligatorio
+        guardaryeditar(e);
     });
 }
+
 
 /**
  * Función para guardar o editar un vehículo.
@@ -165,6 +170,8 @@ function previsualizar(id) {
             manejarVisibilidadCampo("#vehiculo_sisopera", data.sisopera);
             manejarVisibilidadCampo("#vehiculo_ram", data.ram);
             manejarVisibilidadCampo("#vehiculo_disco", data.disco);
+            $('#vehiculo_ubicacion').html(`<option selected>${data.ubicacion}</option>`).prop("disabled", true);
+
 
 
 
@@ -405,6 +412,9 @@ function editar(id) {
                 $(".modal-footer .btn-primary").show();
             }
 
+            $("#vehiculo_ubicacion").val(data.ubicacion); // Puedes omitir esta línea si usas cargarAreas con parámetro
+
+            cargarAreas(data.ubicacion); // 🔹 Cargar áreas y seleccionar la correcta
 
             cargarResponsables(responsableID, function () {
                 console.log("🔹 Responsable y demás campos cargados correctamente.");
@@ -435,22 +445,26 @@ $('#mnt_modal').on('shown.bs.modal', function () {
  * Se limpia el formulario y se prepara el modal para la creación de un nuevo vehículo.
  */
 $("#btnnuevo").on("click", function () {
-    $("#vehiculo_id").val('');   // Limpiar el campo de ID del vehículo
-    $("#mnt_form")[0].reset();   // Resetea el formulario
-    $("#vehiculo_acompra").val(''); // 🔹 Limpiar campo acompra
+    $("#vehiculo_id").val('');
+    $("#mnt_form")[0].reset();
+    $("#vehiculo_acompra").val('');
 
-    // 🕒 Asignar fecha actual
     const fechaActual = new Date();
     const formato = fechaActual.toISOString().slice(0, 19).replace("T", " ");
     $("#vehiculo_fecha_registro").val(formato);
 
-    // ✅ Cargar opciones del select de responsables
+    // ✅ Cargar áreas
+    cargarAreas(null);
+
+    // ✅ Cargar responsables
     cargarResponsables(null, function () {
         $("#myModalLabel").html('Nuevo Registro');
         $(".modal-footer .btn-primary").show();
         $("#mnt_modal").modal('show');
     });
 });
+
+
 
 $(document).ready(function () {
     function toggleCamposCPU() {
@@ -659,6 +673,30 @@ function cargarHistorialMantenimientos(id) {
     });
 }
 
+function cargarAreas(ubicacion = null) {
+    console.log("🟡 Ejecutando cargarAreas()");
+
+    $.ajax({
+        url: '../../controller/activo.php?op=obtener_areas',
+        type: 'GET',
+        dataType: 'json',
+        success: function (response) {
+            console.log("📦 Áreas recibidas:", response);
+            let options = '<option value="">Seleccione un área</option>';
+            response.forEach(area => {
+                options += `<option value="${area.area_nom}">${area.area_nom}</option>`;
+            });
+            $('#vehiculo_ubicacion').html(options);
+
+            if (ubicacion) {
+                $('#vehiculo_ubicacion').val(ubicacion);
+            }
+        },
+        error: function () {
+            Swal.fire('Error', 'No se pudieron cargar las áreas', 'error');
+        }
+    });
+}
 
 // Llamada a la función de inicialización
 init();

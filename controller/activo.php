@@ -383,4 +383,16 @@ switch ($_GET["op"]) {
         $historial = $auditoria->obtener_historial($activo_id);
         echo json_encode($historial);
         break;
+
+case 'obtener_areas':
+    // Aquí va la lógica para consultar las áreas desde la base de datos
+    // Ejemplo:
+    require_once(__DIR__ . '/../models/Activo.php');
+
+    $activo = new Activo();
+
+    $rspta = $activo->listarAreas(); // función del modelo
+    echo json_encode($rspta);
+    break;
+
 }

@@ -1,5 +1,6 @@
 <!-- jQuery SIEMPRE debe ir primero -->
-<script src="../../assets/js/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 <!-- Select2 (solo JS, el CSS ya debe estar en head.php) -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -39,3 +40,5 @@
 
 <!-- Script de la plantilla (debe ir al final) -->
 <script src="../../assets/js/app.js"></script>
+<!-- 👇 Tu archivo de lógica JavaScript principal -->
+<script src="activo.js"></script>
