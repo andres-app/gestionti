@@ -14,47 +14,87 @@ function init() {
 
 function guardaryeditar(e) {
     e.preventDefault();
-    var formData = new FormData($("#mnt_form")[0]); // Recoge todos los datos del formulario
+
+    // Validar contraseña para nuevo usuario
+    if ($("#usu_id").val() == "" && $("#usu_pass").val() == "") {
+        Swal.fire({
+            title: "Error",
+            text: "Debe ingresar una contraseña para nuevo usuario",
+            icon: "error"
+        });
+        return false;
+    }
+
+    // Crear FormData y agregar campos manualmente
+    var formData = new FormData();
+    formData.append('usu_id', $("#usu_id").val());
+    formData.append('usu_nomape', $("#usu_nomape").val());
+    formData.append('usu_correo', $("#usu_correo").val());
+    formData.append('area_id', $("#area_id").val());
+    formData.append('rol_id', $("#rol_id").val());
+    
+    // Solo agregar la contraseña si no está vacía o es un nuevo usuario
+    if ($("#usu_pass").val() != "" || $("#usu_id").val() == "") {
+        formData.append('usu_pass', $("#usu_pass").val());
+    }
+
+    // Depuración: Mostrar lo que se enviará
+    for (var pair of formData.entries()) {
+        console.log(pair[0] + ': ' + pair[1]);
+    }
+
     $.ajax({
         url: "../../controller/usuario.php?op=guardaryeditar",
         type: "POST",
         data: formData,
         contentType: false,
         processData: false,
-        success: function (datos) {
+        success: function(datos) {
+            console.log("Respuesta del servidor:", datos);
             if (datos == 1) {
-                // Cuando se crea un nuevo colaborador
                 $("#mnt_form")[0].reset();
                 $("#mnt_modal").modal('hide');
+                tabla.ajax.reload();
                 Swal.fire({
-                    title: "Exito",
-                    html: "Usuario registrado con éxito.",
-                    icon: "success",
-                    confirmButtonColor: "#5156be",
+                    title: "Éxito",
+                    text: "Usuario registrado con éxito",
+                    icon: "success"
                 });
             } else if (datos == 2) {
-                // Cuando se actualiza un colaborador (incluida la edición de la contraseña)
                 $("#mnt_form")[0].reset();
                 $("#mnt_modal").modal('hide');
+                tabla.ajax.reload();
                 Swal.fire({
-                    title: "Exito",
-                    html: "Usuario actualizado con éxito.",
-                    icon: "success",
-                    confirmButtonColor: "#5156be",
+                    title: "Éxito",
+                    text: "Usuario actualizado con éxito",
+                    icon: "success"
                 });
             } else if (datos == 0) {
                 Swal.fire({
                     title: "Error",
-                    html: "El usuario ya existe, por favor valide.",
-                    icon: "error",
-                    confirmButtonColor: "#5156be",
+                    text: "El usuario ya existe",
+                    icon: "error"
+                });
+            } else if (datos == 5) {
+                Swal.fire({
+                    title: "Error",
+                    text: "Error al actualizar el usuario",
+                    icon: "error"
                 });
             }
         },
-        beforeSend: function () {
+        error: function(xhr, status, error) {
+            console.error("Error en la solicitud AJAX:", status, error);
+            Swal.fire({
+                title: "Error",
+                text: "Ocurrió un error al procesar la solicitud",
+                icon: "error"
+            });
+        },
+        beforeSend: function() {
             $('#btnguardar').prop("disabled", true);
         },
-        complete: function () {
+        complete: function() {
             $('#btnguardar').prop("disabled", false);
         }
     });
@@ -131,6 +171,9 @@ $(document).on("click", "#btnnuevo", function () {
     $("#usu_id").val('');
     $("#mnt_form")[0].reset();
     $("#myModalLabel").html('Nuevo Registro');
+    $("#pass_required").show(); // Muestra que es obligatorio
+    $("#usu_pass").prop('required', true); // Hace el campo requerido
+    $("#pass_help").hide(); // Oculta la ayuda para edición
     $("#mnt_modal").modal('show');
 });
 
@@ -141,9 +184,11 @@ function editar(usu_id) {
         $("#usu_id").val(data.usu_id);
         $("#usu_nomape").val(data.usu_nomape);
         $("#usu_correo").val(data.usu_correo);
-        $("#area_id").val(data.area_id); // Cargar el área
+        $("#area_id").val(data.area_id);
         $("#rol_id").val(data.rol_id);
-        $("#usu_pass").val('');
+        $("#usu_pass").val('').prop('required', false); // Quita el required
+        $("#pass_required").hide(); // Oculta el asterisco
+        $("#pass_help").show(); // Muestra la ayuda
         $("#mnt_modal").modal('show');
     });
 }

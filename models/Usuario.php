@@ -289,38 +289,54 @@ class Usuario extends Conectar
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function update_colaborador($usu_id, $usu_nomape, $usu_correo, $usu_pass, $area_id, $rol_id)
-    {
-        $conectar = parent::conexion();
-        parent::set_names();
+public function update_colaborador($usu_id, $usu_nomape, $usu_correo, $usu_pass, $area_id, $rol_id)
+{
+    $conectar = parent::conexion();
+    parent::set_names();
 
+    try {
+        // Consulta base con campos comunes
+        $sql = "UPDATE tm_usuario SET 
+                usu_nomape = ?, 
+                usu_correo = ?, 
+                area_id = ?, 
+                rol_id = ?, 
+                fech_modi = NOW()";
+        
+        $params = [
+            $usu_nomape,
+            $usu_correo,
+            $area_id,
+            $rol_id
+        ];
+
+        // Agregar contraseña solo si se proporciona
         if (!empty($usu_pass)) {
-            $hashedPassword = password_hash($usu_pass, PASSWORD_BCRYPT);
-
-            $sql = "UPDATE tm_usuario
-              SET usu_nomape = ?, usu_correo = ?, usu_pass = ?, area_id = ?, rol_id = ?, fech_modi = NOW()
-              WHERE usu_id = ?";
-            $sql = $conectar->prepare($sql);
-            $sql->bindValue(1, $usu_nomape);
-            $sql->bindValue(2, $usu_correo);
-            $sql->bindValue(3, $hashedPassword);
-            $sql->bindValue(4, $area_id);  // Nuevo parámetro
-            $sql->bindValue(5, $rol_id);
-            $sql->bindValue(6, $usu_id);
-        } else {
-            $sql = "UPDATE tm_usuario
-              SET usu_nomape = ?, usu_correo = ?, area_id = ?, rol_id = ?, fech_modi = NOW()
-              WHERE usu_id = ?";
-            $sql = $conectar->prepare($sql);
-            $sql->bindValue(1, $usu_nomape);
-            $sql->bindValue(2, $usu_correo);
-            $sql->bindValue(3, $area_id);  // Nuevo parámetro
-            $sql->bindValue(4, $rol_id);
-            $sql->bindValue(5, $usu_id);
+            $sql .= ", usu_pass = ?";
+            $params[] = password_hash($usu_pass, PASSWORD_BCRYPT);
         }
 
-        $sql->execute();
+        // Condición WHERE
+        $sql .= " WHERE usu_id = ?";
+        $params[] = $usu_id;
+
+        // Preparar y ejecutar la consulta
+        $stmt = $conectar->prepare($sql);
+        
+        // Bind de parámetros dinámicos
+        foreach ($params as $index => $value) {
+            $stmt->bindValue($index + 1, $value);
+        }
+
+        // Ejecutar y devolver resultado
+        return $stmt->execute();
+
+    } catch (PDOException $e) {
+        // Registrar error en logs
+        error_log("Error en update_colaborador: " . $e->getMessage());
+        return false;
     }
+}
 
 
     public function eliminar_colaborador($usu_id)

@@ -125,46 +125,64 @@ switch ($_GET["op"]) {
         break;
 
     case "guardaryeditar":
-        if (empty($_POST["usu_id"])) {  // Creación de un nuevo colaborador
+    try {
+        if (empty($_POST["usu_id"])) {  // Creación de nuevo usuario
+            // Validación de campos obligatorios
+            if (empty($_POST["usu_pass"])) {
+                error_log("Error: Contraseña faltante para nuevo usuario");
+                echo "3"; // Código para contraseña faltante
+                break;
+            }
+
             $datos = $usuario->get_usuario_correo($_POST["usu_correo"]);
-            if (is_array($datos) == true && count($datos) == 0) {
-                // Inserta colaborador con la contraseña y área proporcionada
-                $datos1 = $usuario->insert_colaborador(
-                    $_POST["usu_nomape"],
-                    $_POST["usu_correo"],
-                    $_POST["usu_pass"],
-                    $_POST["area_id"], // Nuevo parámetro para área
-                    $_POST["rol_id"]
-                );
-                echo "1";
-            } else {
-                echo "0"; // Usuario ya existente
+            if (is_array($datos) && count($datos) > 0) {
+                error_log("Error: Usuario con correo ".$_POST["usu_correo"]." ya existe");
+                echo "0"; // Usuario ya existe
+                break;
             }
-        } else {
-            // Si se proporciona una nueva contraseña, actualiza la contraseña
-            if (!empty($_POST["usu_pass"])) {
-                $usuario->update_colaborador(
-                    $_POST["usu_id"],
-                    $_POST["usu_nomape"],
-                    $_POST["usu_correo"],
-                    $_POST["usu_pass"],
-                    $_POST["area_id"], // Nuevo parámetro para área
-                    $_POST["rol_id"]
-                );
+
+            $resultado = $usuario->insert_colaborador(
+                $_POST["usu_nomape"],
+                $_POST["usu_correo"],
+                $_POST["usu_pass"],
+                $_POST["area_id"],
+                $_POST["rol_id"]
+            );
+
+            if ($resultado) {
+                error_log("Nuevo usuario creado: ".$_POST["usu_correo"]);
+                echo "1"; // Éxito
             } else {
-                // Si no se proporciona una nueva contraseña, no se actualiza
-                $usuario->update_colaborador(
-                    $_POST["usu_id"],
-                    $_POST["usu_nomape"],
-                    $_POST["usu_correo"],
-                    null,  // No se modifica la contraseña
-                    $_POST["area_id"], // Nuevo parámetro para área
-                    $_POST["rol_id"]
-                );
+                error_log("Error al crear usuario");
+                echo "4"; // Error en creación
             }
-            echo "2"; // Actualización exitosa
+
+        } else {  // Edición de usuario
+            $actualizo_pass = !empty($_POST["usu_pass"]);
+            error_log("Actualizando usuario ID: ".$_POST["usu_id"].($actualizo_pass ? " con nueva contraseña" : ""));
+
+            $resultado = $usuario->update_colaborador(
+                $_POST["usu_id"],
+                $_POST["usu_nomape"],
+                $_POST["usu_correo"],
+                $actualizo_pass ? $_POST["usu_pass"] : null,
+                $_POST["area_id"],
+                $_POST["rol_id"]
+            );
+
+            if ($resultado) {
+                error_log("Usuario actualizado correctamente");
+                echo "2"; // Éxito en actualización
+            } else {
+                error_log("Error al actualizar usuario");
+                echo "5"; // Error en actualización
+            }
         }
-        break;
+    } catch (Exception $e) {
+        error_log("Excepción en guardaryeditar: ".$e->getMessage());
+        echo "6"; // Error inesperado
+    }
+    break;
 
 
     case "mostrar":

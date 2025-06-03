@@ -36,14 +36,14 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="usu_pass" class="form-label">Contraseña (*)</label>
-                        <input type="password" class="form-control" name="usu_pass" id="usu_pass" required>
+                        <label for="usu_pass" class="form-label">Contraseña <span id="pass_required">(*)</span></label>
+                        <input type="password" class="form-control" name="usu_pass" id="usu_pass">
+                        <small id="pass_help" class="form-text text-muted">Para editar, dejar vacío si no desea cambiar la contraseña</small>
                     </div>
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="submit" id="btnguardar"
+                    <button type="submit" id="btnguardar"  
                         class="btn btn-primary waves-effect waves-light">Guardar</button>
                 </div>
             </div>
