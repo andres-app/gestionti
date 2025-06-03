@@ -128,11 +128,12 @@ switch ($_GET["op"]) {
         if (empty($_POST["usu_id"])) {  // Creación de un nuevo colaborador
             $datos = $usuario->get_usuario_correo($_POST["usu_correo"]);
             if (is_array($datos) == true && count($datos) == 0) {
-                // Inserta colaborador con la contraseña proporcionada
+                // Inserta colaborador con la contraseña y área proporcionada
                 $datos1 = $usuario->insert_colaborador(
                     $_POST["usu_nomape"],
                     $_POST["usu_correo"],
-                    $_POST["usu_pass"],  // Asegúrate de que la contraseña está siendo enviada
+                    $_POST["usu_pass"],
+                    $_POST["area_id"], // Nuevo parámetro para área
                     $_POST["rol_id"]
                 );
                 echo "1";
@@ -146,7 +147,8 @@ switch ($_GET["op"]) {
                     $_POST["usu_id"],
                     $_POST["usu_nomape"],
                     $_POST["usu_correo"],
-                    $_POST["usu_pass"],  // Nueva contraseña
+                    $_POST["usu_pass"],
+                    $_POST["area_id"], // Nuevo parámetro para área
                     $_POST["rol_id"]
                 );
             } else {
@@ -156,6 +158,7 @@ switch ($_GET["op"]) {
                     $_POST["usu_nomape"],
                     $_POST["usu_correo"],
                     null,  // No se modifica la contraseña
+                    $_POST["area_id"], // Nuevo parámetro para área
                     $_POST["rol_id"]
                 );
             }
@@ -171,6 +174,7 @@ switch ($_GET["op"]) {
                 $output["usu_id"] = $row["usu_id"];
                 $output["usu_nomape"] = $row["usu_nomape"];
                 $output["usu_correo"] = $row["usu_correo"];
+                $output["area_id"] = $row["area_id"]; // Nuevo campo
                 $output["rol_id"] = $row["rol_id"];
             }
             echo json_encode($output);
@@ -189,10 +193,11 @@ switch ($_GET["op"]) {
             $sub_array = array();
             $sub_array[] = $row["usu_nomape"];
             $sub_array[] = $row["usu_correo"];
+            $sub_array[] = $row["area_nom"]; // Nuevo campo para mostrar el nombre del área
             $sub_array[] = $row["rol_nom"];
             $sub_array[] = $row["fech_crea"];
             $sub_array[] = '<button type="button" class="btn btn-soft-warning waves-effect waves-light btn-sm" onClick="editar(' . $row["usu_id"] . ')"><i class="bx bx-edit-alt font-size-16 align-middle"></i></button>
-            <button type="button" class="btn btn-soft-danger waves-effect waves-light btn-sm" onClick="eliminar(' . $row["usu_id"] . ')"><i class="bx bx-trash-alt font-size-16 align-middle"></i></button>';
+        <button type="button" class="btn btn-soft-danger waves-effect waves-light btn-sm" onClick="eliminar(' . $row["usu_id"] . ')"><i class="bx bx-trash-alt font-size-16 align-middle"></i></button>';
             $data[] = $sub_array;
         }
 

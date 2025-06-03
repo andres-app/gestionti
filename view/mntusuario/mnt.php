@@ -20,10 +20,18 @@
                     </div>
 
                     <div class="mb-3">
+                        <label for="form-label" class="form-label">Área (*)</label>
+                        <select class="form-select" name="area_id" id="area_id" placeholder="Seleccionar" required>
+                            <option value="">Seleccionar</option>
+                            <!-- Opciones de áreas se llenarán dinámicamente -->
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
                         <label for="form-label" class="form-label">Rol (*)</label>
                         <select class="form-select" name="rol_id" id="rol_id" placeholder="Seleccionar" required>
                             <option value="">Seleccionar</option>
-
+                            <!-- Opciones de roles se llenarán dinámicamente -->
                         </select>
                     </div>
 
@@ -31,7 +39,6 @@
                         <label for="usu_pass" class="form-label">Contraseña (*)</label>
                         <input type="password" class="form-control" name="usu_pass" id="usu_pass" required>
                     </div>
-
 
                 </div>
                 <div class="modal-footer">

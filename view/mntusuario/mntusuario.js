@@ -1,9 +1,14 @@
 var tabla;
 var tabla_permiso;
 
-function init(){
-    $("#mnt_form").on("submit",function(e){
+function init() {
+    $("#mnt_form").on("submit", function (e) {
         guardaryeditar(e);
+    });
+
+    // Cargar combo de áreas
+    $.post("../../controller/area.php?op=combo", function (data) {
+        $('#area_id').html(data);
     });
 }
 
@@ -16,8 +21,8 @@ function guardaryeditar(e) {
         data: formData,
         contentType: false,
         processData: false,
-        success: function(datos) {
-            if(datos == 1){
+        success: function (datos) {
+            if (datos == 1) {
                 // Cuando se crea un nuevo colaborador
                 $("#mnt_form")[0].reset();
                 $("#mnt_modal").modal('hide');
@@ -27,7 +32,7 @@ function guardaryeditar(e) {
                     icon: "success",
                     confirmButtonColor: "#5156be",
                 });
-            } else if(datos == 2) {
+            } else if (datos == 2) {
                 // Cuando se actualiza un colaborador (incluida la edición de la contraseña)
                 $("#mnt_form")[0].reset();
                 $("#mnt_modal").modal('hide');
@@ -37,7 +42,7 @@ function guardaryeditar(e) {
                     icon: "success",
                     confirmButtonColor: "#5156be",
                 });
-            } else if(datos == 0) {
+            } else if (datos == 0) {
                 Swal.fire({
                     title: "Error",
                     html: "El usuario ya existe, por favor valide.",
@@ -46,20 +51,26 @@ function guardaryeditar(e) {
                 });
             }
         },
-        beforeSend: function() {
-            $('#btnguardar').prop("disabled",true);
+        beforeSend: function () {
+            $('#btnguardar').prop("disabled", true);
         },
-        complete: function() {
-            $('#btnguardar').prop("disabled",false);
+        complete: function () {
+            $('#btnguardar').prop("disabled", false);
         }
     });
 }
 
 
-$(document).ready(function(){
+$(document).ready(function () {
 
-    $.post("../../controller/rol.php?op=combo",function(data){
+    // Cargar combo de roles
+    $.post("../../controller/rol.php?op=combo", function (data) {
         $('#rol_id').html(data);
+    });
+
+    // Cargar combo de áreas
+    $.post("../../controller/area.php?op=combo", function (data) {
+        $('#area_id').html(data);
     });
 
     tabla = $("#listado_table").dataTable({
@@ -75,40 +86,40 @@ $(document).ready(function(){
             'csvHtml5',
             'pdfHtml5'
         ],
-        "ajax":{
+        "ajax": {
             url: '../../controller/usuario.php?op=listar',
-            type : "get",
-            dataType : "json",
-            error:function(e){
+            type: "get",
+            dataType: "json",
+            error: function (e) {
                 console.log(e.responseText);
             }
         },
         "bDestroy": true,
         "responsive": true,
-        "bInfo":true,
+        "bInfo": true,
         "iDisplayLength": 10,
         "autoWidth": false,
         "language": {
-            "sProcessing":     "Procesando...",
-            "sLengthMenu":     "Mostrar _MENU_ registros",
-            "sZeroRecords":    "No se encontraron resultados",
-            "sEmptyTable":     "Ningún dato disponible en esta tabla",
-            "sInfo":           "Mostrando un total de _TOTAL_ registros",
-            "sInfoEmpty":      "Mostrando un total de 0 registros",
-            "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
-            "sInfoPostFix":    "",
-            "sSearch":         "Buscar:",
-            "sUrl":            "",
-            "sInfoThousands":  ",",
+            "sProcessing": "Procesando...",
+            "sLengthMenu": "Mostrar _MENU_ registros",
+            "sZeroRecords": "No se encontraron resultados",
+            "sEmptyTable": "Ningún dato disponible en esta tabla",
+            "sInfo": "Mostrando un total de _TOTAL_ registros",
+            "sInfoEmpty": "Mostrando un total de 0 registros",
+            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix": "",
+            "sSearch": "Buscar:",
+            "sUrl": "",
+            "sInfoThousands": ",",
             "sLoadingRecords": "Cargando...",
             "oPaginate": {
-                "sFirst":    "Primero",
-                "sLast":     "Último",
-                "sNext":     "Siguiente",
+                "sFirst": "Primero",
+                "sLast": "Último",
+                "sNext": "Siguiente",
                 "sPrevious": "Anterior"
             },
             "oAria": {
-                "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
                 "sSortDescending": ": Activar para ordenar la columna de manera descendente"
             }
         }
@@ -116,7 +127,7 @@ $(document).ready(function(){
 
 });
 
-$(document).on("click","#btnnuevo",function(){
+$(document).on("click", "#btnnuevo", function () {
     $("#usu_id").val('');
     $("#mnt_form")[0].reset();
     $("#myModalLabel").html('Nuevo Registro');
@@ -130,14 +141,14 @@ function editar(usu_id) {
         $("#usu_id").val(data.usu_id);
         $("#usu_nomape").val(data.usu_nomape);
         $("#usu_correo").val(data.usu_correo);
+        $("#area_id").val(data.area_id); // Cargar el área
         $("#rol_id").val(data.rol_id);
-        // Deja el campo de contraseña vacío, solo si el usuario lo llena se modificará.
         $("#usu_pass").val('');
         $("#mnt_modal").modal('show');
     });
 }
 
-function eliminar(usu_id){
+function eliminar(usu_id) {
     Swal.fire({
         title: "Esta seguro de eliminar el registro?",
         icon: "question",
@@ -146,7 +157,7 @@ function eliminar(usu_id){
         denyButtonText: `No`
     }).then((result) => {
         if (result.isConfirmed) {
-            $.post("../../controller/usuario.php?op=eliminar",{usu_id:usu_id},function(data){
+            $.post("../../controller/usuario.php?op=eliminar", { usu_id: usu_id }, function (data) {
                 $("#listado_table").DataTable().ajax.reload();
                 Swal.fire({
                     title: "TEMPLATE",
@@ -159,7 +170,7 @@ function eliminar(usu_id){
     });
 }
 
-function permiso(usu_id){
+function permiso(usu_id) {
 
     tabla_permiso = $("#listado_table_permiso").dataTable({
         "aProcessing": true,
@@ -174,41 +185,41 @@ function permiso(usu_id){
             'csvHtml5',
             'pdfHtml5'
         ],
-        "ajax":{
+        "ajax": {
             url: '../../controller/area.php?op=permiso',
-            type : "post",
-            data : {usu_id:usu_id},
-            dataType : "json",
-            error:function(e){
+            type: "post",
+            data: { usu_id: usu_id },
+            dataType: "json",
+            error: function (e) {
                 console.log(e.responseText);
             }
         },
         "bDestroy": true,
         "responsive": true,
-        "bInfo":true,
+        "bInfo": true,
         "iDisplayLength": 15,
         "autoWidth": false,
         "language": {
-            "sProcessing":     "Procesando...",
-            "sLengthMenu":     "Mostrar _MENU_ registros",
-            "sZeroRecords":    "No se encontraron resultados",
-            "sEmptyTable":     "Ningún dato disponible en esta tabla",
-            "sInfo":           "Mostrando un total de _TOTAL_ registros",
-            "sInfoEmpty":      "Mostrando un total de 0 registros",
-            "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
-            "sInfoPostFix":    "",
-            "sSearch":         "Buscar:",
-            "sUrl":            "",
-            "sInfoThousands":  ",",
+            "sProcessing": "Procesando...",
+            "sLengthMenu": "Mostrar _MENU_ registros",
+            "sZeroRecords": "No se encontraron resultados",
+            "sEmptyTable": "Ningún dato disponible en esta tabla",
+            "sInfo": "Mostrando un total de _TOTAL_ registros",
+            "sInfoEmpty": "Mostrando un total de 0 registros",
+            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix": "",
+            "sSearch": "Buscar:",
+            "sUrl": "",
+            "sInfoThousands": ",",
             "sLoadingRecords": "Cargando...",
             "oPaginate": {
-                "sFirst":    "Primero",
-                "sLast":     "Último",
-                "sNext":     "Siguiente",
+                "sFirst": "Primero",
+                "sLast": "Último",
+                "sNext": "Siguiente",
                 "sPrevious": "Anterior"
             },
             "oAria": {
-                "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
                 "sSortDescending": ": Activar para ordenar la columna de manera descendente"
             }
         }
@@ -217,14 +228,14 @@ function permiso(usu_id){
     $("#mnt_modal_permiso").modal('show');
 }
 
-function habilitar(aread_id){
-    $.post("../../controller/area.php?op=habilitar",{aread_id:aread_id},function(data){
+function habilitar(aread_id) {
+    $.post("../../controller/area.php?op=habilitar", { aread_id: aread_id }, function (data) {
         $("#listado_table_permiso").DataTable().ajax.reload();
     });
 }
 
-function deshabilitar(aread_id){
-    $.post("../../controller/area.php?op=deshabilitar",{aread_id:aread_id},function(data){
+function deshabilitar(aread_id) {
+    $.post("../../controller/area.php?op=deshabilitar", { aread_id: aread_id }, function (data) {
         $("#listado_table_permiso").DataTable().ajax.reload();
     });
 }
