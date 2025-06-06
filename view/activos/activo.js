@@ -603,32 +603,61 @@ function abrirModalMantenimiento(id) {
 }
 
 
-$('#form_mantenimiento').on('submit', function (e) {
-    e.preventDefault();
+$(document).ready(function () {
+    $('#form_mantenimiento').off('submit').on('submit', function (e) {
+        e.preventDefault();
 
-    const formData = new FormData(this);
-    $.ajax({
-        url: '../../controller/mantenimiento.php?op=registrar',
-        type: 'POST',
-        data: formData,
-        contentType: false,
-        processData: false,
-        success: function (resp) {
-            console.log("🔴 RESPUESTA CRUDA:", resp);  // 👈 Agrega esto
-
-            const res = JSON.parse(resp); // Aquí es donde revienta
-
-            if (res.success) {
-                Swal.fire('Listo', 'Mantenimiento registrado correctamente', 'success');
-                cargarHistorialMantenimientos($('#mantenimiento_activo_id').val());
-                $('#form_mantenimiento')[0].reset();
-            } else {
-                Swal.fire('Error', 'No se pudo registrar el mantenimiento', 'error');
-            }
-        },
-        error: function () {
-            Swal.fire('Error', 'Error de conexión con el servidor', 'error');
+        // Validar campos obligatorios antes de enviar (puedes agregar más validaciones)
+        if (!$('#fecha').val()) {
+            Swal.fire('Atención', 'Debe ingresar la fecha del mantenimiento', 'warning');
+            return;
         }
+        if (!$('#detalle').val().trim()) {
+            Swal.fire('Atención', 'Debe ingresar el detalle del mantenimiento', 'warning');
+            return;
+        }
+
+        // Validar archivo Orden de Servicio
+        if ($('#orden_servicio')[0].files.length === 0) {
+            Swal.fire('Atención', 'Debe cargar la Orden de Servicio', 'warning');
+            return;
+        }
+
+        // Validar archivo Documento de Conformidad
+        if ($('#documento_conformidad')[0].files.length === 0) {
+            Swal.fire('Atención', 'Debe cargar el Documento de Conformidad', 'warning');
+            return;
+        }
+
+        const $btnSubmit = $(this).find('button[type=submit]');
+        $btnSubmit.prop('disabled', true); // deshabilitar botón
+
+        const formData = new FormData(this);
+        $.ajax({
+            url: '../../controller/mantenimiento.php?op=registrar',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (resp) {
+                console.log("🔴 RESPUESTA CRUDA:", resp);
+                const res = JSON.parse(resp);
+
+                if (res.success) {
+                    Swal.fire('Listo', 'Mantenimiento registrado correctamente', 'success');
+                    cargarHistorialMantenimientos($('#mantenimiento_activo_id').val());
+                    $('#form_mantenimiento')[0].reset();
+                } else {
+                    Swal.fire('Error', 'No se pudo registrar el mantenimiento', 'error');
+                }
+            },
+            error: function () {
+                Swal.fire('Error', 'Error de conexión con el servidor', 'error');
+            },
+            complete: function() {
+                $btnSubmit.prop('disabled', false); // habilitar botón nuevamente
+            }
+        });
     });
 });
 

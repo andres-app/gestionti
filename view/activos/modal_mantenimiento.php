@@ -31,11 +31,11 @@
           <div class="row g-3 mb-4">
             <div class="col-md-6">
               <label for="orden_servicio" class="form-label fw-medium">📄 Orden de Servicio</label>
-              <input type="file" name="orden_servicio" id="orden_servicio" class="form-control rounded-pill" accept=".pdf,.jpg,.png,.doc,.docx">
+              <input type="file" name="orden_servicio" id="orden_servicio" class="form-control rounded-pill" accept=".pdf,.jpg,.png,.doc,.docx" required>
             </div>
             <div class="col-md-6">
               <label for="documento_conformidad" class="form-label fw-medium">📄 Documento de Conformidad</label>
-              <input type="file" name="documento_conformidad" id="documento_conformidad" class="form-control rounded-pill" accept=".pdf,.jpg,.png,.doc,.docx">
+              <input type="file" name="documento_conformidad" id="documento_conformidad" class="form-control rounded-pill" accept=".pdf,.jpg,.png,.doc,.docx" required>
             </div>
           </div>
 
