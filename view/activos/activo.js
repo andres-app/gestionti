@@ -223,9 +223,9 @@ $(document).ready(function () {
             data: function (d) {
                 d.condicion = $("#filtro_condicion").val(); // ✅ este es el filtro de condición
             },
-            error: function (e) {
-                Swal.fire('Error', 'No se pudo cargar la lista de activos', 'error');
-            }
+            // error: function (e) {
+            //     Swal.fire('Error', 'No se pudo cargar la lista de activos', 'error');
+            // }
         },
         "bDestroy": true,
         "responsive": true,
