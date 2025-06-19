@@ -17,10 +17,10 @@
                 /* TODO: Detectar entorno */
                 if (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false) {
                     // Configuración para el entorno de desarrollo
-                    $conectar = $this->dbh = new PDO("mysql:host=localhost;dbname=gestionti", "root", "");
+                    $conectar = $this->dbh = new PDO("mysql:host=localhost;dbname=gestionti", "root", "Dev2804751$$$");
                 } else {
                     // Configuración para el entorno de producción
-                    $conectar = $this->dbh = new PDO("mysql:host=localhost;dbname=gestionti", "root", "");
+                    $conectar = $this->dbh = new PDO("mysql:host=localhost;dbname=gestionti", "root", "Dev2804751$$$");
                 }
                 
                 

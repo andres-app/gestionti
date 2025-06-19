@@ -81,8 +81,9 @@ $(document).ready(function () {
         let fecha = $("#reporte_fecha").val() || "";
         let obsolescencia = $("#filtro_obsolescencia").val() || "";
         let garantia = $("#filtro_garantia").val() || "";
+        let condicion = $("#filtro_condicion").val() || ""; // Asegúrate de capturar este valor
 
-        let url = `../../controller/reporte.php?op=exportar_excel&usuario=${usuario}&tipo_activo=${tipo_activo}&fecha=${fecha}&obsolescencia=${obsolescencia}&garantia=${garantia}`;
+        let url = `../../controller/reporte.php?op=exportar_excel&usuario=${usuario}&tipo_activo=${tipo_activo}&fecha=${fecha}&obsolescencia=${obsolescencia}&garantia=${garantia}&condicion=${condicion}`;
         window.location.href = url;
     });
 

@@ -130,24 +130,25 @@ switch ($_GET["op"]) {
                         <tbody>';
 
         // Agregar los datos
-        foreach ($datos as $row) {
-            $html .= '<tr>
-                            <td>' . $row["id"] . '</td>
-                            <td>' . utf8_decode($row["usuario"]) . '</td>
-                            <td>' . $row["sbn"] . '</td>
-                            <td>' . $row["serie"] . '</td>
-                            <td>' . utf8_decode($row["tipo_activo"]) . '</td>
-                            <td>' . utf8_decode($row["marca"]) . '</td>
-                            <td>' . utf8_decode($row["modelo"]) . '</td>
-                            <td>' . utf8_decode($row["ubicacion"]) . '</td>
-                            <td>' . utf8_decode($row["hostname"]) . '</td>
-                            <td>' . utf8_decode($row["procesador"]) . '</td>
-                            <td>' . utf8_decode($row["sisopera"]) . '</td>
-                            <td>' . utf8_decode($row["ram"]) . '</td>
-                            <td>' . utf8_decode($row["disco"]) . '</td>
-                            <td>' . $row["fecha"] . '</td>
-                        </tr>';
-        }
+foreach ($datos as $row) {
+    $html .= '<tr>
+                <td>' . $row["id"] . '</td>
+                <td>' . utf8_decode($row["usuario"]) . '</td>
+                <td>' . $row["sbn"] . '</td>
+                <td>' . $row["serie"] . '</td>
+                <td>' . utf8_decode($row["tipo_activo"]) . '</td>
+                <td>' . utf8_decode($row["marca"]) . '</td>
+                <td>' . utf8_decode($row["modelo"]) . '</td>
+                <td>' . utf8_decode($row["ubicacion"]) . '</td>
+                <td>' . utf8_decode($row["hostname"]) . '</td>
+                <td>' . utf8_decode($row["procesador"]) . '</td>
+                <td>' . utf8_decode($row["sisopera"]) . '</td>
+                <td>' . utf8_decode($row["ram"]) . '</td>
+                <td>' . utf8_decode($row["disco"]) . '</td>
+                <td>' . $row["fecha"] . '</td>
+                <td>' . ($row['acompra'] ?? 'N/A') . '</td>
+              </tr>';
+}
 
         $html .= '</tbody></table>';
 
@@ -188,13 +189,14 @@ switch ($_GET["op"]) {
                         <th>Tipo Activo</th>
                         <th>Marca</th>
                         <th>Modelo</th>
-                        <th>Ubicación</th>
+                        <th>Ubicacion</th>
                         <th>Hostname</th>
                         <th>Procesador</th>
                         <th>Sis. Ope.</th>
                         <th>RAM</th>
                         <th>Disco</th>
                         <th>Fecha</th>
+                        <th>Ano Compra</th>
                     </tr>
                   </thead>";
 
@@ -215,6 +217,7 @@ switch ($_GET["op"]) {
                         <td>{$row['ram']}</td>
                         <td>{$row['disco']}</td>
                         <td>{$row['fecha']}</td>
+                        <td>{$row['acompra']}</td>
                       </tr>";
         }
         echo "</tbody></table>";
