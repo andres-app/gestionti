@@ -109,29 +109,33 @@ switch ($_GET["op"]) {
 
         // Encabezados de la tabla
         $html = '<table border="1" cellpadding="4">
-                        <thead>
-                            <tr style="background-color:#cccccc;">
-                                <th>ID</th>
-                                <th>Usuario</th>
-                                <th>SBN</th>
-                                <th>Serie</th>
-                                <th>Tipo Activo</th>
-                                <th>Marca</th>
-                                <th>Modelo</th>
-                                <th>Ubicación</th>
-                                <th>Hostname</th>
-                                <th>Procesador</th>
-                                <th>Sis. Ope.</th>
-                                <th>RAM</th>
-                                <th>Disco</th>
-                                <th>Fecha</th>
-                            </tr>
-                        </thead>
-                        <tbody>';
+            <thead>
+                <tr style="background-color:#cccccc;">
+                    <th>ID</th>
+                    <th>Usuario</th>
+                    <th>SBN</th>
+                    <th>Serie</th>
+                    <th>Tipo Activo</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Ubicación</th>
+                    <th>Hostname</th>
+                    <th>Procesador</th>
+                    <th>Sis. Ope.</th>
+                    <th>RAM</th>
+                    <th>Disco</th>
+                    <th>Año Compra</th>
+                    <th>Sede</th>
+                    <th>Condición</th>
+                    <th>Observaciones</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>';
 
-        // Agregar los datos
-foreach ($datos as $row) {
-    $html .= '<tr>
+        // Y en el bucle de datos:
+        foreach ($datos as $row) {
+            $html .= '<tr>
                 <td>' . $row["id"] . '</td>
                 <td>' . utf8_decode($row["usuario"]) . '</td>
                 <td>' . $row["sbn"] . '</td>
@@ -145,10 +149,13 @@ foreach ($datos as $row) {
                 <td>' . utf8_decode($row["sisopera"]) . '</td>
                 <td>' . utf8_decode($row["ram"]) . '</td>
                 <td>' . utf8_decode($row["disco"]) . '</td>
-                <td>' . $row["fecha"] . '</td>
                 <td>' . ($row['acompra'] ?? 'N/A') . '</td>
+                <td>' . ($row['sede'] ?? 'N/A') . '</td>
+                <td>' . ($row['condicion'] ?? 'N/A') . '</td>
+                <td>' . utf8_decode($row['observaciones'] ?? '') . '</td>
+                <td>' . $row["fecha"] . '</td>
               </tr>';
-}
+        }
 
         $html .= '</tbody></table>';
 
@@ -181,44 +188,50 @@ foreach ($datos as $row) {
         // Construir la tabla
         echo "<table border='1'>";
         echo "<thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Usuario</th>
-                        <th>SBN</th>
-                        <th>Serie</th>
-                        <th>Tipo Activo</th>
-                        <th>Marca</th>
-                        <th>Modelo</th>
-                        <th>Ubicacion</th>
-                        <th>Hostname</th>
-                        <th>Procesador</th>
-                        <th>Sis. Ope.</th>
-                        <th>RAM</th>
-                        <th>Disco</th>
-                        <th>Fecha</th>
-                        <th>Ano Compra</th>
-                    </tr>
-                  </thead>";
+        <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>SBN</th>
+            <th>Serie</th>
+            <th>Tipo Activo</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Ubicacion</th>
+            <th>Hostname</th>
+            <th>Procesador</th>
+            <th>Sis. Ope.</th>
+            <th>RAM</th>
+            <th>Disco</th>
+            <th>Ano Compra</th>
+            <th>Sede</th>
+            <th>Condicion</th>
+            <th>Observaciones</th>
+            <th>Fecha</th>
+        </tr>
+      </thead>";
 
-        echo "<tbody>";
+        // Y en el bucle de datos:
         foreach ($datos as $row) {
             echo "<tr>
-                        <td>{$row['id']}</td>
-                        <td>{$row['usuario']}</td>
-                        <td>{$row['sbn']}</td>
-                        <td>{$row['serie']}</td>
-                        <td>{$row['tipo_activo']}</td>
-                        <td>{$row['marca']}</td>
-                        <td>{$row['modelo']}</td>
-                        <td>{$row['ubicacion']}</td>
-                        <td>{$row['hostname']}</td>
-                        <td>{$row['procesador']}</td>
-                        <td>{$row['sisopera']}</td>
-                        <td>{$row['ram']}</td>
-                        <td>{$row['disco']}</td>
-                        <td>{$row['fecha']}</td>
-                        <td>{$row['acompra']}</td>
-                      </tr>";
+            <td>{$row['id']}</td>
+            <td>{$row['usuario']}</td>
+            <td>{$row['sbn']}</td>
+            <td>{$row['serie']}</td>
+            <td>{$row['tipo_activo']}</td>
+            <td>{$row['marca']}</td>
+            <td>{$row['modelo']}</td>
+            <td>{$row['ubicacion']}</td>
+            <td>{$row['hostname']}</td>
+            <td>{$row['procesador']}</td>
+            <td>{$row['sisopera']}</td>
+            <td>{$row['ram']}</td>
+            <td>{$row['disco']}</td>
+            <td>{$row['acompra']}</td>
+            <td>{$row['sede']}</td>
+            <td>{$row['condicion']}</td>
+            <td>{$row['observaciones']}</td>
+            <td>{$row['fecha']}</td>
+          </tr>";
         }
         echo "</tbody></table>";
 

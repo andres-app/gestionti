@@ -59,6 +59,9 @@ $(document).ready(function () {
                     return edad >= 3 ? "Sin Garantía" : "Con Garantía";
                 }
             },
+            { "data": "sede" },
+            { "data": "condicion" },
+            { "data": "observaciones" },
             { "data": "fecha" }
         ]
 

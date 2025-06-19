@@ -20,7 +20,13 @@ public function get_reportes($usuario_id = null, $tipo_activo = null, $fecha = n
                 d.ram, 
                 d.disco, 
                 a.fecha_registro AS fecha,
-                a.acompra
+                a.acompra,
+                a.sede,
+                CASE 
+                    WHEN EXISTS (SELECT 1 FROM bajas b WHERE b.activo_id = a.id) THEN 'De Baja'
+                    ELSE 'Activo'
+                END AS condicion,
+                a.observaciones
             FROM activos a
             LEFT JOIN tm_usuario u ON a.responsable_id = u.usu_id
             LEFT JOIN detactivo d ON a.id = d.activo_id

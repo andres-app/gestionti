@@ -146,8 +146,11 @@ if (isset($_SESSION["usu_id"]) && count($datos) > 0) {
                                                     <th>RAM</th>
                                                     <th>Disco</th>
                                                     <th>Año Compra</th>
-                                                    <th>Obsolescencia</th> <!-- NUEVO -->
-                                                    <th>Garantía</th> <!-- NUEVO -->
+                                                    <th>Obsolescencia</th>
+                                                    <th>Garantía</th>
+                                                    <th>Sede</th>
+                                                    <th>Condición</th>
+                                                    <th>Observaciones</th>
                                                     <th>Fecha Reg.</th>
                                                 </tr>
                                             </thead>
