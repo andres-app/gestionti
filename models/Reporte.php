@@ -22,10 +22,7 @@ public function get_reportes($usuario_id = null, $tipo_activo = null, $fecha = n
                 a.fecha_registro AS fecha,
                 a.acompra,
                 a.sede,
-                CASE 
-                    WHEN EXISTS (SELECT 1 FROM bajas b WHERE b.activo_id = a.id) THEN 'De Baja'
-                    ELSE 'Activo'
-                END AS condicion,
+                a.condicion,
                 a.observaciones
             FROM activos a
             LEFT JOIN tm_usuario u ON a.responsable_id = u.usu_id
@@ -61,15 +58,10 @@ public function get_reportes($usuario_id = null, $tipo_activo = null, $fecha = n
         $sql .= " AND (YEAR(CURDATE()) - a.acompra) < 3";
     }
 
-    // 👉 Aquí insertas la lógica del filtro "condicion"
-    if ($condicion === "activo") {
-        $sql .= " AND NOT EXISTS (SELECT 1 FROM bajas b WHERE b.activo_id = a.id)";
-    } elseif ($condicion === "baja") {
-        $sql .= " AND EXISTS (SELECT 1 FROM bajas b WHERE b.activo_id = a.id)";
+    if (!empty($condicion)) {
+        $sql .= " AND a.condicion = ?";
+        $params[] = $condicion;
     }
-
-    // 👇 No antes de esta línea
-    error_log("📌 SQL Ejecutado: " . $sql . " | Parámetros: " . json_encode($params));
 
     $stmt = $conectar->prepare($sql);
     $stmt->execute($params);
