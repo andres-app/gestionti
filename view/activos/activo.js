@@ -170,7 +170,7 @@ function previsualizar(id) {
             manejarVisibilidadCampo("#vehiculo_sisopera", data.sisopera);
             manejarVisibilidadCampo("#vehiculo_ram", data.ram);
             manejarVisibilidadCampo("#vehiculo_disco", data.disco);
-            $('#vehiculo_ubicacion').html(`<option selected>${data.ubicacion}</option>`).prop("disabled", true);
+            $('#vehiculo_ubicacion').html(`<option selected>${data.ubicacion_nombre}</option>`).prop("disabled", true);
 
 
 

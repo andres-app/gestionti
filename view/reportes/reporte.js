@@ -162,46 +162,45 @@ $(document).ready(function () {
         });
     }
 
-    function cargarUbicaciones() {
-        $.ajax({
-            url: '../../controller/reporte.php?op=obtener_ubicaciones',
-            type: 'GET',
-            dataType: 'json',
-            beforeSend: function () {
-                $('#filtro_ubicacion').html('<option value="">Cargando ubicaciones...</option>');
-            },
-            success: function (response) {
-                console.log("Respuesta del servidor:", response); // Para depuración
+function cargarUbicaciones() {
+    $.ajax({
+        url: '../../controller/reporte.php?op=obtener_ubicaciones',
+        type: 'GET',
+        dataType: 'json',
+        beforeSend: function () {
+            $('#filtro_ubicacion').html('<option value="">Cargando ubicaciones...</option>');
+        },
+        success: function (response) {
+            console.log("Respuesta del servidor:", response);
 
-                if (response.success && Array.isArray(response.data)) {
-                    let options = '<option value="">Todas las ubicaciones</option>';
+            if (response.success && Array.isArray(response.data)) {
+                let options = '<option value="">Todas las ubicaciones</option>';
 
-                    // Ordenar alfabéticamente
-                    response.data.sort((a, b) => {
-                        return a.ubicacion.localeCompare(b.ubicacion);
-                    });
-
-                    // Generar opciones
-                    response.data.forEach(function (item) {
-                        if (item.ubicacion && item.ubicacion.trim() !== '') {
-                            options += `<option value="${item.ubicacion}">${item.ubicacion}</option>`;
-                        }
-                    });
-
-                    $('#filtro_ubicacion').html(options);
-                } else {
-                    console.error("Estructura de respuesta inválida:", response);
-                    $('#filtro_ubicacion').html('<option value="">Error en datos recibidos</option>');
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error("Error en la solicitud:", {
-                    status: status,
-                    error: error,
-                    responseText: xhr.responseText
+                response.data.sort((a, b) => {
+                    return a.area_nom.localeCompare(b.area_nom);
                 });
-                $('#filtro_ubicacion').html('<option value="">Error al cargar ubicaciones</option>');
+
+                response.data.forEach(function (item) {
+                    if (item.area_nom && item.area_nom.trim() !== '') {
+                        options += `<option value="${item.area_id}">${item.area_nom}</option>`;
+                    }
+                });
+
+                $('#filtro_ubicacion').html(options);
+            } else {
+                console.error("Estructura de respuesta inválida:", response);
+                $('#filtro_ubicacion').html('<option value="">Error en datos recibidos</option>');
             }
-        });
-    }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error en la solicitud:", {
+                status: status,
+                error: error,
+                responseText: xhr.responseText
+            });
+            $('#filtro_ubicacion').html('<option value="">Error al cargar ubicaciones</option>');
+        }
+    });
+}
+
 });

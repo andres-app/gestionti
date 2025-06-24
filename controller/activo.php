@@ -31,7 +31,7 @@ switch ($_GET["op"]) {
             $sub_array["tipo"] = $row["tipo"];
             $sub_array["marca"] = $row["marca"];
             $sub_array["modelo"] = $row["modelo"];
-            $sub_array["ubicacion"] = $row["ubicacion"];
+            $sub_array["ubicacion"] = $row["ubicacion_nombre"];
             $sub_array["responsable"] = $row["responsable"];
 
             // 🔹 Datos para el modal (NO se mostrarán en DataTable)

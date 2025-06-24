@@ -23,10 +23,12 @@ class Activo extends Conectar
         $conectar = parent::conexion();
 
         $sql = "SELECT a.*, 
-                   u.usu_nomape as responsable, 
-                   EXISTS (SELECT 1 FROM bajas b WHERE b.activo_id = a.id) as tiene_baja 
+                   u.usu_nomape AS responsable, 
+                   ta.area_nom AS ubicacion_nombre, 
+                   EXISTS (SELECT 1 FROM bajas b WHERE b.activo_id = a.id) AS tiene_baja 
             FROM activos a 
             LEFT JOIN tm_usuario u ON a.responsable_id = u.usu_id 
+            LEFT JOIN tm_area ta ON a.ubicacion = ta.area_id 
             WHERE a.estado = 1";
 
         // Filtro adicional
@@ -36,14 +38,10 @@ class Activo extends Conectar
             $sql .= " AND EXISTS (SELECT 1 FROM bajas b WHERE b.activo_id = a.id)";
         }
 
-
         $stmt = $conectar->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
-
-
 
     public function get_total_activos()
     {
