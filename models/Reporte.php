@@ -1,11 +1,13 @@
 <?php
 
-class Reporte extends Conectar {
+class Reporte extends Conectar
+{
 
-public function get_reportes($usuario_id = null, $tipo_activo = null, $fecha = null, $obsolescencia = null, $garantia = null, $condicion = null) {
-    $conectar = parent::conexion();
+    public function get_reportes($usuario_id = null, $tipo_activo = null, $fecha = null, $obsolescencia = null, $garantia = null, $condicion = null, $ubicacion = null)
+    {
+        $conectar = parent::conexion();
 
-    $sql = "SELECT 
+        $sql = "SELECT 
                 a.id, 
                 u.usu_nomape AS usuario, 
                 a.sbn, 
@@ -29,43 +31,60 @@ public function get_reportes($usuario_id = null, $tipo_activo = null, $fecha = n
             LEFT JOIN detactivo d ON a.id = d.activo_id
             WHERE a.estado = 1";
 
-    $params = [];
+        $params = [];
 
-    if (!empty($usuario_id)) {
-        $sql .= " AND a.responsable_id = ?";
-        $params[] = $usuario_id;
+        if (!empty($usuario_id)) {
+            $sql .= " AND a.responsable_id = ?";
+            $params[] = $usuario_id;
+        }
+
+        if (!empty($tipo_activo)) {
+            $sql .= " AND a.tipo = ?";
+            $params[] = $tipo_activo;
+        }
+
+        if (!empty($fecha)) {
+            $sql .= " AND YEAR(a.fecha_registro) = ?";
+            $params[] = $fecha;
+        }
+
+        if (!empty($ubicacion)) {
+            $sql .= " AND a.ubicacion = ?";
+            $params[] = $ubicacion;
+        }
+
+        if ($obsolescencia === "obsoleto") {
+            $sql .= " AND (YEAR(CURDATE()) - a.acompra) >= 5";
+        } elseif ($obsolescencia === "vigente") {
+            $sql .= " AND (YEAR(CURDATE()) - a.acompra) < 5";
+        }
+
+        if ($garantia === "sin") {
+            $sql .= " AND (YEAR(CURDATE()) - a.acompra) >= 3";
+        } elseif ($garantia === "con") {
+            $sql .= " AND (YEAR(CURDATE()) - a.acompra) < 3";
+        }
+
+        if (!empty($condicion)) {
+            $sql .= " AND a.condicion = ?";
+            $params[] = $condicion;
+        }
+
+        $stmt = $conectar->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    if (!empty($tipo_activo)) {
-        $sql .= " AND a.tipo = ?";
-        $params[] = $tipo_activo;
-    }
-
-    if (!empty($fecha)) {
-        $sql .= " AND YEAR(a.fecha_registro) = ?";
-        $params[] = $fecha;
-    }
-
-    if ($obsolescencia === "obsoleto") {
-        $sql .= " AND (YEAR(CURDATE()) - a.acompra) >= 5";
-    } elseif ($obsolescencia === "vigente") {
-        $sql .= " AND (YEAR(CURDATE()) - a.acompra) < 5";
-    }
-
-    if ($garantia === "sin") {
-        $sql .= " AND (YEAR(CURDATE()) - a.acompra) >= 3";
-    } elseif ($garantia === "con") {
-        $sql .= " AND (YEAR(CURDATE()) - a.acompra) < 3";
-    }
-
-    if (!empty($condicion)) {
-        $sql .= " AND a.condicion = ?";
-        $params[] = $condicion;
-    }
-
+    public function get_ubicaciones() {
+    $conectar = parent::conexion();
+    
+    $sql = "SELECT DISTINCT ubicacion 
+            FROM activos 
+            WHERE ubicacion IS NOT NULL AND ubicacion != '' 
+            ORDER BY ubicacion";
+    
     $stmt = $conectar->prepare($sql);
-    $stmt->execute($params);
+    $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
-
 }

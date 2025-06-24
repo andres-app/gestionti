@@ -12,11 +12,10 @@ switch ($_GET["op"]) {
         $fecha          = $_GET["fecha"] ?? null;
         $obsolescencia  = $_GET["obsolescencia"] ?? null;
         $garantia       = $_GET["garantia"] ?? null;
-        $condicion = $_GET["condicion"] ?? null;
+        $condicion      = $_GET["condicion"] ?? null;
+        $ubicacion      = $_GET["ubicacion"] ?? null;
 
-        $datos = $reporte->get_reportes($usuario_id, $tipo_activo, $fecha, $obsolescencia, $garantia, $condicion);
-
-
+        $datos = $reporte->get_reportes($usuario_id, $tipo_activo, $fecha, $obsolescencia, $garantia, $condicion, $ubicacion);
 
         if (!$datos || count($datos) == 0) {
             echo json_encode(["data" => []]);
@@ -77,6 +76,23 @@ switch ($_GET["op"]) {
             echo json_encode(["error" => "No se encontraron tipos de activos"]);
         } else {
             echo json_encode($datos);
+        }
+        break;
+
+    case 'obtener_ubicaciones':
+        header('Content-Type: application/json'); // ¡Importante!
+        try {
+            $reporte = new Reporte();
+            $ubicaciones = $reporte->get_ubicaciones();
+            echo json_encode([
+                'success' => true,
+                'data' => $ubicaciones
+            ]);
+        } catch (Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Error al cargar ubicaciones: ' . $e->getMessage()
+            ]);
         }
         break;
 
