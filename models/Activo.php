@@ -155,12 +155,15 @@ class Activo extends Conectar
         $sql = "SELECT v.id, v.sbn, v.serie, v.tipo, v.marca, v.modelo, v.ubicacion, 
        v.responsable_id, u.usu_nomape AS responsable, 
        v.fecha_registro, v.condicion, v.estado,
-       v.sede, v.observaciones,v.acompra,
-       d.hostname, d.procesador, d.sisopera, d.ram, d.disco
-            FROM activos v
-            LEFT JOIN tm_usuario u ON v.responsable_id = u.usu_id
-            LEFT JOIN detactivo d ON v.id = d.activo_id
-            WHERE v.id = ?";
+       v.sede, v.observaciones, v.acompra,
+       d.hostname, d.procesador, d.sisopera, d.ram, d.disco,
+       a.area_nom AS ubicacion_nombre
+        FROM activos v
+        LEFT JOIN tm_usuario u ON v.responsable_id = u.usu_id
+        LEFT JOIN detactivo d ON v.id = d.activo_id
+        LEFT JOIN tm_area a ON v.ubicacion = a.area_id
+        WHERE v.id = ?";
+
 
         $stmt = $conectar->prepare($sql);
         $stmt->execute([$id]);
