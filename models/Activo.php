@@ -464,7 +464,7 @@ class Activo extends Conectar
     public function listarAreas()
     {
         $conectar = parent::conexion();
-        $sql = "SELECT area_nom FROM tm_area";
+        $sql = "SELECT area_id, area_nom FROM tm_area";
         $stmt = $conectar->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

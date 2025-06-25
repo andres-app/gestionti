@@ -654,7 +654,7 @@ $(document).ready(function () {
             error: function () {
                 Swal.fire('Error', 'Error de conexión con el servidor', 'error');
             },
-            complete: function() {
+            complete: function () {
                 $btnSubmit.prop('disabled', false); // habilitar botón nuevamente
             }
         });
@@ -710,16 +710,16 @@ function cargarAreas(ubicacion = null) {
         type: 'GET',
         dataType: 'json',
         success: function (response) {
-            console.log("📦 Áreas recibidas:", response);
             let options = '<option value="">Seleccione un área</option>';
             response.forEach(area => {
-                options += `<option value="${area.area_nom}">${area.area_nom}</option>`;
+                options += `<option value="${area.area_id}">${area.area_nom}</option>`;
             });
             $('#vehiculo_ubicacion').html(options);
 
             if (ubicacion) {
                 $('#vehiculo_ubicacion').val(ubicacion);
             }
+
         },
         error: function () {
             Swal.fire('Error', 'No se pudieron cargar las áreas', 'error');
