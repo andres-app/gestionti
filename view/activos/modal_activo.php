@@ -92,6 +92,7 @@
                                 <option value="SEDE CENTRAL">SEDE CENTRAL</option>
                                 <option value="PASAJE ACUÑA">PASAJE ACUÑA</option>
                                 <option value="CAMANA">CAMANA</option>
+                                <option value="CENECP">CENECP</option>
                             </select>
                         </div>
                     </div>
