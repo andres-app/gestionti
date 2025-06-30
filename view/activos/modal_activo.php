@@ -93,6 +93,7 @@
                                 <option value="PASAJE ACUÑA">PASAJE ACUÑA</option>
                                 <option value="CAMANA">CAMANA</option>
                                 <option value="CENECP">CENECP</option>
+                                <option value="CEREC">CEREC</option>
                             </select>
                         </div>
                     </div>
