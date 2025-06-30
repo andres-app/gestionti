@@ -66,10 +66,10 @@ switch ($_GET["op"]) {
         $datos = $area->get_area_nombre($_POST["area_nom"]);
         if (is_array($datos) == true and count($datos) == 0) {
             if (empty($_POST["area_id"])) {
-                $area->insert_area($_POST["area_nom"], $_POST["area_correo"]);
+                $area->insert_area($_POST["area_nom"]);
                 echo "1";
             } else {
-                $area->update_area($_POST["area_id"], $_POST["area_nom"], $_POST["area_correo"]);
+                $area->update_area($_POST["area_id"], $_POST["area_nom"]);
                 echo "2";
             }
         } else {
@@ -128,34 +128,33 @@ switch ($_GET["op"]) {
         echo "1";
         break;
 
-        case "listar":
-            $datos = $area->get_area();
-            $data = array();
-            
-            foreach($datos as $row){
-                $sub_array = array();
-                $sub_array[] = $row["area_nom"];
-                $sub_array[] = $row["area_correo"];
-                $sub_array[] = date("d/m/Y", strtotime($row["fech_crea"])); // o el campo correcto de fecha
-                $sub_array[] = '
-                    <button type="button" class="btn btn-soft-warning waves-effect waves-light btn-sm" onClick="editar(' . $row["area_id"] . ')">
-                        <i class="bx bx-edit-alt font-size-16 align-middle"></i>
-                    </button>
-                    <button type="button" class="btn btn-soft-danger waves-effect waves-light btn-sm" onClick="eliminar(' . $row["area_id"] . ')">
-                        <i class="bx bx-trash-alt font-size-16 align-middle"></i>
-                    </button>
-                ';
-                $data[] = $sub_array;
-            }
-        
-            $results = array(
-                "sEcho" => 1,
-                "iTotalRecords" => count($data),
-                "iTotalDisplayRecords" => count($data),
-                "aaData" => $data
-            );
-        
-            echo json_encode($results);
-            break;
-        
+    case "listar":
+        $datos = $area->get_area();
+        $data = array();
+
+        foreach ($datos as $row) {
+            $sub_array = array();
+            $sub_array[] = $row["area_nom"];
+            // $sub_array[] = $row["area_correo"]; // ELIMINADO
+            $sub_array[] = date("d/m/Y", strtotime($row["fech_crea"]));
+            $sub_array[] = '
+        <button type="button" class="btn btn-soft-warning waves-effect waves-light btn-sm" onClick="editar(' . $row["area_id"] . ')">
+            <i class="bx bx-edit-alt font-size-16 align-middle"></i>
+        </button>
+        <button type="button" class="btn btn-soft-danger waves-effect waves-light btn-sm" onClick="eliminar(' . $row["area_id"] . ')">
+            <i class="bx bx-trash-alt font-size-16 align-middle"></i>
+        </button>
+    ';
+            $data[] = $sub_array;
+        }
+
+        $results = array(
+            "sEcho" => 1,
+            "iTotalRecords" => count($data),
+            "iTotalDisplayRecords" => count($data),
+            "aaData" => $data
+        );
+
+        echo json_encode($results);
+        break;
 }
