@@ -83,7 +83,7 @@ switch ($_GET["op"]) {
             foreach ($datos as $row) {
                 $output["area_id"] = $row["area_id"];
                 $output["area_nom"] = $row["area_nom"];
-                $output["area_correo"] = $row["area_correo"];
+                // $output["area_correo"] = $row["area_correo"];  // <-- Eliminado
             }
             echo json_encode($output);
         }
