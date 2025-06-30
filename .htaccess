@@ -1,5 +1,5 @@
 RewriteEngine On
 
-# Redirigir de /gestionti/ a /gestionti/view/accesopersonal/
+# Redirigir de /gestionti/ a /gestionti/view/login/
 RewriteCond %{REQUEST_URI} ^/gestionti/?$
-RewriteRule ^(.*)$ /gestionti/view/accesopersonal/ [L,R=301]
+RewriteRule ^(.*)$ /gestionti/view/login/ [L,R=301]

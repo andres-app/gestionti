@@ -83,7 +83,7 @@ class Email extends PHPMailer{
         if ($rol_id == 1){
             $url = $conexion->ruta();
         }elseif($rol_id == 2){
-            $url = $conexion->ruta()."view/accesopersonal/";
+            $url = $conexion->ruta()."view/login/";
         }
 
         //TODO: Generar la cadena alfanumérica
@@ -128,7 +128,7 @@ class Email extends PHPMailer{
         $this->IsHTML(true);
         $this->Subject = "TEMPLATE";
 
-        $url = $conexion->ruta()."view/accesopersonal/";
+        $url = $conexion->ruta()."view/login/";
 
         //TODO: Generar la cadena alfanumérica
         $xpassusu = $this->generarXPassUsu();

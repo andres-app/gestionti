@@ -51,7 +51,7 @@
                                         </form>
 
                                         <div class="mt-5 text-center">
-                                            <p class="text-muted mb-0">Regresar a <a href="../../view/accesopersonal/index.php" class="text-primary fw-semibold"> Acceder </a> </p>
+                                            <p class="text-muted mb-0">Regresar a <a href="../../view/login/index.php" class="text-primary fw-semibold"> Acceder </a> </p>
                                         </div>
                                     </div>
                                     <div class="mt-4 mt-md-5 text-center">

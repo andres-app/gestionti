@@ -56,11 +56,17 @@ class Usuario extends Conectar
         $conectar = parent::conexion();
         parent::set_names();
         if (isset($_POST["enviar"])) {
-            $correo = $_POST["usu_correo"];
+            $correo = trim($_POST["usu_correo"]);
             $pass = $_POST["usu_pass"];
 
+            // --- NUEVO: Agrega dominio si no tiene ---
+            if (strpos($correo, '@') === false) {
+                $correo .= '@inpe.gob.pe';
+            }
+            $correo = strtolower($correo); // OPCIONAL: evitar problemas de mayúsculas/minúsculas
+
             if (empty($correo) || empty($pass)) {
-                header("Location:" . conectar::ruta() . "view/accesopersonal/index.php?m=2");
+                header("Location:" . conectar::ruta() . "view/login/index.php?m=2");
                 exit();
             } else {
                 $sql = "SELECT * FROM tm_usuario WHERE usu_correo = ? AND rol_id IN (2,3,4,5)";
@@ -83,17 +89,18 @@ class Usuario extends Conectar
                         }
                     } else {
                         // Contraseña incorrecta
-                        header("Location:" . Conectar::ruta() . "view/accesopersonal/index.php?m=3");
+                        header("Location:" . Conectar::ruta() . "view/login/index.php?m=3");
                         exit();
                     }
                 } else {
                     // Usuario no encontrado
-                    header("Location:" . Conectar::ruta() . "view/accesopersonal/index.php?m=1");
+                    header("Location:" . Conectar::ruta() . "view/login/index.php?m=1");
                     exit();
                 }
             }
         }
     }
+
 
 
     /* TODO: Método para registrar un nuevo usuario en la base de datos */
@@ -289,54 +296,53 @@ class Usuario extends Conectar
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-public function update_colaborador($usu_id, $usu_nomape, $usu_correo, $usu_pass, $area_id, $rol_id)
-{
-    $conectar = parent::conexion();
-    parent::set_names();
+    public function update_colaborador($usu_id, $usu_nomape, $usu_correo, $usu_pass, $area_id, $rol_id)
+    {
+        $conectar = parent::conexion();
+        parent::set_names();
 
-    try {
-        // Consulta base con campos comunes
-        $sql = "UPDATE tm_usuario SET 
+        try {
+            // Consulta base con campos comunes
+            $sql = "UPDATE tm_usuario SET 
                 usu_nomape = ?, 
                 usu_correo = ?, 
                 area_id = ?, 
                 rol_id = ?, 
                 fech_modi = NOW()";
-        
-        $params = [
-            $usu_nomape,
-            $usu_correo,
-            $area_id,
-            $rol_id
-        ];
 
-        // Agregar contraseña solo si se proporciona
-        if (!empty($usu_pass)) {
-            $sql .= ", usu_pass = ?";
-            $params[] = password_hash($usu_pass, PASSWORD_BCRYPT);
+            $params = [
+                $usu_nomape,
+                $usu_correo,
+                $area_id,
+                $rol_id
+            ];
+
+            // Agregar contraseña solo si se proporciona
+            if (!empty($usu_pass)) {
+                $sql .= ", usu_pass = ?";
+                $params[] = password_hash($usu_pass, PASSWORD_BCRYPT);
+            }
+
+            // Condición WHERE
+            $sql .= " WHERE usu_id = ?";
+            $params[] = $usu_id;
+
+            // Preparar y ejecutar la consulta
+            $stmt = $conectar->prepare($sql);
+
+            // Bind de parámetros dinámicos
+            foreach ($params as $index => $value) {
+                $stmt->bindValue($index + 1, $value);
+            }
+
+            // Ejecutar y devolver resultado
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            // Registrar error en logs
+            error_log("Error en update_colaborador: " . $e->getMessage());
+            return false;
         }
-
-        // Condición WHERE
-        $sql .= " WHERE usu_id = ?";
-        $params[] = $usu_id;
-
-        // Preparar y ejecutar la consulta
-        $stmt = $conectar->prepare($sql);
-        
-        // Bind de parámetros dinámicos
-        foreach ($params as $index => $value) {
-            $stmt->bindValue($index + 1, $value);
-        }
-
-        // Ejecutar y devolver resultado
-        return $stmt->execute();
-
-    } catch (PDOException $e) {
-        // Registrar error en logs
-        error_log("Error en update_colaborador: " . $e->getMessage());
-        return false;
     }
-}
 
 
     public function eliminar_colaborador($usu_id)

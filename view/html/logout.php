@@ -12,10 +12,10 @@ session_destroy();
 if ($rol_id == 1) {
     header("Location:".Conectar::ruta()."index.php");
 } elseif (in_array($rol_id, [2, 3, 4, 5])) { //Aca se agregan mas roles que podamos permitir cerrar la sesion
-    header("Location:".Conectar::ruta()."view/accesopersonal/index.php");
+    header("Location:".Conectar::ruta()."view/login/index.php");
 } else {
     // Si no hay rol definido o es otro caso, puedes redirigir a una página genérica
-    header("Location:".Conectar::ruta()."view/accesopersonal");
+    header("Location:".Conectar::ruta()."view/login");
 }
 
 exit();

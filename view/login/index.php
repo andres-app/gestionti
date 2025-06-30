@@ -88,7 +88,7 @@ if (isset($_POST["enviar"]) and $_POST["enviar"] == "si") {
 
                                         <div class="mb-3">
                                             <label class="form-label">Correo Electronico</label>
-                                            <input type="email" class="form-control" id="usu_correo" name="usu_correo" placeholder="Ingrese Correo Electronico" required>
+                                            <input type="text" class="form-control" id="usu_correo" name="usu_correo" placeholder="Ingrese usuario o correo electrónico" required>
                                         </div>
                                         <div class="mb-3">
                                             <div class="d-flex align-items-start">
@@ -303,7 +303,7 @@ if (isset($_POST["enviar"]) and $_POST["enviar"] == "si") {
     <script src="https://accounts.google.com/gsi/client" async></script>
     <!-- Sweet Alerts js -->
     <script src="../../assets/js/sweetalert2.min.js"></script>
-    <script type="text/javascript" src="accesopersonal.js"></script>
+    <script type="text/javascript" src="login.js"></script>
 </body>
 
 </html>
