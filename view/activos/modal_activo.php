@@ -70,7 +70,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="vehiculo_fecha_registro" class="form-label">Fecha de registro</label>
-                            <input class="form-control" type="text" name="vehiculo_fecha_registro" id="vehiculo_fecha_registro">
+                            <input class="form-control" type="date" name="vehiculo_fecha_registro" id="vehiculo_fecha_registro">
                         </div>
                     </div>
 

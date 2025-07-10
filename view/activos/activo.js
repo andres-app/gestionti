@@ -449,9 +449,9 @@ $("#btnnuevo").on("click", function () {
     $("#mnt_form")[0].reset();
     $("#vehiculo_acompra").val('');
 
-    const fechaActual = new Date();
-    const formato = fechaActual.toISOString().slice(0, 19).replace("T", " ");
-    $("#vehiculo_fecha_registro").val(formato);
+    // SOLO FECHA, no hora
+    const fechaActual = new Date().toISOString().split('T')[0];
+    $("#vehiculo_fecha_registro").val(fechaActual);
 
     // ✅ Cargar áreas
     cargarAreas(null);
