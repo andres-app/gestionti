@@ -434,4 +434,35 @@ class Usuario extends Conectar
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function get_colaborador_oficina_sistemas()
+    {
+        $conectar = parent::conexion();
+        parent::set_names();
+
+        $sql = "SELECT
+        u.usu_id,
+        u.usu_nomape,
+        u.usu_correo,
+        u.rol_id,
+        r.rol_nom,
+        a.area_nom,
+        u.fech_crea,
+        u.usu_img,
+        u.usu_fecnac,
+        u.usu_cargo,
+        u.usu_anexo
+        FROM tm_usuario u
+        INNER JOIN tm_rol r ON u.rol_id = r.rol_id
+        LEFT JOIN tm_area a ON u.area_id = a.area_id
+        WHERE u.est = 1
+        AND u.rol_id IN (2,3,4,5)
+        AND u.area_id = 43
+        ORDER BY u.usu_nomape";
+
+        $stmt = $conectar->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
