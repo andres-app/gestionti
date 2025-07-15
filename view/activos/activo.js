@@ -392,11 +392,12 @@ function editar(id) {
             $("#vehiculo_disco").val(data.disco);
             $("#vehiculo_observaciones").val(data.observaciones).prop("disabled", false);
             $("#vehiculo_acompra").val(data.acompra);
+
             const ultimaFecha = data.ult_mant_real ? data.ult_mant_real : 'Sin mantenimiento registrado';
             $("#vehiculo_ult_mant").val(ultimaFecha);
 
-            // === Cargar select de sede dinámicamente ===
-            cargarSedes(data.sede, function () {
+            // === Cargar select de sede dinámicamente usando sede_id ===
+            cargarSedes(data.sede_id, function () {
                 // Opcional: cualquier otra acción luego de cargar la sede
             });
 
@@ -435,6 +436,7 @@ function editar(id) {
         }
     });
 }
+
 
 
 
@@ -770,6 +772,7 @@ function cargarSedes(sede_id = null, callback = null) {
         }
     });
 }
+
 
 
 // Llamada a la función de inicialización
