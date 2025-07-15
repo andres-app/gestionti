@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             const set = (id, val) => document.getElementById(id).value = val || '';
                             set('sbn', a.sbn); set('serie', a.serie); set('tipo', a.tipo); set('marca', a.marca);
                             set('modelo', a.modelo); set('responsable', a.responsable_id); set('ubicacion', a.ubicacion);
-                            set('sede', a.sede); set('condicion', a.condicion); set('observaciones', a.observaciones);
+                            set('sede', a.sede_id); set('condicion', a.condicion); set('observaciones', a.observaciones);
                             set('acompra', a.acompra); set('fecha_registro', a.fecha_registro); set('ult_mant', a.ult_mant);
                             set('hostname', d.hostname); set('procesador', d.procesador); set('sisopera', d.sisopera);
                             set('ram', d.ram); set('disco', d.disco);

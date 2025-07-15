@@ -2,13 +2,13 @@
     require_once("../../config/conexion.php");
     require_once("../../models/Rol.php");
     $rol = new Rol();
-    $datos = $rol->validar_menu_x_rol($_SESSION["rol_id"],"mntarea");
+    $datos = $rol->validar_menu_x_rol($_SESSION["rol_id"],"sedes");
     if(isset($_SESSION["usu_id"]) and count($datos)>0){
 ?>
 <!doctype html>
 <html lang="es">
     <head>
-        <title>  Mnt.Area</title>
+        <title>  Mnt.Sede</title>
         <?php require_once("../html/head.php")?>
     </head>
 
@@ -28,12 +28,12 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                    <h4 class="mb-sm-0 font-size-18">Mantenimiento de Area</h4>
+                                    <h4 class="mb-sm-0 font-size-18">Mantenimiento de Sede</h4>
 
                                     <div class="page-title-right">
                                         <ol class="breadcrumb m-0">
-                                            <li class="breadcrumb-item"><a href="javascript: void(0);">Pages</a></li>
-                                            <li class="breadcrumb-item active">Starter Page</li>
+                                            <li class="breadcrumb-item"><a href="javascript: void(0);">Inicio</a></li>
+                                            <li class="breadcrumb-item active">Sedes</li>
                                         </ol>
                                     </div>
 
@@ -44,8 +44,8 @@
                                 <div class="col-lg-12">
                                     <div class="card">
                                         <div class="card-header">
-                                            <h4 class="card-title">Area</h4>
-                                            <p class="card-title-desc">(*) Vista para Registrar, Modificar, Listar y Eliminar. </p>
+                                            <h4 class="card-title">Sede</h4>
+                                            <p class="card-title-desc">(*) Vista para Registrar, Modificar, Listar y Eliminar.</p>
                                         </div>
 
                                         <div class="card-body">
@@ -90,7 +90,7 @@
 
         <?php require_once("../html/js.php")?>
 
-        <script type="text/javascript" src="mntarea.js"></script>
+        <script type="text/javascript" src="mntsede.js"></script>
 
     </body>
 </html>

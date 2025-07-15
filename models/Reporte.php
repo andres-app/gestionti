@@ -8,30 +8,33 @@ class Reporte extends Conectar
         $conectar = parent::conexion();
 
         $sql = "SELECT 
-            a.id, 
-            u.usu_nomape AS usuario, 
-            a.sbn, 
-            a.serie, 
-            a.tipo AS tipo_activo, 
-            a.marca, 
-            a.modelo, 
-            ar.area_nom AS ubicacion,  -- Cambiado para mostrar el nombre del área
-            a.ubicacion AS ubicacion_id,  -- Mantener el ID por si es necesario
-            d.hostname, 
-            d.procesador, 
-            d.sisopera, 
-            d.ram, 
-            d.disco, 
-            a.fecha_registro AS fecha,
-            a.acompra,
-            a.sede,
-            a.condicion,
-            a.observaciones
-        FROM activos a
-        LEFT JOIN tm_usuario u ON a.responsable_id = u.usu_id
-        LEFT JOIN detactivo d ON a.id = d.activo_id
-        LEFT JOIN tm_area ar ON a.ubicacion = ar.area_id  -- Nuevo JOIN
-        WHERE a.estado = 1";
+    a.id, 
+    u.usu_nomape AS usuario, 
+    a.sbn, 
+    a.serie, 
+    a.tipo AS tipo_activo, 
+    a.marca, 
+    a.modelo, 
+    ar.area_nom AS ubicacion,
+    a.ubicacion AS ubicacion_id,  
+    d.hostname, 
+    d.procesador, 
+    d.sisopera, 
+    d.ram, 
+    d.disco, 
+    a.fecha_registro AS fecha,
+    a.acompra,
+    s.sede_nom as sede,          -- <-- Agrega esto
+    a.sede_id,                  -- (opcional, solo si necesitas el id)
+    a.condicion,
+    a.observaciones
+FROM activos a
+LEFT JOIN tm_usuario u ON a.responsable_id = u.usu_id
+LEFT JOIN detactivo d ON a.id = d.activo_id
+LEFT JOIN tm_area ar ON a.ubicacion = ar.area_id
+LEFT JOIN tm_sede s ON a.sede_id = s.sede_id    -- <-- Nuevo JOIN
+WHERE a.estado = 1";
+
 
         $params = [];
 
@@ -77,18 +80,17 @@ class Reporte extends Conectar
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-public function get_ubicaciones()
-{
-    $conectar = parent::conexion();
+    public function get_ubicaciones()
+    {
+        $conectar = parent::conexion();
 
-    $sql = "SELECT area_id, area_nom 
+        $sql = "SELECT area_id, area_nom 
             FROM tm_area 
             WHERE area_nom IS NOT NULL AND area_nom != '' 
             ORDER BY area_nom";
 
-    $stmt = $conectar->prepare($sql);
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
+        $stmt = $conectar->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

@@ -23,13 +23,16 @@ class Activo extends Conectar
         $conectar = parent::conexion();
 
         $sql = "SELECT a.*, 
-                   u.usu_nomape AS responsable, 
-                   ta.area_nom AS ubicacion_nombre, 
-                   EXISTS (SELECT 1 FROM bajas b WHERE b.activo_id = a.id) AS tiene_baja 
-            FROM activos a 
-            LEFT JOIN tm_usuario u ON a.responsable_id = u.usu_id 
-            LEFT JOIN tm_area ta ON a.ubicacion = ta.area_id 
-            WHERE a.estado = 1";
+               u.usu_nomape AS responsable, 
+               ta.area_nom AS ubicacion_nombre, 
+               s.sede_nom AS sede_nombre, 
+               EXISTS (SELECT 1 FROM bajas b WHERE b.activo_id = a.id) AS tiene_baja 
+        FROM activos a 
+        LEFT JOIN tm_usuario u ON a.responsable_id = u.usu_id 
+        LEFT JOIN tm_area ta ON a.ubicacion = ta.area_id 
+        LEFT JOIN tm_sede s ON a.sede_id = s.sede_id
+        WHERE a.estado = 1";
+
 
         // Filtro adicional
         if ($condicion === "activo") {
@@ -69,17 +72,18 @@ class Activo extends Conectar
      * 
      * @return bool True si la inserción fue exitosa, false en caso de error.
      */
-    public function insertar_vehiculo($sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $sede, $responsable_id, $fecha_registro, $condicion, $estado, $observaciones, $acompra)
+    // Insertar (cambia $sede por $sede_id)
+    public function insertar_vehiculo($sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $sede_id, $responsable_id, $fecha_registro, $condicion, $estado, $observaciones, $acompra)
     {
         $conectar = parent::conexion();
         parent::set_names();
 
-        $sql = "INSERT INTO activos (sbn, serie, tipo, marca, modelo, ubicacion, sede, responsable_id, fecha_registro, condicion, estado, observaciones, acompra)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO activos (sbn, serie, tipo, marca, modelo, ubicacion, sede_id, responsable_id, fecha_registro, condicion, estado, observaciones, acompra)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = $conectar->prepare($sql);
 
-        if ($stmt->execute([$sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $sede, $responsable_id, $fecha_registro, $condicion, $estado, $observaciones, $acompra])) {
+        if ($stmt->execute([$sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $sede_id, $responsable_id, $fecha_registro, $condicion, $estado, $observaciones, $acompra])) {
             return $conectar->lastInsertId(); // Retornar ID insertado
         } else {
             $error = $stmt->errorInfo();
@@ -87,6 +91,7 @@ class Activo extends Conectar
             return false;
         }
     }
+
 
 
 
@@ -104,9 +109,9 @@ class Activo extends Conectar
 
             // 🔹 Actualizar la tabla `activos`
             $sql1 = "UPDATE activos 
-                    SET sbn = ?, serie = ?, tipo = ?, marca = ?, modelo = ?, ubicacion = ?, responsable_id = ?, fecha_registro = ?, 
-                        condicion = ?, estado = ?, sede = ?, observaciones = ?, acompra = ?
-                    WHERE id = ?";
+    SET sbn = ?, serie = ?, tipo = ?, marca = ?, modelo = ?, ubicacion = ?, responsable_id = ?, fecha_registro = ?, 
+        condicion = ?, estado = ?, sede_id = ?, observaciones = ?, acompra = ?
+    WHERE id = ?";
             $stmt1 = $conectar->prepare($sql1);
             $stmt1->execute([$sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $sede, $observaciones, $acompra, $id]);
 
@@ -153,16 +158,18 @@ class Activo extends Conectar
         parent::set_names();
 
         $sql = "SELECT v.id, v.sbn, v.serie, v.tipo, v.marca, v.modelo, v.ubicacion, 
-       v.responsable_id, u.usu_nomape AS responsable, 
-       v.fecha_registro, v.condicion, v.estado,
-       v.sede, v.observaciones, v.acompra,
-       d.hostname, d.procesador, d.sisopera, d.ram, d.disco,
-       a.area_nom AS ubicacion_nombre
-        FROM activos v
-        LEFT JOIN tm_usuario u ON v.responsable_id = u.usu_id
-        LEFT JOIN detactivo d ON v.id = d.activo_id
-        LEFT JOIN tm_area a ON v.ubicacion = a.area_id
-        WHERE v.id = ?";
+            v.responsable_id, u.usu_nomape AS responsable, 
+            v.fecha_registro, v.condicion, v.estado,
+            v.sede_id, s.sede_nom AS sede, -- <-- OJO: sede_id y el nombre con JOIN
+            v.observaciones, v.acompra,
+            d.hostname, d.procesador, d.sisopera, d.ram, d.disco,
+            a.area_nom AS ubicacion_nombre
+                FROM activos v
+                LEFT JOIN tm_usuario u ON v.responsable_id = u.usu_id
+                LEFT JOIN detactivo d ON v.id = d.activo_id
+                LEFT JOIN tm_area a ON v.ubicacion = a.area_id
+                LEFT JOIN tm_sede s ON v.sede_id = s.sede_id
+                WHERE v.id = ?";
 
 
         $stmt = $conectar->prepare($sql);
@@ -324,16 +331,18 @@ class Activo extends Conectar
         $conectar = parent::conexion();
         parent::set_names();
 
-        $sql = "SELECT sede, COUNT(*) AS total 
-            FROM activos 
-            WHERE sede IS NOT NULL AND sede != '' 
-            GROUP BY sede
-            ORDER BY sede";
+        $sql = "SELECT s.sede_nom AS sede, COUNT(*) AS total 
+            FROM activos a
+            LEFT JOIN tm_sede s ON a.sede_id = s.sede_id
+            WHERE a.sede_id IS NOT NULL 
+            GROUP BY a.sede_id
+            ORDER BY s.sede_nom";
 
         $stmt = $conectar->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
 
 
