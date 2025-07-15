@@ -458,15 +458,10 @@ $("#btnnuevo").on("click", function () {
     $("#vehiculo_id").val('');
     $("#mnt_form")[0].reset();
     $("#vehiculo_acompra").val('');
-
-    // Siempre restaurar el select si el campo quedó como input readonly
-    if ($("#vehiculo_sede").is("input[readonly]")) {
-        $("#vehiculo_sede").replaceWith(`
-            <select class="form-control" name="vehiculo_sede" id="vehiculo_sede" required>
-                <option value="">Seleccione una sede</option>
-            </select>
-        `);
-    }
+    // Habilita todos los campos por si quedaron bloqueados antes
+    $("#mnt_form input, #mnt_form select, #mnt_form textarea").prop("disabled", false);
+    // Borra cualquier alerta de baja previa
+    $("#alerta-baja").remove();
 
     // SOLO FECHA, no hora
     const fechaActual = new Date().toISOString().split('T')[0];
@@ -475,16 +470,20 @@ $("#btnnuevo").on("click", function () {
     // ✅ Cargar áreas
     cargarAreas(null);
 
-    // ✅ Cargar sedes
-    cargarSedes(null);
-
     // ✅ Cargar responsables
     cargarResponsables(null, function () {
         $("#myModalLabel").html('Nuevo Registro');
         $(".modal-footer .btn-primary").show();
         $("#mnt_modal").modal('show');
     });
+
+    // Asegura que el select de sede sea el correcto
+    if ($("#vehiculo_sede").is("input[readonly]")) {
+        $("#vehiculo_sede").replaceWith('<select class="form-control" name="vehiculo_sede" id="vehiculo_sede" required></select>');
+    }
+    cargarSedes();
 });
+
 
 
 
