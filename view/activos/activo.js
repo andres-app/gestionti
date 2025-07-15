@@ -144,62 +144,70 @@ function eliminar(id) {
  */
 function previsualizar(id) {
     $.post("../../controller/activo.php?op=mostrar", { vehiculo_id: id }, function (data) {
-        console.log("🔹 Datos recibidos en previsualizar:", data);
-
         if (data.error) {
             Swal.fire('Error', data.error, 'error');
-        } else {
-            $("#vehiculo_id").val(data.id);
-            $("#vehiculo_sbn").val(data.sbn).prop("disabled", true);
-            $("#vehiculo_serie").val(data.serie).prop("disabled", true);
-            $("#vehiculo_tipo").val(data.tipo).prop("disabled", true);
-            $("#vehiculo_marca").val(data.marca).prop("disabled", true);
-            $("#vehiculo_modelo").val(data.modelo).prop("disabled", true);
-            $("#vehiculo_ubicacion").val(data.ubicacion).prop("disabled", true);
-            $("#vehiculo_fecha_registro").val(data.fecha_registro).prop("disabled", true);
-            $("#vehiculo_condicion").val(data.condicion).prop("disabled", true);
-            $("#vehiculo_estado").val(data.estado).prop("disabled", true);
-            const ultimaFecha = data.ult_mant_real ? data.ult_mant_real : 'Sin mantenimiento registrado';
-            $("#vehiculo_ult_mant").val(ultimaFecha).prop("disabled", true);
-            $("#vehiculo_sede").val(data.sede).prop("disabled", true);
-            $("#vehiculo_observaciones").val(data.observaciones).prop("disabled", true);
-            $("#vehiculo_acompra").val(data.acompra).prop("disabled", true);
-            // 🔹 Aplicar visibilidad a los campos vacíos
-            manejarVisibilidadCampo("#vehiculo_hostname", data.hostname);
-            manejarVisibilidadCampo("#vehiculo_procesador", data.procesador);
-            manejarVisibilidadCampo("#vehiculo_sisopera", data.sisopera);
-            manejarVisibilidadCampo("#vehiculo_ram", data.ram);
-            manejarVisibilidadCampo("#vehiculo_disco", data.disco);
-            $('#vehiculo_ubicacion').html(`<option selected>${data.ubicacion_nombre}</option>`).prop("disabled", true);
-
-
-
-
-            // ✅ Agregamos el responsable sin que sea sobrescrito después
-            // ✅ Aseguramos que el responsable se mantenga sin ser sobrescrito
-            $("#vehiculo_responsable_id").html(`<option selected>${data.responsable}</option>`).prop("disabled", true);
-
-            $("#myModalLabel").html("Previsualización del Activo");
-            $(".modal-footer .btn-primary").hide();
-            $("#mnt_modal").modal("show");
-
-            // ✅ Cargar fotos correctamente
-            cargarFotos(data.id); // 🔥 IMPORTANTE: Asegurar que se ejecuta aquí
-
-            // Evitar que el modal recargue el select
-            $("#mnt_modal").off("shown.bs.modal");
+            return;
         }
+        $("#vehiculo_id").val(data.id);
+        $("#vehiculo_sbn").val(data.sbn).prop("disabled", true);
+        $("#vehiculo_serie").val(data.serie).prop("disabled", true);
+        $("#vehiculo_tipo").val(data.tipo).prop("disabled", true);
+        $("#vehiculo_marca").val(data.marca).prop("disabled", true);
+        $("#vehiculo_modelo").val(data.modelo).prop("disabled", true);
+        $("#vehiculo_ubicacion").val(data.ubicacion).prop("disabled", true);
+        $("#vehiculo_fecha_registro").val(data.fecha_registro).prop("disabled", true);
+        $("#vehiculo_condicion").val(data.condicion).prop("disabled", true);
+        $("#vehiculo_estado").val(data.estado).prop("disabled", true);
+        const ultimaFecha = data.ult_mant_real ? data.ult_mant_real : 'Sin mantenimiento registrado';
+        $("#vehiculo_ult_mant").val(ultimaFecha).prop("disabled", true);
+        // Sede como solo lectura
+        $("#vehiculo_sede").replaceWith(
+            `<input type="text" class="form-control" id="vehiculo_sede" value="${data.sede_nombre || data.sede || ''}" readonly>`
+        );
+        $("#vehiculo_observaciones").val(data.observaciones).prop("disabled", true);
+        $("#vehiculo_acompra").val(data.acompra).prop("disabled", true);
+
+        manejarVisibilidadCampo("#vehiculo_hostname", data.hostname);
+        manejarVisibilidadCampo("#vehiculo_procesador", data.procesador);
+        manejarVisibilidadCampo("#vehiculo_sisopera", data.sisopera);
+        manejarVisibilidadCampo("#vehiculo_ram", data.ram);
+        manejarVisibilidadCampo("#vehiculo_disco", data.disco);
+
+        $('#vehiculo_ubicacion').html(`<option selected>${data.ubicacion_nombre}</option>`).prop("disabled", true);
+        $("#vehiculo_responsable_id").html(`<option selected>${data.responsable}</option>`).prop("disabled", true);
+
+        $("#myModalLabel").html("Previsualización del Activo");
+        $(".modal-footer .btn-primary").hide();
+        $("#mnt_modal").modal("show");
+        cargarFotos(data.id);
+
+        // Restaurar select de sede al cerrar
+        $("#mnt_modal").off("hidden.bs.modal").on("hidden.bs.modal", function () {
+            if ($("#vehiculo_sede").is("input[readonly]")) {
+                $("#vehiculo_sede").replaceWith(`
+                    <select class="form-control" name="vehiculo_sede" id="vehiculo_sede" required>
+                        <option value="">Seleccione una sede</option>
+                    </select>
+                `);
+            }
+        });
     });
 }
 
 
-// Restaurar el formulario cuando se cierra el modal.
+
 $("#mnt_modal").on("hidden.bs.modal", function () {
-    $("#mnt_form input, #mnt_form select, #mnt_form textarea").prop("disabled", false);
-    $(".modal-footer .btn-primary").show();
-    $("#alerta-baja").remove(); // Eliminar alerta si quedó
-    $("#mnt_form")[0].reset();
+    // Si el campo Sede es un input readonly, reemplázalo por el select original
+    if ($("#vehiculo_sede").is("input[readonly]")) {
+        $("#vehiculo_sede").replaceWith(`
+            <select class="form-control" name="vehiculo_sede" id="vehiculo_sede" required>
+                <option value="">Seleccione una sede</option>
+            </select>
+        `);
+    }
+    // ...tu código de reseteo actual...
 });
+
 
 
 
@@ -350,20 +358,23 @@ function manejarVisibilidadCampo(selector, valor) {
 function editar(id) {
     console.log("📌 Editando activo con ID:", id);
 
+    // 1. Restaurar el select de sede si fue reemplazado por un input readonly
+    if ($("#vehiculo_sede").is("input[readonly]")) {
+        $("#vehiculo_sede").replaceWith('<select class="form-control" name="vehiculo_sede" id="vehiculo_sede" required></select>');
+    }
+
     $.ajax({
         url: "../../controller/activo.php?op=mostrar",
         type: "POST",
         data: { vehiculo_id: id },
         dataType: "json",
         success: function (data) {
-            console.log("✅ Respuesta del servidor:", data);
-
             if (!data || data.error) {
                 Swal.fire("Error", data.error || "No se encontró información", "error");
                 return;
             }
 
-            // ✅ Asignación de todos los campos
+            // Asignar valores
             $("#vehiculo_id").val(data.id);
             $("#vehiculo_sbn").val(data.sbn);
             $("#vehiculo_serie").val(data.serie);
@@ -373,56 +384,50 @@ function editar(id) {
             $("#vehiculo_ubicacion").val(data.ubicacion);
             $("#vehiculo_fecha_registro").val(data.fecha_registro);
             $("#vehiculo_condicion").val(data.condicion);
-            $("#vehiculo_estado").val(data.estado); // ⚠️ Asegúrate que sea 1 o 0
+            $("#vehiculo_estado").val(data.estado);
             $("#vehiculo_hostname").val(data.hostname);
             $("#vehiculo_procesador").val(data.procesador);
             $("#vehiculo_sisopera").val(data.sisopera);
             $("#vehiculo_ram").val(data.ram);
             $("#vehiculo_disco").val(data.disco);
-            const ultimaFecha = data.ult_mant_real ? data.ult_mant_real : 'Sin mantenimiento registrado';
-            $("#vehiculo_ult_mant").val(ultimaFecha);
-            $("#vehiculo_sede").val(data.sede);
             $("#vehiculo_observaciones").val(data.observaciones).prop("disabled", false);
             $("#vehiculo_acompra").val(data.acompra);
+            const ultimaFecha = data.ult_mant_real ? data.ult_mant_real : 'Sin mantenimiento registrado';
+            $("#vehiculo_ult_mant").val(ultimaFecha);
 
+            // === Cargar select de sede dinámicamente ===
+            cargarSedes(data.sede, function () {
+                // Opcional: cualquier otra acción luego de cargar la sede
+            });
+
+            // === Cargar responsables y áreas ===
+            cargarAreas(data.ubicacion);
             let responsableID = data.responsable_id && !isNaN(data.responsable_id) ? data.responsable_id : null;
-            console.log("📌 Responsable ID recibido:", responsableID);
-
-            // Verifica si está dado de baja
-            const esDeBaja = data.condicion && data.condicion.toLowerCase() === 'de baja';
-
-            if (esDeBaja) {
-                // Mostrar alerta visual
-                if ($("#alerta-baja").length === 0) {
-                    $(".modal-body").prepend(`
-            <div id="alerta-baja" class="alert alert-warning" role="alert">
-                Este activo está registrado como <strong>De Baja</strong>. No se permiten modificaciones.
-            </div>
-        `);
-                }
-
-                // Deshabilitar todos los campos
-                $("#mnt_form input, #mnt_form select, #mnt_form textarea").prop("disabled", true);
-
-                // Ocultar botón guardar
-                $(".modal-footer .btn-primary").hide();
-            } else {
-                $("#alerta-baja").remove(); // Quita la alerta si no aplica
-                $("#mnt_form input, #mnt_form select, #mnt_form textarea").prop("disabled", false);
-                $(".modal-footer .btn-primary").show();
-            }
-
-            $("#vehiculo_ubicacion").val(data.ubicacion); // Puedes omitir esta línea si usas cargarAreas con parámetro
-
-            cargarAreas(data.ubicacion); // 🔹 Cargar áreas y seleccionar la correcta
-
             cargarResponsables(responsableID, function () {
-                console.log("🔹 Responsable y demás campos cargados correctamente.");
                 $("#myModalLabel").html("Editar Activo");
                 $(".modal-footer .btn-primary").show();
                 $("#mnt_modal").modal("show");
             });
 
+            // === Estado "De Baja" ===
+            const esDeBaja = data.condicion && data.condicion.toLowerCase() === 'de baja';
+            if (esDeBaja) {
+                if ($("#alerta-baja").length === 0) {
+                    $(".modal-body").prepend(`
+                        <div id="alerta-baja" class="alert alert-warning" role="alert">
+                            Este activo está registrado como <strong>De Baja</strong>. No se permiten modificaciones.
+                        </div>
+                    `);
+                }
+                $("#mnt_form input, #mnt_form select, #mnt_form textarea").prop("disabled", true);
+                $(".modal-footer .btn-primary").hide();
+            } else {
+                $("#alerta-baja").remove();
+                $("#mnt_form input, #mnt_form select, #mnt_form textarea").prop("disabled", false);
+                $(".modal-footer .btn-primary").show();
+            }
+
+            cargarFotos(data.id);
         },
         error: function (jqXHR, textStatus, errorThrown) {
             console.error("🔴 Error en la solicitud AJAX:", textStatus, errorThrown);
@@ -430,6 +435,9 @@ function editar(id) {
         }
     });
 }
+
+
+
 
 // Cargar fotos cuando se abre el modal
 $('#mnt_modal').on('shown.bs.modal', function () {
@@ -449,12 +457,24 @@ $("#btnnuevo").on("click", function () {
     $("#mnt_form")[0].reset();
     $("#vehiculo_acompra").val('');
 
+    // Siempre restaurar el select si el campo quedó como input readonly
+    if ($("#vehiculo_sede").is("input[readonly]")) {
+        $("#vehiculo_sede").replaceWith(`
+            <select class="form-control" name="vehiculo_sede" id="vehiculo_sede" required>
+                <option value="">Seleccione una sede</option>
+            </select>
+        `);
+    }
+
     // SOLO FECHA, no hora
     const fechaActual = new Date().toISOString().split('T')[0];
     $("#vehiculo_fecha_registro").val(fechaActual);
 
     // ✅ Cargar áreas
     cargarAreas(null);
+
+    // ✅ Cargar sedes
+    cargarSedes(null);
 
     // ✅ Cargar responsables
     cargarResponsables(null, function () {
@@ -463,6 +483,7 @@ $("#btnnuevo").on("click", function () {
         $("#mnt_modal").modal('show');
     });
 });
+
 
 
 
@@ -726,6 +747,30 @@ function cargarAreas(ubicacion = null) {
         }
     });
 }
+
+function cargarSedes(sede_id = null, callback = null) {
+    $.ajax({
+        url: '../../controller/activo.php?op=obtener_sedes',
+        type: 'GET',
+        dataType: 'json',
+        success: function (response) {
+            let options = '<option value="">Seleccione una sede</option>';
+            response.forEach(function (sede) {
+                options += `<option value="${sede.sede_id}">${sede.sede_nom}</option>`;
+            });
+            $('#vehiculo_sede').html(options);
+
+            if (sede_id) {
+                $('#vehiculo_sede').val(sede_id);
+            }
+            if (callback) callback();
+        },
+        error: function () {
+            Swal.fire('Error', 'No se pudieron cargar las sedes', 'error');
+        }
+    });
+}
+
 
 // Llamada a la función de inicialización
 init();

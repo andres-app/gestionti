@@ -481,4 +481,13 @@ class Activo extends Conectar
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function get_sedes()
+    {
+        $conectar = parent::conexion();
+        $sql = "SELECT sede_id, sede_nom FROM tm_sede WHERE est = 1";
+        $stmt = $conectar->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

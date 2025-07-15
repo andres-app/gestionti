@@ -89,12 +89,8 @@
                             <label for="vehiculo_sede" class="form-label">Sede</label>
                             <select class="form-control" name="vehiculo_sede" id="vehiculo_sede" required>
                                 <option value="">Seleccione una sede</option>
-                                <option value="SEDE CENTRAL">SEDE CENTRAL</option>
-                                <option value="PASAJE ACUÑA">PASAJE ACUÑA</option>
-                                <option value="CAMANA">CAMANA</option>
-                                <option value="CENECP">CENECP</option>
-                                <option value="CEREC">CEREC</option>
                             </select>
+
                         </div>
                     </div>
                     <!-- 🔹 Hostname y Procesador en una fila -->

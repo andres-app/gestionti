@@ -384,15 +384,19 @@ switch ($_GET["op"]) {
         echo json_encode($historial);
         break;
 
-case 'obtener_areas':
-    // Aquí va la lógica para consultar las áreas desde la base de datos
-    // Ejemplo:
-    require_once(__DIR__ . '/../models/Activo.php');
+    case 'obtener_areas':
+        // Aquí va la lógica para consultar las áreas desde la base de datos
+        // Ejemplo:
+        require_once(__DIR__ . '/../models/Activo.php');
 
-    $activo = new Activo();
+        $activo = new Activo();
 
-    $rspta = $activo->listarAreas(); // función del modelo
-    echo json_encode($rspta);
-    break;
+        $rspta = $activo->listarAreas(); // función del modelo
+        echo json_encode($rspta);
+        break;
 
+    case 'obtener_sedes':
+        $sedes = $activo->get_sedes();
+        echo json_encode($sedes);
+        break;
 }
