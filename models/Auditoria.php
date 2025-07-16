@@ -68,4 +68,49 @@ class Auditoria extends Conectar
 
         return $usuario ? $usuario['usu_nomape'] : "ID $id";
     }
+
+public function obtener_todo_historial($filtro_tabla = null)
+{
+    $conectar = parent::conexion();
+    parent::set_names();
+
+    $sql = "SELECT a.*, 
+                   u.usu_nomape AS usuario
+            FROM auditoria a
+            LEFT JOIN tm_usuario u ON a.usuario_id = u.usu_id";
+    $params = [];
+    if ($filtro_tabla) {
+        $sql .= " WHERE a.tabla_afectada = ?";
+        $params[] = $filtro_tabla;
+    }
+    $sql .= " ORDER BY a.fecha DESC";
+
+    $stmt = $conectar->prepare($sql);
+    $stmt->execute($params);
+    $historial = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Cambiar IDs por nombres de usuario
+    foreach ($historial as &$item) {
+        if ($item["campo_modificado"] === "responsable_id") {
+            $item["valor_anterior"] = $this->obtener_nombre_usuario($item["valor_anterior"]);
+            $item["valor_nuevo"]    = $this->obtener_nombre_usuario($item["valor_nuevo"]);
+        }
+    }
+    return $historial;
+}
+
+public function obtener_nombre_sede($id)
+{
+    if (!$id) return 'Sin sede';
+    $conectar = parent::conexion();
+    parent::set_names();
+    $sql = "SELECT sede_nom FROM tm_sede WHERE sede_id = ?";
+    $stmt = $conectar->prepare($sql);
+    $stmt->execute([$id]);
+    $sede = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $sede ? $sede['sede_nom'] : "ID $id";
+}
+
+
+    
 }
