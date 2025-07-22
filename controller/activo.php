@@ -108,6 +108,13 @@ switch ($_GET["op"]) {
         $observaciones = $_POST["vehiculo_observaciones"] ?? null;
         $acompra = $_POST["vehiculo_acompra"] ?? null;
 
+        // Campos para detactivo
+        $hostname   = $_POST["vehiculo_hostname"]   ?? null;
+        $procesador = $_POST["vehiculo_procesador"] ?? null;
+        $sisopera   = $_POST["vehiculo_sisopera"]   ?? null;
+        $ram        = $_POST["vehiculo_ram"]        ?? null;
+        $disco      = $_POST["vehiculo_disco"]      ?? null;
+
         // Ejecutar y guardar resultado
         $resultado = $activo->insertar_vehiculo(
             $sbn,
@@ -122,8 +129,15 @@ switch ($_GET["op"]) {
             $condicion,
             $estado,
             $observaciones,
-            $acompra
+            $acompra,
+            $hostname,
+            $procesador,
+            $sisopera,
+            $ram,
+            $disco
         );
+
+
 
         if ($resultado && is_numeric($resultado)) {
             require_once(__DIR__ . "/../models/Auditoria.php");
@@ -147,110 +161,110 @@ switch ($_GET["op"]) {
 
     // Caso para editar un vehículo existente
     case "editar":
-    // 🚀 REGISTRAR EN LOG LOS DATOS RECIBIDOS
-    error_log("📌 Datos recibidos para editar: " . json_encode($_POST));
+        // 🚀 REGISTRAR EN LOG LOS DATOS RECIBIDOS
+        error_log("📌 Datos recibidos para editar: " . json_encode($_POST));
 
-    // Capturar los datos enviados por el formulario
-    $id = $_POST["vehiculo_id"] ?? null;
-    $sbn = $_POST["vehiculo_sbn"] ?? null;
-    $serie = $_POST["vehiculo_serie"] ?? null;
-    $tipo = $_POST["vehiculo_tipo"] ?? null;
-    $marca = $_POST["vehiculo_marca"] ?? null;
-    $modelo = $_POST["vehiculo_modelo"] ?? null;
-    $ubicacion = $_POST["vehiculo_ubicacion"] ?? null;
-    $responsable_id = $_POST["vehiculo_responsable_id"] ?? null;
-    $fecha_registro = $_POST["vehiculo_fecha_registro"] ?? null;
-    $condicion = $_POST["vehiculo_condicion"] ?? null;
-    $vehiculo_actual = $activo->get_vehiculo_por_id($id); // Obtener el registro actual
-    $estado = $vehiculo_actual["estado"];
-    $hostname = $_POST["vehiculo_hostname"] ?? null;
-    $procesador = $_POST["vehiculo_procesador"] ?? null;
-    $sisopera = $_POST["vehiculo_sisopera"] ?? null;
-    $ram = $_POST["vehiculo_ram"] ?? null;
-    $disco = $_POST["vehiculo_disco"] ?? null;
-    $sede_id = $_POST["vehiculo_sede"] ?? null;  // <-- este es el ID
-    $observaciones = $_POST["vehiculo_observaciones"] ?? null;
-    $acompra = $_POST["vehiculo_acompra"] ?? null;
+        // Capturar los datos enviados por el formulario
+        $id = $_POST["vehiculo_id"] ?? null;
+        $sbn = $_POST["vehiculo_sbn"] ?? null;
+        $serie = $_POST["vehiculo_serie"] ?? null;
+        $tipo = $_POST["vehiculo_tipo"] ?? null;
+        $marca = $_POST["vehiculo_marca"] ?? null;
+        $modelo = $_POST["vehiculo_modelo"] ?? null;
+        $ubicacion = $_POST["vehiculo_ubicacion"] ?? null;
+        $responsable_id = $_POST["vehiculo_responsable_id"] ?? null;
+        $fecha_registro = $_POST["vehiculo_fecha_registro"] ?? null;
+        $condicion = $_POST["vehiculo_condicion"] ?? null;
+        $vehiculo_actual = $activo->get_vehiculo_por_id($id); // Obtener el registro actual
+        $estado = $vehiculo_actual["estado"];
+        $hostname = $_POST["vehiculo_hostname"] ?? null;
+        $procesador = $_POST["vehiculo_procesador"] ?? null;
+        $sisopera = $_POST["vehiculo_sisopera"] ?? null;
+        $ram = $_POST["vehiculo_ram"] ?? null;
+        $disco = $_POST["vehiculo_disco"] ?? null;
+        $sede_id = $_POST["vehiculo_sede"] ?? null;  // <-- este es el ID
+        $observaciones = $_POST["vehiculo_observaciones"] ?? null;
+        $acompra = $_POST["vehiculo_acompra"] ?? null;
 
-    // 🚨 Verificar si algún campo clave está vacío
-    if (!$id || !$sbn || !$serie) {
-        error_log("❌ Faltan datos obligatorios: ID: $id, SBN: $sbn, Serie: $serie");
-        echo json_encode(["error" => "Faltan datos obligatorios."]);
-        exit;
-    }
-
-    // 🔥 LLAMAMOS A LA FUNCIÓN DE ACTUALIZACIÓN
-    $resultado = $activo->editar_vehiculo($id, $sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $hostname, $procesador, $sisopera, $ram, $disco, $sede_id, $observaciones, $acompra);
-
-    require_once(__DIR__ . "/../models/Auditoria.php");
-    $auditoria = new Auditoria();
-
-    if ($resultado) {
-        $usuario_id = $_SESSION["usu_id"] ?? 0;
-        $accion = "Edición de activo";
-
-        $campos_id = [
-            "responsable_id",
-            "ubicacion",
-            "sede_id"
-        ];
-
-        $campos = [
-            "sbn",
-            "serie",
-            "tipo",
-            "marca",
-            "modelo",
-            "ubicacion",
-            "responsable_id",
-            "fecha_registro",
-            "condicion",
-            "estado",
-            "sede_id",
-            "observaciones",
-            "acompra",
-            "hostname",
-            "procesador",
-            "sisopera",
-            "ram",
-            "disco"
-        ];
-
-        foreach ($campos as $campo) {
-            if ($campo == 'sede_id') {
-                $valor_antiguo = $vehiculo_actual['sede_id'] ?? null;
-                $valor_nuevo = $sede_id;
-            } else {
-                $valor_antiguo = $vehiculo_actual[$campo] ?? null;
-                $valor_nuevo = $$campo;
-            }
-
-            if (in_array($campo, $campos_id)) {
-                $valor_antiguo = is_null($valor_antiguo) ? null : (string)$valor_antiguo;
-                $valor_nuevo   = is_null($valor_nuevo)   ? null : (string)$valor_nuevo;
-            }
-
-            if ($valor_antiguo !== $valor_nuevo) {
-                if ($campo === "responsable_id") {
-                    $valor_antiguo_nombre = $auditoria->obtener_nombre_usuario($valor_antiguo);
-                    $valor_nuevo_nombre = $auditoria->obtener_nombre_usuario($valor_nuevo);
-                    $detalle = "Se cambió el responsable: de '$valor_antiguo_nombre' a '$valor_nuevo_nombre'";
-                } else if ($campo === "sede_id") {
-                    $valor_antiguo_nombre = $auditoria->obtener_nombre_sede($valor_antiguo);
-                    $valor_nuevo_nombre = $auditoria->obtener_nombre_sede($valor_nuevo);
-                    $detalle = "Se cambió la sede: de '$valor_antiguo_nombre' a '$valor_nuevo_nombre'";
-                } else {
-                    $detalle = "Se modificó el campo '$campo': '$valor_antiguo' → '$valor_nuevo'";
-                }
-                $auditoria->registrar_cambio($id, $usuario_id, $accion, $campo, $valor_antiguo, $valor_nuevo, $detalle);
-            }
+        // 🚨 Verificar si algún campo clave está vacío
+        if (!$id || !$sbn || !$serie) {
+            error_log("❌ Faltan datos obligatorios: ID: $id, SBN: $sbn, Serie: $serie");
+            echo json_encode(["error" => "Faltan datos obligatorios."]);
+            exit;
         }
 
-        echo json_encode(["success" => "Vehículo actualizado correctamente."]);
-    } else {
-        echo json_encode(["error" => "Error al actualizar el vehículo."]);
-    }
-    break;
+        // 🔥 LLAMAMOS A LA FUNCIÓN DE ACTUALIZACIÓN
+        $resultado = $activo->editar_vehiculo($id, $sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $responsable_id, $fecha_registro, $condicion, $estado, $hostname, $procesador, $sisopera, $ram, $disco, $sede_id, $observaciones, $acompra);
+
+        require_once(__DIR__ . "/../models/Auditoria.php");
+        $auditoria = new Auditoria();
+
+        if ($resultado) {
+            $usuario_id = $_SESSION["usu_id"] ?? 0;
+            $accion = "Edición de activo";
+
+            $campos_id = [
+                "responsable_id",
+                "ubicacion",
+                "sede_id"
+            ];
+
+            $campos = [
+                "sbn",
+                "serie",
+                "tipo",
+                "marca",
+                "modelo",
+                "ubicacion",
+                "responsable_id",
+                "fecha_registro",
+                "condicion",
+                "estado",
+                "sede_id",
+                "observaciones",
+                "acompra",
+                "hostname",
+                "procesador",
+                "sisopera",
+                "ram",
+                "disco"
+            ];
+
+            foreach ($campos as $campo) {
+                if ($campo == 'sede_id') {
+                    $valor_antiguo = $vehiculo_actual['sede_id'] ?? null;
+                    $valor_nuevo = $sede_id;
+                } else {
+                    $valor_antiguo = $vehiculo_actual[$campo] ?? null;
+                    $valor_nuevo = $$campo;
+                }
+
+                if (in_array($campo, $campos_id)) {
+                    $valor_antiguo = is_null($valor_antiguo) ? null : (string)$valor_antiguo;
+                    $valor_nuevo   = is_null($valor_nuevo)   ? null : (string)$valor_nuevo;
+                }
+
+                if ($valor_antiguo !== $valor_nuevo) {
+                    if ($campo === "responsable_id") {
+                        $valor_antiguo_nombre = $auditoria->obtener_nombre_usuario($valor_antiguo);
+                        $valor_nuevo_nombre = $auditoria->obtener_nombre_usuario($valor_nuevo);
+                        $detalle = "Se cambió el responsable: de '$valor_antiguo_nombre' a '$valor_nuevo_nombre'";
+                    } else if ($campo === "sede_id") {
+                        $valor_antiguo_nombre = $auditoria->obtener_nombre_sede($valor_antiguo);
+                        $valor_nuevo_nombre = $auditoria->obtener_nombre_sede($valor_nuevo);
+                        $detalle = "Se cambió la sede: de '$valor_antiguo_nombre' a '$valor_nuevo_nombre'";
+                    } else {
+                        $detalle = "Se modificó el campo '$campo': '$valor_antiguo' → '$valor_nuevo'";
+                    }
+                    $auditoria->registrar_cambio($id, $usuario_id, $accion, $campo, $valor_antiguo, $valor_nuevo, $detalle);
+                }
+            }
+
+            echo json_encode(["success" => "Vehículo actualizado correctamente."]);
+        } else {
+            echo json_encode(["error" => "Error al actualizar el vehículo."]);
+        }
+        break;
 
 
 

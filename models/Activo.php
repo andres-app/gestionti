@@ -73,24 +73,58 @@ class Activo extends Conectar
      * @return bool True si la inserción fue exitosa, false en caso de error.
      */
     // Insertar (cambia $sede por $sede_id)
-    public function insertar_vehiculo($sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $sede_id, $responsable_id, $fecha_registro, $condicion, $estado, $observaciones, $acompra)
-    {
+
+    public function insertar_vehiculo(
+        $sbn,
+        $serie,
+        $tipo,
+        $marca,
+        $modelo,
+        $ubicacion,
+        $sede_id,
+        $responsable_id,
+        $fecha_registro,
+        $condicion,
+        $estado,
+        $observaciones,
+        $acompra,
+        $hostname = null,
+        $procesador = null,
+        $sisopera = null,
+        $ram = null,
+        $disco = null
+    ) {
         $conectar = parent::conexion();
         parent::set_names();
 
-        $sql = "INSERT INTO activos (sbn, serie, tipo, marca, modelo, ubicacion, sede_id, responsable_id, fecha_registro, condicion, estado, observaciones, acompra)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try {
+            $conectar->beginTransaction();
 
-        $stmt = $conectar->prepare($sql);
+            // Insertar en activos
+            $sql = "INSERT INTO activos (sbn, serie, tipo, marca, modelo, ubicacion, sede_id, responsable_id, fecha_registro, condicion, estado, observaciones, acompra)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $conectar->prepare($sql);
+            $stmt->execute([$sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $sede_id, $responsable_id, $fecha_registro, $condicion, $estado, $observaciones, $acompra]);
+            $activo_id = $conectar->lastInsertId();
 
-        if ($stmt->execute([$sbn, $serie, $tipo, $marca, $modelo, $ubicacion, $sede_id, $responsable_id, $fecha_registro, $condicion, $estado, $observaciones, $acompra])) {
-            return $conectar->lastInsertId(); // Retornar ID insertado
-        } else {
-            $error = $stmt->errorInfo();
-            error_log("Error en la consulta: " . $error[2]);
+            // Si el tipo es CPU (o el que tú definas)
+            if (strtolower($tipo) == "cpu") {
+                $sql2 = "INSERT INTO detactivo (activo_id, hostname, procesador, sisopera, ram, disco)
+                     VALUES (?, ?, ?, ?, ?, ?)";
+                $stmt2 = $conectar->prepare($sql2);
+                $stmt2->execute([$activo_id, $hostname, $procesador, $sisopera, $ram, $disco]);
+            }
+
+            $conectar->commit();
+            return $activo_id;
+        } catch (PDOException $e) {
+            $conectar->rollBack();
+            error_log("Error al insertar activo/detactivo: " . $e->getMessage());
             return false;
         }
     }
+
+
 
 
 
@@ -489,5 +523,25 @@ class Activo extends Conectar
         $stmt = $conectar->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function buscar_por_codigo($codigo)
+    {
+        $conectar = parent::conexion();
+        parent::set_names();
+        $sql = "SELECT * FROM activos WHERE sbn = ? OR serie = ?";
+        $stmt = $conectar->prepare($sql);
+        $stmt->execute([$codigo, $codigo]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function get_detalle_activo($activo_id)
+    {
+        $conectar = parent::conexion();
+        parent::set_names();
+        $sql = "SELECT * FROM detactivo WHERE activo_id = ?";
+        $stmt = $conectar->prepare($sql);
+        $stmt->execute([$activo_id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }
