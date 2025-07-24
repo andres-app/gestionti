@@ -152,23 +152,21 @@ switch ($_GET["op"]) {
                 );
 
                 if ($resultado) {
-                    // --- AUDITORÍA DE CREACIÓN ---
                     $nuevo_id = $resultado[0]['usu_id'];
+                    $datos_creado = $usuario->get_usuario_id($nuevo_id); // Obtener los datos completos
+
+                    // Solo auditar el correo del usuario creado
                     $auditoria->registrar_cambio_general(
                         $_SESSION['usu_id'],   // Quien hizo la acción
                         'crear',               // Acción
                         'usuarios',            // Tabla
                         $nuevo_id,             // ID registro creado
-                        null,                  // Campo modificado (null si son varios)
-                        null,                  // Valor anterior (no hay)
-                        json_encode([
-                            'usu_nomape' => $_POST["usu_nomape"],
-                            'usu_correo' => $_POST["usu_correo"],
-                            'area_id'    => $_POST["area_id"],
-                            'rol_id'     => $_POST["rol_id"]
-                        ]),
+                        'usu_correo',          // Campo creado (solo el correo)
+                        null,                  // Valor anterior (no existe)
+                        $datos_creado['usu_correo'], // Valor nuevo
                         'Usuario creado'
                     );
+
                     error_log("Nuevo usuario creado: " . $_POST["usu_correo"]);
                     echo "1";
                 } else {
