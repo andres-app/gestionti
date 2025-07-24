@@ -12,7 +12,7 @@ if (isset($_SESSION["usu_id"])) {
     <html lang="es">
 
     <head>
-        <title>Perfil de Usuario - TEMPLATE</title>
+        <title>Perfil de Usuario</title>
         <?php require_once("../html/head.php"); ?>
     </head>
 

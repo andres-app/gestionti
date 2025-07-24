@@ -9,7 +9,7 @@ if (isset($_SESSION["usu_id"]) and count($datos) > 0) {
     <html lang="es">
 
     <head>
-        <title> Mnt.Colaborador TEMPLATE</title>
+        <title> Mnt.Colaborador</title>
         <?php require_once("../html/head.php") ?>
     </head>
 

@@ -8,7 +8,7 @@
 <!doctype html>
 <html lang="es">
     <head>
-        <title>  Mnt.Tramite TEMPLATE</title>
+        <title>  Mnt.Tramite</title>
         <?php require_once("../html/head.php")?>
     </head>
 

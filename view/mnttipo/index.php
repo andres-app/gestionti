@@ -8,7 +8,7 @@
 <!doctype html>
 <html lang="es">
     <head>
-        <title>  Mnt.Tipo TEMPLATE</title>
+        <title>  Mnt.Tipo</title>
         <?php require_once("../html/head.php")?>
     </head>
 
