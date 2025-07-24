@@ -3,10 +3,12 @@
 require_once("../config/conexion.php");
 require_once("../models/Usuario.php");
 require_once("../models/Email.php");
+require_once("../models/Auditoria.php");
 
 /* TODO:Crea una instancia de la clase Usuario */
 $usuario = new Usuario();
 $email = new Email();
+$auditoria = new Auditoria();
 
 /* TODO: Utiliza una estructura switch para determinar la operación a realizar según el valor de $_GET["op"] */
 switch ($_GET["op"]) {
@@ -125,84 +127,138 @@ switch ($_GET["op"]) {
         break;
 
     case "guardaryeditar":
-    try {
-        if (empty($_POST["usu_id"])) {  // Creación de nuevo usuario
-            // Validación de campos obligatorios
-            if (empty($_POST["usu_pass"])) {
-                error_log("Error: Contraseña faltante para nuevo usuario");
-                echo "3"; // Código para contraseña faltante
-                break;
+        try {
+            if (empty($_POST["usu_id"])) {  // Creación de nuevo usuario
+                // Validación de campos obligatorios
+                if (empty($_POST["usu_pass"])) {
+                    error_log("Error: Contraseña faltante para nuevo usuario");
+                    echo "3"; // Código para contraseña faltante
+                    break;
+                }
+
+                $datos = $usuario->get_usuario_correo($_POST["usu_correo"]);
+                if (is_array($datos) && count($datos) > 0) {
+                    error_log("Error: Usuario con correo " . $_POST["usu_correo"] . " ya existe");
+                    echo "0"; // Usuario ya existe
+                    break;
+                }
+
+                $resultado = $usuario->insert_colaborador(
+                    $_POST["usu_nomape"],
+                    $_POST["usu_correo"],
+                    $_POST["usu_pass"],
+                    $_POST["area_id"],
+                    $_POST["rol_id"]
+                );
+
+                if ($resultado) {
+                    // --- AUDITORÍA DE CREACIÓN ---
+                    $nuevo_id = $resultado[0]['usu_id'];
+                    $auditoria->registrar_cambio_general(
+                        $_SESSION['usu_id'],   // Quien hizo la acción
+                        'crear',               // Acción
+                        'usuarios',            // Tabla
+                        $nuevo_id,             // ID registro creado
+                        null,                  // Campo modificado (null si son varios)
+                        null,                  // Valor anterior (no hay)
+                        json_encode([
+                            'usu_nomape' => $_POST["usu_nomape"],
+                            'usu_correo' => $_POST["usu_correo"],
+                            'area_id'    => $_POST["area_id"],
+                            'rol_id'     => $_POST["rol_id"]
+                        ]),
+                        'Usuario creado'
+                    );
+                    error_log("Nuevo usuario creado: " . $_POST["usu_correo"]);
+                    echo "1";
+                } else {
+                    error_log("Error al crear usuario");
+                    echo "4"; // Error en creación
+                }
+            } else {  // Edición de usuario
+                $actualizo_pass = !empty($_POST["usu_pass"]);
+                error_log("Actualizando usuario ID: " . $_POST["usu_id"] . ($actualizo_pass ? " con nueva contraseña" : ""));
+
+                // --- AUDITORÍA: obtén datos antes de editar ---
+                $datos_antes = $usuario->get_usuario_id($_POST["usu_id"]);
+
+                $resultado = $usuario->update_colaborador(
+                    $_POST["usu_id"],
+                    $_POST["usu_nomape"],
+                    $_POST["usu_correo"],
+                    $actualizo_pass ? $_POST["usu_pass"] : null,
+                    $_POST["area_id"],
+                    $_POST["rol_id"]
+                );
+
+                if ($resultado) {
+                    // --- AUDITORÍA DE EDICIÓN ---
+                    $datos_despues = $usuario->get_usuario_id($_POST["usu_id"]);
+                    $no_auditar = ['fech_modi', 'fech_crea', 'fech_elim', 'fech_acti', 'cambio_clave', 'usu_pass'];
+
+                    foreach ($datos_antes as $campo => $valor_anterior) {
+                        if (
+                            !in_array($campo, $no_auditar) &&
+                            isset($datos_despues[$campo]) &&
+                            $valor_anterior != $datos_despues[$campo]
+                        ) {
+                            $auditoria->registrar_cambio_general(
+                                $_SESSION['usu_id'],
+                                'editar',
+                                'usuarios',
+                                $_POST["usu_id"],
+                                $campo,
+                                $valor_anterior,
+                                $datos_despues[$campo],
+                                'Modificación de usuario'
+                            );
+                        }
+                    }
+                    error_log("Usuario actualizado correctamente");
+                    echo "2"; // Éxito en actualización
+                } else {
+                    error_log("Error al actualizar usuario");
+                    echo "5"; // Error en actualización
+                }
             }
-
-            $datos = $usuario->get_usuario_correo($_POST["usu_correo"]);
-            if (is_array($datos) && count($datos) > 0) {
-                error_log("Error: Usuario con correo ".$_POST["usu_correo"]." ya existe");
-                echo "0"; // Usuario ya existe
-                break;
-            }
-
-            $resultado = $usuario->insert_colaborador(
-                $_POST["usu_nomape"],
-                $_POST["usu_correo"],
-                $_POST["usu_pass"],
-                $_POST["area_id"],
-                $_POST["rol_id"]
-            );
-
-            if ($resultado) {
-                error_log("Nuevo usuario creado: ".$_POST["usu_correo"]);
-                echo "1"; // Éxito
-            } else {
-                error_log("Error al crear usuario");
-                echo "4"; // Error en creación
-            }
-
-        } else {  // Edición de usuario
-            $actualizo_pass = !empty($_POST["usu_pass"]);
-            error_log("Actualizando usuario ID: ".$_POST["usu_id"].($actualizo_pass ? " con nueva contraseña" : ""));
-
-            $resultado = $usuario->update_colaborador(
-                $_POST["usu_id"],
-                $_POST["usu_nomape"],
-                $_POST["usu_correo"],
-                $actualizo_pass ? $_POST["usu_pass"] : null,
-                $_POST["area_id"],
-                $_POST["rol_id"]
-            );
-
-            if ($resultado) {
-                error_log("Usuario actualizado correctamente");
-                echo "2"; // Éxito en actualización
-            } else {
-                error_log("Error al actualizar usuario");
-                echo "5"; // Error en actualización
-            }
+        } catch (Exception $e) {
+            error_log("Excepción en guardaryeditar: " . $e->getMessage());
+            echo "6"; // Error inesperado
         }
-    } catch (Exception $e) {
-        error_log("Excepción en guardaryeditar: ".$e->getMessage());
-        echo "6"; // Error inesperado
-    }
-    break;
+        break;
+
 
 
     case "mostrar":
         $datos = $usuario->get_usuario_id($_POST["usu_id"]);
-        if (is_array($datos) == true and count($datos) > 0) {
-            foreach ($datos as $row) {
-                $output["usu_id"] = $row["usu_id"];
-                $output["usu_nomape"] = $row["usu_nomape"];
-                $output["usu_correo"] = $row["usu_correo"];
-                $output["area_id"] = $row["area_id"]; // Nuevo campo
-                $output["rol_id"] = $row["rol_id"];
-            }
+        if (is_array($datos) && count($datos) > 0) {
+            $output["usu_id"] = $datos["usu_id"];
+            $output["usu_nomape"] = $datos["usu_nomape"];
+            $output["usu_correo"] = $datos["usu_correo"];
+            $output["area_id"] = $datos["area_id"];
+            $output["rol_id"] = $datos["rol_id"];
             echo json_encode($output);
         }
         break;
 
+
     case "eliminar":
+        $datos_antes = $usuario->get_usuario_id($_POST["usu_id"]);
         $usuario->eliminar_colaborador($_POST["usu_id"]);
+        // --- AUDITORÍA DE ELIMINACIÓN ---
+        $auditoria->registrar_cambio_general(
+            $_SESSION['usu_id'],
+            'eliminar',
+            'usuarios',
+            $_POST["usu_id"],
+            null,
+            json_encode($datos_antes[0]),
+            null,
+            'Usuario eliminado'
+        );
         echo "1";
         break;
+
 
     case "listar":
         $datos = $usuario->get_colaborador();

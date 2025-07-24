@@ -171,21 +171,15 @@ class Usuario extends Conectar
 
     public function get_usuario_id($usu_id)
     {
-        /* TODO: Obtener la conexión a la base de datos utilizando el método de la clase padre */
         $conectar = parent::conexion();
-        /* TODO: Establecer el juego de caracteres a UTF-8 utilizando el método de la clase padre */
         parent::set_names();
-        /* TODO: Consulta SQL para insertar un nuevo usuario en la tabla tm_usuario */
-        $sql = "SELECT * FROM tm_usuario
-                WHERE usu_id = ?";
-        /* TODO:Preparar la consulta SQL */
+        $sql = "SELECT * FROM tm_usuario WHERE usu_id = ?";
         $sql = $conectar->prepare($sql);
-        /* TODO: Vincular los valores a los parámetros de la consulta */
         $sql->bindValue(1, $usu_id);
-        /* TODO: Ejecutar la consulta SQL */
         $sql->execute();
-        return $sql->fetchAll();
+        return $sql->fetch(PDO::FETCH_ASSOC); // ¡Aquí está el cambio!
     }
+
 
     public function activar_usuario($usu_id)
     {
