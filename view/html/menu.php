@@ -14,7 +14,7 @@ $datos = $rol->get_menu_x_rol($_SESSION["rol_id"]);
 
                 <?php
                 // Arrays para menús principales y submenús
-                $submenus_mantenimiento = ["Usuarios", "Area", "Sedes", "Tramite", "Tipo de persona", "Roles"];
+                $submenus_mantenimiento = ["Usuarios", "Unidad","Area", "Sedes", "Tramite", "Tipo de persona", "Roles"];
                 $submenus = [];
 
                 foreach ($datos as $row) {
