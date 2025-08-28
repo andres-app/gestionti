@@ -1,26 +1,25 @@
-<div id="mnt_modal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <form method="post" id="mnt_form" autocomplete="off">
-      <div class="modal-content">
+<div id="mnt_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form id="mnt_form" method="post">
         <div class="modal-header">
-          <h5 class="modal-title" id="myModalLabel"></h5>
+          <h5 class="modal-title" id="myModalLabel">Nuevo registro</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
         <div class="modal-body">
-          <input type="hidden" id="unidad_id" name="unidad_id">
-
+          <input type="hidden" id="dependencia_id" name="dependencia_id">
           <div class="mb-3">
-            <label for="unidad_nom" class="form-label">Nombre (*)</label>
-            <input class="form-control" type="text" name="unidad_nom" id="unidad_nom" required>
+            <label for="unidad_nom" class="form-label">Nombre de la Unidad Organica</label>
+            <input type="text" class="form-control" id="unidad_nom" name="unidad_nom" placeholder="Ingrese nombre">
           </div>
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Cerrar</button>
-          <button type="submit" class="btn btn-primary waves-effect waves-light">Guardar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
 </div>
